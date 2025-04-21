@@ -18,6 +18,7 @@ import {
 interface PortfolioStock {
   symbol: string;
   name: string;
+    quantity: number;
   price: string;
   change: string;
   changePercent: string;
@@ -30,11 +31,11 @@ export default function SellPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [portfolio, setPortfolio] = useState<PortfolioStock[]>([
-    { symbol: 'AAPL', name: 'Apple Inc.', price: '170.34', change: '+1.50', changePercent: '0.89%' },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', price: '430.25', change: '-0.50', changePercent: '-0.12%' },
-    { symbol: 'GOOG', name: 'Alphabet Inc.', price: '150.70', change: '+0.25', changePercent: '0.17%' },
-    { symbol: 'NVDA', name: 'Nvidia Corp.', price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
-    { symbol: 'TSLA', name: 'Tesla, Inc.', price: '850.50', change: '+5.00', changePercent: '+0.59%' },
+    { symbol: 'AAPL', name: 'Apple Inc.', quantity: 10, price: '170.34', change: '+1.50', changePercent: '0.89%' },
+    { symbol: 'MSFT', name: 'Microsoft Corp.', quantity: 5, price: '430.25', change: '-0.50', changePercent: '-0.12%' },
+    { symbol: 'GOOG', name: 'Alphabet Inc.', quantity: 8, price: '150.70', change: '+0.25', changePercent: '0.17%' },
+    { symbol: 'NVDA', name: 'Nvidia Corp.', quantity: 3, price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
+    { symbol: 'TSLA', name: 'Tesla, Inc.', quantity: 4, price: '850.50', change: '+5.00', changePercent: '+0.59%' },
   ]);
 
   useEffect(() => {
@@ -79,12 +80,17 @@ export default function SellPage() {
         </label>
         
         {portfolio.map((stock) => (
-          <div key={stock.symbol} className="mb-2 p-2 border rounded">
-            <Button variant="link" onClick={() => setSelectedStock(stock)}>
-              {stock.name} ({stock.symbol})
-            </Button>
-            <p>Price: {stock.price}</p>
-            <p>Change: {stock.change} ({stock.changePercent})</p>
+          <div key={stock.symbol} className="mb-2 p-2 border rounded flex items-center justify-between">
+            <div>
+              <Button variant="link" onClick={() => setSelectedStock(stock)}>
+                {stock.name} ({stock.symbol})
+              </Button>
+              <p className="text-sm">Price: {stock.price}</p>
+              <p className="text-sm">Change: {stock.change} ({stock.changePercent})</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm">Quantity: {stock.quantity}</p>
+            </div>
           </div>
         ))}
       </div>
