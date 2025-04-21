@@ -48,6 +48,12 @@ export const NewsSection = () => {
 
   useEffect(() => {
     async function loadNews() {
+      const apiKey = process.env.NEWS_API_KEY;
+      if (!apiKey) {
+        console.warn("NEWS_API_KEY is not set, skipping news loading.");
+        return;
+      }
+
       const initialGeneralNews = await fetchNews();
       setGeneralNews(initialGeneralNews);
 
