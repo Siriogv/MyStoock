@@ -12,13 +12,14 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 import {useToast} from "@/hooks/use-toast";
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from "@/hooks/use-local-storage";
 
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
-  const {i18n, t} = useTranslation();
+  const { t, i18n } = useTranslation();
+
 
   const [currency, setCurrency] = useLocalStorage("currency", "EUR");
   const [market, setMarket] = useLocalStorage("market", "NYSE");
@@ -32,7 +33,9 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    i18n.changeLanguage(language);
+    if (i18n && language) {
+      i18n.changeLanguage(language);
+    }
   }, [language, i18n]);
 
 
