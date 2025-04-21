@@ -14,11 +14,12 @@ import {Label} from "@/components/ui/label";
 import {useToast} from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useI18n } from "@/hooks/use-i18n";
 
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useI18n();
 
 
   const [currency, setCurrency] = useLocalStorage("currency", "EUR");
@@ -33,7 +34,7 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    if (i18n && language) {
+    if (language && i18n.language !== language) {
       i18n.changeLanguage(language);
     }
   }, [language, i18n]);
@@ -41,20 +42,20 @@ export default function SettingsPage() {
 
   const handleSaveSettings = async () => {
     toast({
-      title: t("Settings Saved"),
-      description: t("Your settings have been saved successfully."),
+      title: "Settings Saved",
+      description: "Your settings have been saved successfully.",
     });
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{t("User Settings")}</h1>
+      <h1 className="text-2xl font-bold mb-4">User Settings</h1>
 
       <div className="mb-4">
-        <Label htmlFor="currency">{t("Currency")}</Label>
+        <Label htmlFor="currency">Currency</Label>
         <Select value={currency} onValueChange={setCurrency}>
           <SelectTrigger id="currency">
-            <SelectValue placeholder={t("Select Currency")}/>
+            <SelectValue placeholder="Select Currency"/>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="EUR">EUR</SelectItem>
@@ -65,10 +66,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="market">{t("Market")}</Label>
+        <Label htmlFor="market">Market</Label>
         <Select value={market} onValueChange={setMarket}>
           <SelectTrigger id="market">
-            <SelectValue placeholder={t("Select Market")}/>
+            <SelectValue placeholder="Select Market"/>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="NYSE">NYSE</SelectItem>
@@ -80,10 +81,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="theme">{t("Theme")}</Label>
+        <Label htmlFor="theme">Theme</Label>
         <Select value={theme} onValueChange={setTheme}>
           <SelectTrigger id="theme">
-            <SelectValue placeholder={t("Select Theme")}/>
+            <SelectValue placeholder="Select Theme"/>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="light">Light</SelectItem>
@@ -94,10 +95,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="language">{t("Language")}</Label>
+        <Label htmlFor="language">Language</Label>
         <Select value={language} onValueChange={setLanguage}>
           <SelectTrigger id="language">
-            <SelectValue placeholder={t("Select Language")}/>
+            <SelectValue placeholder="Select Language"/>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="en">English</SelectItem>
@@ -107,40 +108,40 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label>{t("Commission Type")}</Label>
+        <Label>Commission Type</Label>
         <div className="flex items-center space-x-2">
           <Button
             variant={commissionType === "fixed" ? "default" : "outline"}
             onClick={() => setCommissionType("fixed")}
           >
-            {t("Fixed")}
+            Fixed
           </Button>
           <Button
             variant={commissionType === "percentage" ? "default" : "outline"}
             onClick={() => setCommissionType("percentage")}
           >
-            {t("Percentage")}
+            Percentage
           </Button>
         </div>
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="commissionValue">{t("Commission Value")}</Label>
+        <Label htmlFor="commissionValue">Commission Value</Label>
         <input
           type="number"
           id="commissionValue"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           value={commissionValue}
           onChange={(e) => setCommissionValue(e.target.value)}
-          placeholder={t("Enter commission value")}
+          placeholder="Enter commission value"
         />
       </div>
 
       <Button onClick={handleSaveSettings} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        {t("Save Settings")}
+        Save Settings
       </Button>
 
-      <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
+      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
     </div>
   );
 }
