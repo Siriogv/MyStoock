@@ -25,13 +25,29 @@ export default function SellPage() {
 
   const handleSearch = async () => {
     // TODO: Implement search from portfolio logic here
-    const info = await getStockInfo(symbol, market);
-    setStockInfo(info);
-     if (!info) {
+    // For now, use a mock portfolio
+    const mockPortfolio = [
+      { symbol: 'AAPL', name: 'Apple Inc.', price: '170.34', change: '+1.50', changePercent: '0.89%' },
+      { symbol: 'MSFT', name: 'Microsoft Corp.', price: '430.25', change: '-0.50', changePercent: '-0.12%' },
+      { symbol: 'GOOG', name: 'Alphabet Inc.', price: '150.70', change: '+0.25', changePercent: '0.17%' },
+        { symbol: 'NVDA', name: 'Nvidia Corp.', price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
+      // Add more stocks to the mock portfolio as needed
+    ];
+
+    const foundStock = mockPortfolio.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
+
+    if (foundStock) {
+      setStockInfo(foundStock);
+        toast({
+          title: "Success",
+          description: `Stock ${foundStock.symbol} found in your portfolio.`,
+        });
+    } else {
+      setStockInfo(null);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to retrieve stock information. Please check the symbol and try again.",
+        description: "Stock not found in your portfolio. Please check the symbol.",
       });
     }
   };
@@ -71,18 +87,6 @@ export default function SellPage() {
           onChange={(e) => setSymbol(e.target.value)}
           className="mr-2"
         />
-         <Select value={market} onValueChange={setMarket}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Market" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="NASDAQ">NASDAQ</SelectItem>
-              <SelectItem value="NYSE">NYSE</SelectItem>
-              <SelectItem value="BOM">BOM</SelectItem>
-               <SelectItem value="MIL">MIL</SelectItem>
-              {/* Add more markets as needed */}
-            </SelectContent>
-          </Select>
         <Button onClick={handleSearch} className="ml-2">
           <Search className="mr-2 h-4 w-4" />
           Search
