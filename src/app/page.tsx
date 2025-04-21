@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -28,6 +29,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
+import {HighestProfitStocks} from "@/components/highest-profit-stocks";
 
 export default function Home() {
   const { toast } = useToast();
@@ -174,6 +176,7 @@ export default function Home() {
             </div>
           </div>
           <NewsSection /> {/* Include the NewsSection component */}
+          <HighestProfitStocks/>
         </div>
       </SidebarInset>
     </SidebarProvider>
