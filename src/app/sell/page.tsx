@@ -41,6 +41,10 @@ export default function SellPage() {
         }
   };
 
+   const goBackToDashboard = () => {
+    router.push('/');
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Sell Stock</h1>
@@ -78,6 +82,8 @@ export default function SellPage() {
           <Button onClick={handleSell}>Sell</Button>
         </div>
       )}
+
+       <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
     </div>
   );
 }

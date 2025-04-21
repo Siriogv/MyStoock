@@ -8,8 +8,8 @@ body {
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 235 45% 94%; /* Light gray (#ecf0f1) */
+    --foreground: 220 71.4% 95.9%; /* Calming blue (#3498db) - lighter shade for text */
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
@@ -28,9 +28,9 @@ body {
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
     --radius: 0.5rem;
-    --success: 141.3 70.6% 48.4%;
+    --success: 145 63% 43%; /* Green (#2ecc71) */
     --success-foreground: 0 0% 100%;
-    --error: 0 72.2% 50.6%;
+    --error: 354 70% 51%; /* Red (#e74c3c) */
     --error-foreground: 0 0% 100%;
     --sidebar-background: 222.2 84% 4.9%;
     --sidebar-foreground: 210 40% 98%;
@@ -43,8 +43,8 @@ body {
   }
 
   .dark {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 219 29.6% 15.9%; /* Dark gray alternative for dark mode */
+    --foreground: 210 40% 98%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;

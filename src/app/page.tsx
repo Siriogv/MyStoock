@@ -70,7 +70,7 @@ export default function Home() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="#">
+                <SidebarMenuButton href="/transaction-history">
                   <Icons.workflow className="mr-2 h-4 w-4" />
                   <span>Transaction History</span>
                 </SidebarMenuButton>
@@ -100,7 +100,7 @@ export default function Home() {
             <SidebarGroupLabel>Simulation</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="#">
+                <SidebarMenuButton href="/simulate">
                   <Icons.edit className="mr-2 h-4 w-4" />
                   <span>Simulation Page</span>
                 </SidebarMenuButton>
@@ -112,7 +112,7 @@ export default function Home() {
             <SidebarGroupLabel>Settings</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="#">
+                <SidebarMenuButton href="/settings">
                   <Icons.settings className="mr-2 h-4 w-4" />
                   <span>User Settings</span>
                 </SidebarMenuButton>
@@ -143,6 +143,23 @@ export default function Home() {
           <p className="text-muted-foreground">
             Welcome to your investment portfolio overview.
           </p>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-lg border bg-card p-4 shadow-sm">
+              <h2 className="text-lg font-semibold">Total Purchase Value</h2>
+              <p className="text-2xl">$100,000</p>
+            </div>
+
+            <div className="rounded-lg border bg-card p-4 shadow-sm">
+              <h2 className="text-lg font-semibold">Current Total Value</h2>
+              <p className="text-2xl">$110,000</p>
+            </div>
+
+            <div className="rounded-lg border bg-card p-4 shadow-sm">
+              <h2 className="text-lg font-semibold">Total Profit/Loss</h2>
+              <p className="text-2xl success">+$10,000</p>
+            </div>
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
