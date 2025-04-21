@@ -6,9 +6,11 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
@@ -22,7 +24,10 @@ export default function SettingsPage() {
 
   const handleSaveSettings = () => {
     // TODO: Implement save settings logic here
-    alert("Settings Saved!");
+    toast({
+      title: "Settings Saved",
+      description: "Your settings have been saved successfully.",
+    });
   };
 
   return (
@@ -110,3 +115,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

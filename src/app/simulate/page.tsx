@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SimulationPage() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -36,6 +38,11 @@ export default function SimulationPage() {
       profitLoss,
       tax,
       netProfit,
+    });
+
+     toast({
+      title: "Simulation complete",
+      description: "The simulation has been successfully calculated.",
     });
   };
 
@@ -144,3 +151,4 @@ export default function SimulationPage() {
     </div>
   );
 }
+
