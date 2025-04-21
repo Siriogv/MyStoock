@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import {getStockInfo, Stock} from "@/services/finance";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from 'next/navigation';
 
 export default function SellPage() {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
 
   const handleSearch = async () => {
     // TODO: Implement search from portfolio logic here
@@ -19,7 +23,22 @@ export default function SellPage() {
 
   const handleSell = () => {
     // TODO: Implement sell logic here
-    alert(`Selling ${quantity} shares of ${symbol}`);
+    if (stockInfo) {
+          // For now, just show a success message
+          toast({
+            title: "Success",
+            description: `Successfully sold ${quantity} shares of ${stockInfo.symbol}`,
+          });
+
+          // Redirect to the dashboard after successful buy
+          router.push('/');
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Stock information not found. Please search for a stock first.",
+          });
+        }
   };
 
   return (

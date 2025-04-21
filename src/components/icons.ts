@@ -87,4 +87,3 @@ const Icons = {
 export { Icons };
 export type { IconProps };
 export type { LucideIcon }
-
