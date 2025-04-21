@@ -78,18 +78,29 @@ export default function SellPage() {
         <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
           Select Stock from Portfolio
         </label>
-        
+
+          {/* Grid Header */}
+          <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_0.5fr] gap-4 py-2 font-semibold">
+            <div>Name (Symbol)</div>
+            <div>Price</div>
+            <div>Change</div>
+            <div>Quantity</div>
+            <div>Action</div>
+          </div>
+
         {portfolio.map((stock) => (
-          <div key={stock.symbol} className="mb-2 p-2 border rounded flex items-center justify-between">
+          <div key={stock.symbol} className="grid grid-cols-[1.5fr_1fr_1fr_1fr_0.5fr] gap-4 py-2 border-b">
             <div className="flex items-center space-x-2">
-              <Button variant="link" onClick={() => setSelectedStock(stock)}>
-                {stock.name} ({stock.symbol})
-              </Button>
-              <p className="text-sm">Price: {stock.price}</p>
-              <p className="text-sm">Change: {stock.change} ({stock.changePercent})</p>
-              <p className="text-sm">Quantity: {stock.quantity}</p>
+              <div>{stock.name} ({stock.symbol})</div>
             </div>
-            
+            <div>{stock.price}</div>
+            <div>{stock.change} ({stock.changePercent})</div>
+            <div>{stock.quantity}</div>
+            <div className="flex justify-end">
+              <Button variant="link" onClick={() => setSelectedStock(stock)}>
+                Select
+              </Button>
+            </div>
           </div>
         ))}
       </div>
@@ -125,4 +136,3 @@ export default function SellPage() {
     </div>
   );
 }
-
