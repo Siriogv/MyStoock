@@ -26,6 +26,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 export default function Home() {
   const { toast } = useToast();
@@ -76,6 +77,25 @@ export default function Home() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Trade</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/buy">
+                  <Icons.building className="mr-2 h-4 w-4" />
+                  <span>Buy Stock</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/sell">
+                  <Icons.coins className="mr-2 h-4 w-4" />
+                  <span>Sell Stock</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+
           <SidebarGroup>
             <SidebarGroupLabel>Simulation</SidebarGroupLabel>
             <SidebarMenu>
