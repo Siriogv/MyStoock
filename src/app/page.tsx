@@ -1,3 +1,132 @@
+"use client";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+
 export default function Home() {
-  return <></>;
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
+  return (
+    <SidebarProvider>
+      <Sidebar
+        collapsible="icon"
+        defaultOpen
+        style={{
+          borderRight: "1px solid var(--border)",
+        }}
+      >
+        <SidebarHeader>
+          <div className="flex items-center space-x-2">
+            <Icons.logo className="h-6 w-6" />
+            <h1 className="text-lg font-semibold">PortafoglioSemplice</h1>
+          </div>
+        </SidebarHeader>
+        <SidebarRail>
+          {/*<SidebarTrigger asChild>*/}
+          {/*  <Button variant="ghost" size="icon" aria-label="Collapse sidebar">*/}
+          {/*    <Icons.chevronLeft className="h-4 w-4" />*/}
+          {/*  </Button>*/}
+          {/*</SidebarTrigger>*/}
+        </SidebarRail>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="#" isActive>
+                  <Icons.home className="mr-2 h-4 w-4" />
+                  <span>Overview</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="#">
+                  <Icons.workflow className="mr-2 h-4 w-4" />
+                  <span>Transaction History</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>Simulation</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="#">
+                  <Icons.edit className="mr-2 h-4 w-4" />
+                  <span>Simulation Page</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarSeparator />
+          <SidebarGroup>
+            <SidebarGroupLabel>Settings</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="#">
+                  <Icons.settings className="mr-2 h-4 w-4" />
+                  <span>User Settings</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={() =>
+              toast({
+                title: "Logged out!",
+                description: "See you soon.",
+              })
+            }
+          >
+            <Icons.logOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <div className="p-4">
+          <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+          <p className="text-muted-foreground">
+            Welcome to your investment portfolio overview.
+          </p>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }
+

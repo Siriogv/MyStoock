@@ -1,12 +1,59 @@
-import {ArrowRight, Check, ChevronsUpDown, Circle, Copy, Edit, ExternalLink, File, HelpCircle, Home, Loader2, Mail, MessageSquare, Moon, Plus, PlusCircle, Search, Server, Settings, Share2, Shield, Sun, Trash, User, X, Workflow} from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  ChevronsUpDown,
+  Circle,
+  Copy,
+  Edit,
+  ExternalLink,
+  File,
+  HelpCircle,
+  Home,
+  Loader2,
+  Mail,
+  MessageSquare,
+  Moon,
+  Plus,
+  PlusCircle,
+  Search,
+  Server,
+  Settings,
+  Share2,
+  Shield,
+  Sun,
+  Trash,
+  User,
+  Workflow,
+  LogOut,
+  PanelLeft,
+  ChevronLeft,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  Info,
+  LucideIcon,
+  Wallet,
+  Building2,
+  Percent,
+  Coins,
+  Crosshair,
+} from "lucide-react";
+
+interface IconProps {
+  className?: string;
+}
 
 const Icons = {
+  logo: Wallet,
+  percent: Percent,
+  coins: Coins,
+  building: Building2,
   arrowRight: ArrowRight,
   check: Check,
   chevronDown: ChevronsUpDown,
   circle: Circle,
   workflow: Workflow,
-  close: X,
+  close: Crosshair,
   copy: Copy,
   dark: Moon,
   edit: Edit,
@@ -28,6 +75,16 @@ const Icons = {
   spinner: Loader2,
   trash: Trash,
   user: User,
+  logOut: LogOut,
+  panelLeft: PanelLeft,
+  chevronLeft: ChevronLeft,
+  trendingUp: TrendingUp,
+  trendingDown: TrendingDown,
+  alertTriangle: AlertTriangle,
+  info: Info,
 };
 
-export {Icons};
+export { Icons };
+export type { IconProps };
+export type { LucideIcon }
+
