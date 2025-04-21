@@ -8,25 +8,25 @@ body {
 
 @layer base {
   :root {
-    --background: 235 45% 94%; /* Light gray (#ecf0f1) */
-    --foreground: 220 71.4% 95.9%; /* Calming blue (#3498db) - lighter shade for text */
-    --card: 222.2 84% 4.9%;
+    --background: 210 20% 98%; /* Light background */
+    --foreground: 220 70% 4%; /* Dark text for contrast */
+    --card: 240 10% 3.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 48 95% 59%; /* Gold/Yellow */
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 220 14.3% 95.9%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 39 100% 50%; /* Neon Blue/Cyan */
     --radius: 0.5rem;
     --success: 145 63% 43%; /* Green (#2ecc71) */
     --success-foreground: 0 0% 100%;
@@ -43,13 +43,13 @@ body {
   }
 
   .dark {
-    --background: 219 29.6% 15.9%; /* Dark gray alternative for dark mode */
+    --background: 219 29.6% 15.9%; /* Dark background */
     --foreground: 210 40% 98%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 214.3 41.4% 11.8%;
+    --primary: 48 95% 59%; /* Gold/Yellow */
     --primary-foreground: 220 71.4% 95.9%;
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 240 10% 3.9%;
@@ -61,7 +61,7 @@ body {
     --destructive-foreground: 0 0% 98%;
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 214.3 41.4% 11.8%;
+    --ring: 39 100% 50%; /* Neon Blue/Cyan */
     --success: 141.3 70.6% 48.4%;
     --success-foreground: 0 0% 100%;
     --error: 0 72.2% 50.6%;
