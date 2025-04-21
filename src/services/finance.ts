@@ -71,9 +71,12 @@ export async function getStockInfo(query: string, market: string = 'NASDAQ'): Pr
       change,
       changePercent,
     };
-  } catch (error) {
-    console.error("Errore scraping:", error.message);
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error("Errore scraping (Axios):", error.message, error.code, error.response?.status, error.response?.data);
+    } else {
+      console.error("Errore scraping:", error.message);
+    }
     return null;
   }
 }
-
