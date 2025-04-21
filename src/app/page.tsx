@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
 
 export default function Home() {
   const { toast } = useToast();
@@ -172,6 +173,7 @@ export default function Home() {
               <p className="text-2xl success">+$10,000</p>
             </div>
           </div>
+          <NewsSection /> {/* Include the NewsSection component */}
         </div>
       </SidebarInset>
     </SidebarProvider>
