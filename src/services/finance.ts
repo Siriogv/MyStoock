@@ -28,18 +28,24 @@ export interface Stock {
  */
 export async function getStockInfo(symbol: string): Promise<Stock | null> {
   try {
+    // Use a different API endpoint or service for fetching stock data
     const response = await fetch(
-      `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`
+      `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=YOUR_FINNHUB_API_KEY` // Replace with your actual API key
     );
+
+    if (!response.ok) {
+      console.error('Failed to fetch stock info:', response.status, response.statusText);
+      return null;
+    }
+
     const data = await response.json();
 
-    if (data.quoteResponse.result.length > 0) {
-      const quote = data.quoteResponse.result[0];
+    if (data) {
       return {
-        symbol: quote.symbol,
-        name: quote.longName || quote.shortName || quote.symbol,
-        price: quote.regularMarketPrice,
-        changePercent: quote.regularMarketChangePercent,
+        symbol: symbol,
+        name: symbol, // name is not directly available in this API response, so using symbol as a placeholder
+        price: data.c, // current price
+        changePercent: data.dp, // percentage change
       };
     } else {
       return null;
