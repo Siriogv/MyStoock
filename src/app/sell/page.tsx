@@ -19,6 +19,13 @@ export default function SellPage() {
     // TODO: Implement search from portfolio logic here
     const info = await getStockInfo(symbol);
     setStockInfo(info);
+     if (!info) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to retrieve stock information. Please check the symbol and try again.",
+      });
+    }
   };
 
   const handleSell = () => {
@@ -66,6 +73,12 @@ export default function SellPage() {
         <div className="mb-4">
           <p>Name: {stockInfo.name}</p>
           <p>Price: {stockInfo.price}</p>
+            <p>
+              Change Percent:
+              <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
+                {stockInfo.changePercent.toFixed(2)}%
+              </span>
+            </p>
         </div>
       )}
 
@@ -87,4 +100,3 @@ export default function SellPage() {
     </div>
   );
 }
-/
