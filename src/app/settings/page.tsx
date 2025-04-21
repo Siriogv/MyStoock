@@ -15,41 +15,50 @@ import {useToast} from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
-import { useSession } from "next-auth/react";
-import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import { firebaseApp } from "@/services/firebase";
-import { initializeApp } from 'firebase/app';
-import { getApp } from 'firebase/app';
+// import { useSession } from "next-auth/react"; // Removed next-auth
+import {TextDatabase} from "@/services/text-database";
 
 
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
   const { i18n, isInitialized } = useI18n();
-  const { data: session } = useSession()
+  //const { data: session } = useSession() // Removed next-auth
 
-  const [currency, setCurrency] = useLocalStorage("currency", "EUR");
-  const [market, setMarket] = useLocalStorage("market", "NYSE");
-  const [theme, setTheme] = useLocalStorage("theme", "light");
-  const [commissionType, setCommissionType] = useLocalStorage("commissionType", "fixed");
-  const [commissionValue, setCommissionValue] = useLocalStorage("commissionValue", "5");
-  const [language, setLanguage] = useLocalStorage("language", i18n.language);
-  const [db, setDb] = useState<any>(null);
-  const [auth, setAuth] = useState<any>(null);
-
+  const [currency, setCurrency] = useState("EUR");
+  const [market, setMarket] = useState("NYSE");
+  const [theme, setTheme] = useState("light");
+  const [commissionType, setCommissionType] = useState("fixed");
+  const [commissionValue, setCommissionValue] = useState("5");
+  const [language, setLanguage] = useState(i18n.language);
+  const [textDb, setTextDb] = useState<TextDatabase>(new TextDatabase());
 
   useEffect(() => {
-    try {
-      initializeApp(firebaseApp);
-      setDb(getFirestore(getApp()));
-      setAuth(getAuth(getApp()));
-    } catch (e: any) {
-      console.error("Firebase configuration is not valid. Check your environment variables.");
-    }
-  }, []);
+      const loadSettings = async () => {
+          try {
+              const settings = await textDb.loadSettings();
+              if (settings) {
+                  setCurrency(settings.currency);
+                  setMarket(settings.market);
+                  setTheme(settings.theme);
+                  setCommissionType(settings.commissionType);
+                  setCommissionValue(settings.commissionValue);
+                  setLanguage(settings.language);
+              }
+          } catch (error) {
+              console.error("Failed to load settings:", error);
+              toast({
+                  variant: "destructive",
+                  title: "Error",
+                  description: "Failed to load settings. Please try again.",
+              });
+          }
+      };
 
-  useEffect(() => {
+      loadSettings();
+  }, [toast, textDb]);
+
+   useEffect(() => {
     if (language && i18n.language !== language && isInitialized) {
       i18n.changeLanguage(language);
     }
@@ -60,30 +69,36 @@ export default function SettingsPage() {
   };
 
   const handleSaveSettings = async () => {
-    if (!session?.user?.email) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You must be logged in to save settings.",
-      });
-      return;
-    }
-    try {
-        // TODO: Implement save settings logic here
-        // save settings to the database
-        toast({
-          title: "Settings Saved",
-          description: "Your settings have been saved successfully.",
-        });
+    // if (!session?.user?.email) { // Removed next-auth
+    //   toast({
+    //     variant: "destructive",
+    //     title: "Error",
+    //     description: "You must be logged in to save settings.",
+    //   });
+    //   return;
+    // }
+      try {
+          await textDb?.saveSettings({
+              currency,
+              market,
+              theme,
+              commissionType,
+              commissionValue,
+              language,
+          });
 
-      } catch (error) {
-        console.error("Failed to save settings:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to save settings. Please try again.",
-        });
-      }
+          toast({
+            title: "Settings Saved",
+            description: "Your settings have been saved successfully.",
+          });
+        } catch (error) {
+          console.error("Failed to save settings:", error);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Failed to save settings. Please try again.",
+          });
+        }
   };
 
   return (
@@ -184,3 +199,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
