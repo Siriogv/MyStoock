@@ -1,6 +1,7 @@
 // src/services/finance.ts
+// npm install cheerio
 import axios from 'axios';
-import { load } from 'cheerio';
+//import { load } from 'cheerio';
 
 /**
  * Represents stock information.
@@ -46,18 +47,22 @@ export async function getStockInfo(query: string, market: string = 'NASDAQ'): Pr
       },
     });
 
-    const html = response.data;
-    const $ = load(html);
+    //const html = response.data;
+    //const $ = load(html);
 
     // Nome completo titolo
-    const name = $("div.zzDege").first().text().trim();
+    //const name = $("div.zzDege").first().text().trim();
+    const name = "TODO"
 
     // Prezzo attuale
-    const price = $("div.YMlKec.fxKbKc").first().text().trim();
+    //const price = $("div.YMlKec.fxKbKc").first().text().trim();
+	const price = "TODO";
 
     // Variazione giornaliera e percentuale
-    const changeText = $("div.JwB6zf").first().text().trim();
-    const [change, changePercent] = changeText.split(" ");
+    //const changeText = $("div.JwB6zf").first().text().trim();
+    //const [change, changePercent] = changeText.split(" ");
+	const change = "TODO";
+	const changePercent = "TODO";
 
     return {
       symbol: query, // or extract from the page if available
@@ -71,3 +76,4 @@ export async function getStockInfo(query: string, market: string = 'NASDAQ'): Pr
     return null;
   }
 }
+
