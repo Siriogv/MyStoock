@@ -66,7 +66,7 @@ export default function SellPage() {
        <div className="flex items-center mb-4">
         <Input
           type="text"
-          placeholder="Enter stock symbol from your portfolio"
+          placeholder="Enter stock symbol or name from your portfolio"
           value={symbol}
           onChange={(e) => setSymbol(e.target.value)}
           className="mr-2"
@@ -79,6 +79,7 @@ export default function SellPage() {
               <SelectItem value="NASDAQ">NASDAQ</SelectItem>
               <SelectItem value="NYSE">NYSE</SelectItem>
               <SelectItem value="BOM">BOM</SelectItem>
+               <SelectItem value="MIL">MIL</SelectItem>
               {/* Add more markets as needed */}
             </SelectContent>
           </Select>
