@@ -7,6 +7,13 @@ import { Search } from "lucide-react";
 import {getStockInfo, Stock} from "@/services/finance";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function SellPage() {
   const [symbol, setSymbol] = useState('');
@@ -14,10 +21,11 @@ export default function SellPage() {
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+  const [market, setMarket] = useState('NASDAQ'); // Default market
 
   const handleSearch = async () => {
     // TODO: Implement search from portfolio logic here
-    const info = await getStockInfo(symbol);
+    const info = await getStockInfo(symbol, market);
     setStockInfo(info);
      if (!info) {
       toast({
@@ -55,7 +63,7 @@ export default function SellPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Sell Stock</h1>
-      <div className="flex items-center mb-4">
+       <div className="flex items-center mb-4">
         <Input
           type="text"
           placeholder="Enter stock symbol from your portfolio"
@@ -63,7 +71,18 @@ export default function SellPage() {
           onChange={(e) => setSymbol(e.target.value)}
           className="mr-2"
         />
-        <Button onClick={handleSearch}>
+         <Select value={market} onValueChange={setMarket}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Market" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NASDAQ">NASDAQ</SelectItem>
+              <SelectItem value="NYSE">NYSE</SelectItem>
+              <SelectItem value="BOM">BOM</SelectItem>
+              {/* Add more markets as needed */}
+            </SelectContent>
+          </Select>
+        <Button onClick={handleSearch} className="ml-2">
           <Search className="mr-2 h-4 w-4" />
           Search
         </Button>
@@ -76,7 +95,7 @@ export default function SellPage() {
             <p>
               Change Percent:
               <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
-                {stockInfo.changePercent.toFixed(2)}%
+                {stockInfo.changePercent}
               </span>
             </p>
         </div>
