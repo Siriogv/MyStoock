@@ -13,7 +13,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { firebaseConfig } from "@/services/firebase";
 
 // Initialize Firebase if it hasn't been initialized yet
-if (!getApps().length) {
+if (!getApps().length && firebaseConfig && firebaseConfig.apiKey) {
   initializeApp(firebaseConfig);
 }
 
@@ -34,11 +34,23 @@ export default function SettingsPage() {
     router.push('/');
   };
 
-  const db = getFirestore();
-  const auth = getAuth();
+  const [db, setDb] = useState<any>(null);
+  const [auth, setAuth] = useState<any>(null);
+
+  useEffect(() => {
+    if (firebaseConfig && firebaseConfig.apiKey) {
+      setDb(getFirestore());
+      setAuth(getAuth());
+    } else {
+      console.error("Firebase configuration is not valid. Check your environment variables.");
+    }
+  }, []);
+
 
   useEffect(() => {
     const loadSettings = async () => {
+      if (!auth) return;
+
       const user = auth.currentUser;
       if (user) {
         const docRef = doc(db, "users", user.uid);
@@ -57,10 +69,21 @@ export default function SettingsPage() {
       }
     };
 
-    loadSettings();
-  }, [auth.currentUser, db, i18n]);
+    if (db && auth) {
+      loadSettings();
+    }
+  }, [auth, db, i18n]);
 
   const handleSaveSettings = async () => {
+    if (!auth) {
+      toast({
+        variant: "destructive",
+        title: t("Error"),
+        description: t("Firebase not initialized. Check your environment variables."),
+      });
+      return;
+    }
+
     const user = auth.currentUser;
     if (user) {
       try {
