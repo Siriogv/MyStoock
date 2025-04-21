@@ -15,12 +15,19 @@ import {useToast} from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
+import { useSession } from "next-auth/react";
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { firebaseApp } from "@/services/firebase";
+import { initializeApp } from 'firebase/app';
+import { getApp } from 'firebase/app';
+
 
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
-  const { i18n } = useI18n();
-
+  const { i18n, isInitialized } = useI18n();
+  const { data: session } = useSession()
 
   const [currency, setCurrency] = useLocalStorage("currency", "EUR");
   const [market, setMarket] = useLocalStorage("market", "NYSE");
@@ -28,23 +35,55 @@ export default function SettingsPage() {
   const [commissionType, setCommissionType] = useLocalStorage("commissionType", "fixed");
   const [commissionValue, setCommissionValue] = useLocalStorage("commissionValue", "5");
   const [language, setLanguage] = useLocalStorage("language", i18n.language);
+  const [db, setDb] = useState<any>(null);
+  const [auth, setAuth] = useState<any>(null);
+
+
+  useEffect(() => {
+    try {
+      initializeApp(firebaseApp);
+      setDb(getFirestore(getApp()));
+      setAuth(getAuth(getApp()));
+    } catch (e: any) {
+      console.error("Firebase configuration is not valid. Check your environment variables.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (language && i18n.language !== language && isInitialized) {
+      i18n.changeLanguage(language);
+    }
+  }, [language, i18n, isInitialized]);
 
   const goBackToDashboard = () => {
     router.push('/');
   };
 
-  useEffect(() => {
-    if (language && i18n.language !== language) {
-      i18n.changeLanguage(language);
-    }
-  }, [language, i18n]);
-
-
   const handleSaveSettings = async () => {
-    toast({
-      title: "Settings Saved",
-      description: "Your settings have been saved successfully.",
-    });
+    if (!session?.user?.email) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You must be logged in to save settings.",
+      });
+      return;
+    }
+    try {
+        // TODO: Implement save settings logic here
+        // save settings to the database
+        toast({
+          title: "Settings Saved",
+          description: "Your settings have been saved successfully.",
+        });
+
+      } catch (error) {
+        console.error("Failed to save settings:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to save settings. Please try again.",
+        });
+      }
   };
 
   return (
