@@ -9,6 +9,14 @@ import { useToast } from "@/hooks/use-toast";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { useTranslation } from 'react-i18next';
+import { initializeApp, getApps } from "firebase/app";
+import { firebaseConfig } from "@/services/firebase";
+
+// Initialize Firebase if it hasn't been initialized yet
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
+
 
 export default function SettingsPage() {
   const router = useRouter();
