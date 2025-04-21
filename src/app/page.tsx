@@ -55,7 +55,7 @@ export default function Home() {
         <SidebarRail>
           {/*<SidebarTrigger asChild>*/}
           {/*  <Button variant="ghost" size="icon" aria-label="Collapse sidebar">*/}
-          {/*    <Icons.chevronLeft className="h-4 w-4" />*/}
+          {/*    <Icons.chevronLeft className="h-4 w-4" />
           {/*  </Button>*/}
           {/*</SidebarTrigger>*/}
         </SidebarRail>
@@ -64,16 +64,20 @@ export default function Home() {
             <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="#" isActive>
-                  <Icons.home className="mr-2 h-4 w-4" />
-                  <span>Overview</span>
-                </SidebarMenuButton>
+                <Link href="/" passHref>
+                  <SidebarMenuButton href="#" isActive>
+                    <Icons.home className="mr-2 h-4 w-4" />
+                    <span>Overview</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/transaction-history">
-                  <Icons.workflow className="mr-2 h-4 w-4" />
-                  <span>Transaction History</span>
-                </SidebarMenuButton>
+                <Link href="/transaction-history" passHref>
+                  <SidebarMenuButton href="/transaction-history">
+                    <Icons.workflow className="mr-2 h-4 w-4" />
+                    <span>Transaction History</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
@@ -82,16 +86,20 @@ export default function Home() {
             <SidebarGroupLabel>Trade</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/buy">
-                  <Icons.building className="mr-2 h-4 w-4" />
-                  <span>Buy Stock</span>
-                </SidebarMenuButton>
+                <Link href="/buy" passHref>
+                  <SidebarMenuButton href="/buy">
+                    <Icons.building className="mr-2 h-4 w-4" />
+                    <span>Buy Stock</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/sell">
-                  <Icons.coins className="mr-2 h-4 w-4" />
-                  <span>Sell Stock</span>
-                </SidebarMenuButton>
+                <Link href="/sell" passHref>
+                  <SidebarMenuButton href="/sell">
+                    <Icons.coins className="mr-2 h-4 w-4" />
+                    <span>Sell Stock</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
@@ -100,10 +108,12 @@ export default function Home() {
             <SidebarGroupLabel>Simulation</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/simulate">
-                  <Icons.edit className="mr-2 h-4 w-4" />
-                  <span>Simulation Page</span>
-                </SidebarMenuButton>
+                <Link href="/simulate" passHref>
+                  <SidebarMenuButton href="/simulate">
+                    <Icons.edit className="mr-2 h-4 w-4" />
+                    <span>Simulation Page</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
@@ -112,10 +122,12 @@ export default function Home() {
             <SidebarGroupLabel>Settings</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="/settings">
-                  <Icons.settings className="mr-2 h-4 w-4" />
-                  <span>User Settings</span>
-                </SidebarMenuButton>
+                <Link href="/settings" passHref>
+                  <SidebarMenuButton href="/settings">
+                    <Icons.settings className="mr-2 h-4 w-4" />
+                    <span>User Settings</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
