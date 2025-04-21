@@ -49,7 +49,7 @@ export default function Home() {
         <SidebarHeader>
           <div className="flex items-center space-x-2">
             <Icons.logo className="h-6 w-6" />
-            <h1 className="text-lg font-semibold">PortafoglioSemplice</h1>
+            <h1 className="text-lg font-semibold">Stoock</h1>
           </div>
         </SidebarHeader>
         <SidebarRail>
