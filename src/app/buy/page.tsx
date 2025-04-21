@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import {getStockInfo, Stock} from "@/services/finance";
+import { useRouter } from 'next/navigation'; // Import useRouter
+import { getStockInfo, Stock } from "@/services/finance";
+import { useToast } from "@/hooks/use-toast";
 
 export default function BuyPage() {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
+  const router = useRouter(); // Initialize useRouter
+  const { toast } = useToast();
 
   const handleSearch = async () => {
     const info = await getStockInfo(symbol);
@@ -18,7 +22,26 @@ export default function BuyPage() {
 
   const handleBuy = () => {
     // TODO: Implement buy logic here
-    alert(`Buying ${quantity} shares of ${symbol}`);
+    if (stockInfo) {
+      // For now, just show a success message
+      toast({
+        title: "Success",
+        description: `Successfully bought ${quantity} shares of ${stockInfo.symbol}`,
+      });
+
+      // Redirect to the dashboard after successful buy
+      router.push('/');
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Stock information not found. Please search for a stock first.",
+      });
+    }
+  };
+
+  const goBackToDashboard = () => {
+    router.push('/');
   };
 
   return (
@@ -58,6 +81,7 @@ export default function BuyPage() {
           <Button onClick={handleBuy}>Buy</Button>
         </div>
       )}
+      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
     </div>
   );
 }
