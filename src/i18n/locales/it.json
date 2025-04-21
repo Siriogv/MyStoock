@@ -1,0 +1,23 @@
+{{
+  "User Settings": "Impostazioni Utente",
+  "Currency": "Valuta",
+  "Select Currency": "Seleziona Valuta",
+  "Market": "Mercato",
+  "Select Market": "Seleziona Mercato",
+  "Theme": "Tema",
+  "Select Theme": "Seleziona Tema",
+  "Language": "Lingua",
+  "Select Language": "Seleziona Lingua",
+  "Commission Type": "Tipo di Commissione",
+  "Fixed": "Fisso",
+  "Percentage": "Percentuale",
+  "Commission Value": "Valore Commissione",
+  "Enter commission value": "Inserisci valore commissione",
+  "Save Settings": "Salva Impostazioni",
+  "Back to Dashboard": "Torna alla Dashboard",
+  "Settings Saved": "Impostazioni Salva",
+  "Your settings have been saved successfully.": "Le tue impostazioni sono state salvate con successo.",
+  "Error": "Errore",
+  "Failed to save settings. Please try again.": "Impossibile salvare le impostazioni. Per favore riprova.",
+  "You must be logged in to save settings.": "Devi essere loggato per salvare le impostazioni."
+}

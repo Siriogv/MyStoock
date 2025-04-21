@@ -2,43 +2,101 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { i18n, t } = useTranslation();
 
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
   const [theme, setTheme] = useState("light");
   const [commissionType, setCommissionType] = useState("fixed");
   const [commissionValue, setCommissionValue] = useState("5");
+  const [language, setLanguage] = useState(i18n.language);
 
   const goBackToDashboard = () => {
     router.push('/');
   };
 
-  const handleSaveSettings = () => {
-    // TODO: Implement save settings logic here
-    toast({
-      title: "Settings Saved",
-      description: "Your settings have been saved successfully.",
-    });
+  const db = getFirestore();
+  const auth = getAuth();
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setCurrency(data.currency || "EUR");
+          setMarket(data.market || "NYSE");
+          setTheme(data.theme || "light");
+          setCommissionType(data.commissionType || "fixed");
+          setCommissionValue(data.commissionValue || "5");
+          setLanguage(data.language || i18n.language);
+          i18n.changeLanguage(data.language || i18n.language);
+        }
+      }
+    };
+
+    loadSettings();
+  }, [auth.currentUser, db, i18n]);
+
+  const handleSaveSettings = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          currency,
+          market,
+          theme,
+          commissionType,
+          commissionValue,
+          language,
+        });
+
+        i18n.changeLanguage(language);
+
+        toast({
+          title: t("Settings Saved"),
+          description: t("Your settings have been saved successfully."),
+        });
+      } catch (error: any) {
+        console.error("Error saving settings:", error);
+        toast({
+          variant: "destructive",
+          title: t("Error"),
+          description: t("Failed to save settings. Please try again."),
+        });
+      }
+    } else {
+      toast({
+        variant: "destructive",
+        title: t("Error"),
+        description: t("You must be logged in to save settings."),
+      });
+    }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">User Settings</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("User Settings")}</h1>
 
       <div className="mb-4">
-        <Label htmlFor="currency">Currency</Label>
+        <Label htmlFor="currency">{t("Currency")}</Label>
         <Select value={currency} onValueChange={setCurrency}>
           <SelectTrigger id="currency">
-            <SelectValue placeholder="Select Currency" />
+            <SelectValue placeholder={t("Select Currency")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="EUR">EUR</SelectItem>
@@ -49,10 +107,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="market">Market</Label>
+        <Label htmlFor="market">{t("Market")}</Label>
         <Select value={market} onValueChange={setMarket}>
           <SelectTrigger id="market">
-            <SelectValue placeholder="Select Market" />
+            <SelectValue placeholder={t("Select Market")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="NYSE">NYSE</SelectItem>
@@ -64,10 +122,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="theme">Theme</Label>
+        <Label htmlFor="theme">{t("Theme")}</Label>
         <Select value={theme} onValueChange={setTheme}>
           <SelectTrigger id="theme">
-            <SelectValue placeholder="Select Theme" />
+            <SelectValue placeholder={t("Select Theme")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="light">Light</SelectItem>
@@ -78,41 +136,53 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-4">
-        <Label>Commission Type</Label>
+        <Label htmlFor="language">{t("Language")}</Label>
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger id="language">
+            <SelectValue placeholder={t("Select Language")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="it">Italiano</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="mb-4">
+        <Label>{t("Commission Type")}</Label>
         <div className="flex items-center space-x-2">
           <Button
             variant={commissionType === "fixed" ? "default" : "outline"}
             onClick={() => setCommissionType("fixed")}
           >
-            Fixed
+            {t("Fixed")}
           </Button>
           <Button
             variant={commissionType === "percentage" ? "default" : "outline"}
             onClick={() => setCommissionType("percentage")}
           >
-            Percentage
+            {t("Percentage")}
           </Button>
         </div>
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="commissionValue">Commission Value</Label>
+        <Label htmlFor="commissionValue">{t("Commission Value")}</Label>
         <input
           type="number"
           id="commissionValue"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           value={commissionValue}
           onChange={(e) => setCommissionValue(e.target.value)}
-          placeholder="Enter commission value"
+          placeholder={t("Enter commission value")}
         />
       </div>
 
       <Button onClick={handleSaveSettings} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Save Settings
+        {t("Save Settings")}
       </Button>
 
-      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
+      <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
     </div>
   );
 }
-

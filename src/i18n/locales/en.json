@@ -1,0 +1,23 @@
+{{
+    "User Settings": "User Settings",
+    "Currency": "Currency",
+    "Select Currency": "Select Currency",
+    "Market": "Market",
+    "Select Market": "Select Market",
+    "Theme": "Theme",
+    "Select Theme": "Select Theme",
+    "Language": "Language",
+    "Select Language": "Select Language",
+    "Commission Type": "Commission Type",
+    "Fixed": "Fixed",
+    "Percentage": "Percentage",
+    "Commission Value": "Commission Value",
+    "Enter commission value": "Enter commission value",
+    "Save Settings": "Save Settings",
+    "Back to Dashboard": "Back to Dashboard",
+    "Settings Saved": "Settings Saved",
+    "Your settings have been saved successfully.": "Your settings have been saved successfully.",
+    "Error": "Error",
+    "Failed to save settings. Please try again.": "Failed to save settings. Please try again.",
+    "You must be logged in to save settings.": "You must be logged in to save settings."
+}
