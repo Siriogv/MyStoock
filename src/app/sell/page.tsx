@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -15,94 +15,95 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface PortfolioStock {
+  symbol: string;
+  name: string;
+  price: string;
+  change: string;
+  changePercent: string;
+}
+
 export default function SellPage() {
-  const [symbol, setSymbol] = useState('');
+  const [selectedStock, setSelectedStock] = useState<PortfolioStock | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
   const { toast } = useToast();
   const router = useRouter();
-  const [market, setMarket] = useState('NASDAQ'); // Default market
+  const [portfolio, setPortfolio] = useState<PortfolioStock[]>([
+    { symbol: 'AAPL', name: 'Apple Inc.', price: '170.34', change: '+1.50', changePercent: '0.89%' },
+    { symbol: 'MSFT', name: 'Microsoft Corp.', price: '430.25', change: '-0.50', changePercent: '-0.12%' },
+    { symbol: 'GOOG', name: 'Alphabet Inc.', price: '150.70', change: '+0.25', changePercent: '0.17%' },
+    { symbol: 'NVDA', name: 'Nvidia Corp.', price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
+    { symbol: 'TSLA', name: 'Tesla, Inc.', price: '850.50', change: '+5.00', changePercent: '+0.59%' },
+  ]);
 
-  const handleSearch = async () => {
-    // TODO: Implement search from portfolio logic here
-    // For now, use a mock portfolio
-    const mockPortfolio = [
-      { symbol: 'AAPL', name: 'Apple Inc.', price: '170.34', change: '+1.50', changePercent: '0.89%' },
-      { symbol: 'MSFT', name: 'Microsoft Corp.', price: '430.25', change: '-0.50', changePercent: '-0.12%' },
-      { symbol: 'GOOG', name: 'Alphabet Inc.', price: '150.70', change: '+0.25', changePercent: '0.17%' },
-        { symbol: 'NVDA', name: 'Nvidia Corp.', price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
-      // Add more stocks to the mock portfolio as needed
-    ];
+  useEffect(() => {
+    if (selectedStock) {
+      setStockInfo({
+        symbol: selectedStock.symbol,
+        name: selectedStock.name,
+        price: selectedStock.price,
+        change: selectedStock.change,
+        changePercent: selectedStock.changePercent,
+      });
+    }
+  }, [selectedStock]);
 
-    const foundStock = mockPortfolio.find(stock => stock.symbol.toUpperCase() === symbol.toUpperCase());
-
-    if (foundStock) {
-      setStockInfo(foundStock);
-        toast({
-          title: "Success",
-          description: `Stock ${foundStock.symbol} found in your portfolio.`,
-        });
+  const handleSell = () => {
+    if (stockInfo) {
+      toast({
+        title: "Success",
+        description: `Successfully sold ${quantity} shares of ${stockInfo.symbol}`,
+      });
+      router.push('/');
     } else {
-      setStockInfo(null);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Stock not found in your portfolio. Please check the symbol.",
+        description: "Stock information not found. Please select a stock first.",
       });
     }
   };
 
-  const handleSell = () => {
-    // TODO: Implement sell logic here
-    if (stockInfo) {
-          // For now, just show a success message
-          toast({
-            title: "Success",
-            description: `Successfully sold ${quantity} shares of ${stockInfo.symbol}`,
-          });
-
-          // Redirect to the dashboard after successful buy
-          router.push('/');
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Stock information not found. Please search for a stock first.",
-          });
-        }
-  };
-
-   const goBackToDashboard = () => {
+  const goBackToDashboard = () => {
     router.push('/');
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Sell Stock</h1>
-       <div className="flex items-center mb-4">
-        <Input
-          type="text"
-          placeholder="Enter stock symbol or name from your portfolio"
-          value={symbol}
-          onChange={(e) => setSymbol(e.target.value)}
-          className="mr-2"
-        />
-        <Button onClick={handleSearch} className="ml-2">
-          <Search className="mr-2 h-4 w-4" />
-          Search
-        </Button>
+
+      <div className="mb-4">
+        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+          Select Stock from Portfolio
+        </label>
+        <Select onValueChange={(value) => {
+          const stock = portfolio.find(s => s.symbol === value);
+          setSelectedStock(stock || null);
+        }}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a stock to sell" />
+          </SelectTrigger>
+          <SelectContent>
+            {portfolio.map((stock) => (
+              <SelectItem key={stock.symbol} value={stock.symbol}>
+                {stock.name} ({stock.symbol})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {stockInfo && (
         <div className="mb-4">
           <p>Name: {stockInfo.name}</p>
           <p>Price: {stockInfo.price}</p>
-            <p>
-              Change Percent:
-              <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
-                {stockInfo.changePercent}
-              </span>
-            </p>
+          <p>
+            Change Percent:
+            <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
+              {stockInfo.changePercent}
+            </span>
+          </p>
         </div>
       )}
 
@@ -120,7 +121,7 @@ export default function SellPage() {
         </div>
       )}
 
-       <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
+      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
     </div>
   );
 }
