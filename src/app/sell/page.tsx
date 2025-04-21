@@ -77,21 +77,16 @@ export default function SellPage() {
         <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
           Select Stock from Portfolio
         </label>
-        <Select onValueChange={(value) => {
-          const stock = portfolio.find(s => s.symbol === value);
-          setSelectedStock(stock || null);
-        }}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a stock to sell" />
-          </SelectTrigger>
-          <SelectContent>
-            {portfolio.map((stock) => (
-              <SelectItem key={stock.symbol} value={stock.symbol}>
-                {stock.name} ({stock.symbol})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        
+        {portfolio.map((stock) => (
+          <div key={stock.symbol} className="mb-2 p-2 border rounded">
+            <Button variant="link" onClick={() => setSelectedStock(stock)}>
+              {stock.name} ({stock.symbol})
+            </Button>
+            <p>Price: {stock.price}</p>
+            <p>Change: {stock.change} ({stock.changePercent})</p>
+          </div>
+        ))}
       </div>
 
       {stockInfo && (
