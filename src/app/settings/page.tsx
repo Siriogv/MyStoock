@@ -6,17 +6,29 @@ import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { getAuth } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { useTranslation } from 'react-i18next';
-import { initializeApp, getApps } from "firebase/app";
-import { firebaseConfig } from "@/services/firebase";
+import fs from 'fs/promises';
+import path from 'path';
 
-// Initialize Firebase if it hasn't been initialized yet
-if (!getApps().length && firebaseConfig && firebaseConfig.apiKey) {
-  initializeApp(firebaseConfig);
+const settingsFilePath = path.join(process.cwd(), 'settings.json');
+
+async function readSettingsFromFile(): Promise<{ [key: string]: string }> {
+  try {
+    const data = await fs.readFile(settingsFilePath, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error reading settings from file:", error);
+    return {};
+  }
 }
 
+async function saveSettingsToFile(settings: { [key: string]: string }): Promise<void> {
+  try {
+    await fs.writeFile(settingsFilePath, JSON.stringify(settings, null, 2), 'utf8');
+  } catch (error) {
+    console.error("Error saving settings to file:", error);
+  }
+}
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -34,87 +46,49 @@ export default function SettingsPage() {
     router.push('/');
   };
 
-  const [db, setDb] = useState<any>(null);
-  const [auth, setAuth] = useState<any>(null);
-
-  useEffect(() => {
-    if (firebaseConfig && firebaseConfig.apiKey) {
-      setDb(getFirestore());
-      setAuth(getAuth());
-    } else {
-      console.error("Firebase configuration is not valid. Check your environment variables.");
-    }
-  }, []);
-
-
   useEffect(() => {
     const loadSettings = async () => {
-      if (!auth) return;
-
-      const user = auth.currentUser;
-      if (user) {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setCurrency(data.currency || "EUR");
-          setMarket(data.market || "NYSE");
-          setTheme(data.theme || "light");
-          setCommissionType(data.commissionType || "fixed");
-          setCommissionValue(data.commissionValue || "5");
-          setLanguage(data.language || i18n.language);
-          i18n.changeLanguage(data.language || i18n.language);
-        }
+      try {
+        const settings = await readSettingsFromFile();
+        setCurrency(settings.currency || "EUR");
+        setMarket(settings.market || "NYSE");
+        setTheme(settings.theme || "light");
+        setCommissionType(settings.commissionType || "fixed");
+        setCommissionValue(settings.commissionValue || "5");
+        setLanguage(settings.language || i18n.language);
+        i18n.changeLanguage(settings.language || i18n.language);
+      } catch (error) {
+        console.error("Error loading settings:", error);
       }
     };
 
-    if (db && auth) {
-      loadSettings();
-    }
-  }, [auth, db, i18n]);
+    loadSettings();
+  }, [i18n]);
 
   const handleSaveSettings = async () => {
-    if (!auth) {
+    try {
+      const settings = {
+        currency,
+        market,
+        theme,
+        commissionType,
+        commissionValue,
+        language,
+      };
+
+      await saveSettingsToFile(settings);
+      i18n.changeLanguage(language);
+
       toast({
-        variant: "destructive",
-        title: t("Error"),
-        description: t("Firebase not initialized. Check your environment variables."),
+        title: t("Settings Saved"),
+        description: t("Your settings have been saved successfully."),
       });
-      return;
-    }
-
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        await setDoc(doc(db, "users", user.uid), {
-          currency,
-          market,
-          theme,
-          commissionType,
-          commissionValue,
-          language,
-        });
-
-        i18n.changeLanguage(language);
-
-        toast({
-          title: t("Settings Saved"),
-          description: t("Your settings have been saved successfully."),
-        });
-      } catch (error: any) {
-        console.error("Error saving settings:", error);
-        toast({
-          variant: "destructive",
-          title: t("Error"),
-          description: t("Failed to save settings. Please try again."),
-        });
-      }
-    } else {
+    } catch (error: any) {
+      console.error("Error saving settings:", error);
       toast({
         variant: "destructive",
         title: t("Error"),
-        description: t("You must be logged in to save settings."),
+        description: t("Failed to save settings. Please try again."),
       });
     }
   };
