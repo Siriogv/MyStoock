@@ -41,7 +41,6 @@ export default function Home() {
     <SidebarProvider>
       <Sidebar
         collapsible="icon"
-        defaultOpen
         style={{
           borderRight: "1px solid var(--border)",
         }}
@@ -129,4 +128,3 @@ export default function Home() {
     </SidebarProvider>
   );
 }
-
