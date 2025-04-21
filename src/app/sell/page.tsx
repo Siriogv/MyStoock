@@ -18,7 +18,7 @@ import {
 interface PortfolioStock {
   symbol: string;
   name: string;
-    quantity: number;
+  quantity: number;
   price: string;
   change: string;
   changePercent: string;
@@ -81,16 +81,15 @@ export default function SellPage() {
         
         {portfolio.map((stock) => (
           <div key={stock.symbol} className="mb-2 p-2 border rounded flex items-center justify-between">
-            <div>
+            <div className="flex items-center space-x-2">
               <Button variant="link" onClick={() => setSelectedStock(stock)}>
                 {stock.name} ({stock.symbol})
               </Button>
               <p className="text-sm">Price: {stock.price}</p>
               <p className="text-sm">Change: {stock.change} ({stock.changePercent})</p>
-            </div>
-            <div className="text-right">
               <p className="text-sm">Quantity: {stock.quantity}</p>
             </div>
+            
           </div>
         ))}
       </div>
@@ -126,3 +125,4 @@ export default function SellPage() {
     </div>
   );
 }
+
