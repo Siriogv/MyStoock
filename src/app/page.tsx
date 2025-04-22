@@ -1,8 +1,8 @@
 "use client";
 
-import {useEffect, useState, useCallback} from "react";
-import {useToast} from "@/hooks/use-toast";
-import {NewsSection} from "@/components/news-section";
+import { useEffect, useState, useCallback } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { NewsSection } from "@/components/news-section";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,9 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {useI18n} from "@/hooks/use-i18n";
-import {SidebarLayout} from "@/components/sidebar-layout";
-import {Stock} from "@/types";
+import { useI18n } from "@/hooks/use-i18n";
+import { SidebarLayout } from "@/components/sidebar-layout";
+import { Stock } from "@/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -45,7 +45,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import {SellStockModal} from "@/components/sell-stock-modal";
+import { SellStockModal } from "@/components/sell-stock-modal";
 
 const mockPortfolio = [
   {
@@ -112,12 +112,12 @@ const formatCurrency = (amount: number) => {
 };
 
 export default function Home() {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [portfolio, setPortfolio] = useState(mockPortfolio);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-  const {t} = useI18n();
+  const { t } = useI18n();
 
   useEffect(() => {
     setTimeout(() => {
@@ -173,7 +173,7 @@ export default function Home() {
           </div>
         </div>
 
-        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio}/>
+        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
 
         <SellStockModal
           isOpen={isSellModalOpen}
@@ -183,7 +183,7 @@ export default function Home() {
           portfolio={portfolio}
         />
 
-        <NewsSection/>
+        <NewsSection />
       </div>
     </SidebarLayout>
   );
@@ -197,12 +197,12 @@ interface SellStockModalProps {
   portfolio: Stock[];
 }
 
-const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellStockModalProps) => {
+const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: SellStockModalProps) => {
   const [sellPrice, setSellPrice] = useState<number | null>(null);
   const [commission, setCommission] = useState<number>(0);
   const [isFixedCommission, setIsFixedCommission] = useState(true);
-  const {toast} = useToast();
-  const {t} = useI18n();
+  const { toast } = useToast();
+  const { t } = useI18n();
 
   const handleSell = () => {
     if (!stock || !sellPrice) {
@@ -218,8 +218,8 @@ const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellS
     let commissionAmount = isFixedCommission ? commission : (stock.purchasePrice + sellPrice) * (commission / 100);
     // Calculate profit loss
     let profitLoss = (sellPrice - stock.purchasePrice) * stock.quantity - commissionAmount;
-    const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
-    const netProfit = profitLoss - tax;
+      const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
+      const netProfit = profitLoss - tax;
 
     // Update the portfolio by removing the sold stock
     const updatedPortfolio = portfolio.filter(item => item.symbol !== stock.symbol);
@@ -242,7 +242,7 @@ const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellS
         <DialogHeader>
           <DialogTitle>{t("Sell")} {stock.name}</DialogTitle>
           <DialogDescription>
-            {t("Are you sure you want to sell your shares of")} {stock.symbol}?
+              {t("Are you sure you want to sell your shares of")} {stock.symbol}?
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -274,9 +274,9 @@ const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellS
             <Label htmlFor="isFixedCommission" className="text-right">
               {t("Fixed Commission")}
             </Label>
-            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)}>
+            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)} >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder={t("Fixed or Percentage")}/>
+                <SelectValue placeholder={t("Fixed or Percentage")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="true">{t("Fixed")}</SelectItem>
@@ -308,120 +308,122 @@ const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock 
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const {t} = useI18n();
+  const { t } = useI18n();
   const itemsPerPage = 5;
 
   const columns: ColumnDef<Stock>[] = React.useMemo(() => [
       {
           accessorKey: 'symbol',
-          header: ({column}) => (
-            <>
-              {t("Symbol")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
-          ),
+          header: ({ column }) => {
+            return (
+              <>
+                {t("Symbol")}
+                {column.getIsSorted()
+                  ? column.getIsSorted() === 'asc'
+                    ? ' 🔽'
+                    : ' 🔼'
+                  : null}
+              </>
+            );
+          },
       },
       {
           accessorKey: 'name',
-          header: ({column}) => (
-            <>
-              {t("Name")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Name")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
       {
           accessorKey: 'quantity',
-          header: ({column}) => (
-            <>
-              {t("Quantity")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Quantity")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
       {
           accessorKey: 'purchasePrice',
-          header: ({column}) => (
-            <>
-              {t("Purchase Price")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Purchase Price")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
       {
           accessorKey: 'currentPrice',
-          header: ({column}) => (
-            <>
-              {t("Current Price")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Current Price")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
       {
           accessorKey: 'changePercent',
-          header: ({column}) => (
-            <>
-              {t("Daily %")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Daily %")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
-          cell: ({row}) => {
+          cell: ({ row }) => {
               const value = row.getValue<number>('changePercent');
               return (
-                
-                  {value}%
-                
+                  <>
+                      {value}%
+                  </>
               );
           },
       },
       {
           accessorKey: 'capitalization',
-          header: ({column}) => (
-            <>
-              {t("Capitalization")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Capitalization")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
       {
           accessorKey: 'market',
-          header: ({column}) => (
-            <>
-              {t("Market")}
-              {column.getIsSorted()
-                ? column.getIsSorted() === 'asc'
-                  ? ' 🔽'
-                  : ' 🔼'
-                : null}
-            </>
+          header: ({ column }) => (
+              <>
+                  {t("Market")}
+                  {column.getIsSorted()
+                      ? column.getIsSorted() === 'asc'
+                          ? ' 🔽'
+                          : ' 🔼'
+                      : null}
+              </>
           ),
       },
   ], [t]);
@@ -458,60 +460,61 @@ const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock 
   };
 
   return (
-    
       
-        
           
-            
-                {table.getHeaderGroups().map((headerGroup) => (
+              
                   
-                    {headerGroup.headers.map((header) => {
+                      {table.getHeaderGroups().map((headerGroup) => (
+                          
+                              {headerGroup.headers.map((header) => {
+                                  return (
+                                      
+                                          {header.isPlaceholder
+                                              ? null
+                                              : flexRender(
+                                                  header.column.columnDef.header,
+                                                  header.getContext()
+                                              )}
+                                      
+                                  );
+                              })}
+                          
+                      ))}
+                  
+              
+              
+                  {table.getRowModel().rows.slice(startIndex, endIndex).map(row => {
                       return (
-                        
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        
+                          
+                              {row.getVisibleCells().map(cell => {
+                                  return (
+                                      
+                                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                      
+                                  );
+                              })}
+                          
                       );
-                    })}
-                  
-                ))}
-            
-          
-          
-            {table.getRowModel().rows.slice(startIndex, endIndex).map(row => {
-              return (
-                
-                  {row.getVisibleCells().map(cell => {
-                    return (
-                      
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      
-                    );
                   })}
-                
-              );
-            })}
+              
           
-        
       
 
       
-        <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        
-          Page {currentPage} of {totalPages}
-        
-        <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-          Next
-        </Button>
+          <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
+              Previous
+          </Button>
+          
+              Page {currentPage} of {totalPages}
+          
+          <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
+              Next
+          </Button>
       
     
   );
 };
 
 export { TableComponent, calculateProfit, mockPortfolio };
+"
+
