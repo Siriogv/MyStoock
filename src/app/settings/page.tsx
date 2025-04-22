@@ -2,7 +2,7 @@
 
 import {Button} from "@/components/ui/button";
 import {useRouter} from 'next/navigation';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import {
   Select,
   SelectContent,
@@ -41,7 +41,7 @@ const formSchema = z.object({
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
-  const {i18n, isInitialized, t, changeLanguage} = useI18n();
+  const {t, i18n, isInitialized, changeLanguage} = useI18n();
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
   const [theme, setTheme] = useState("light");
@@ -291,30 +291,30 @@ export default function SettingsPage() {
             <div className="md:col-span-1">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="commissionType" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
-                    <Select value={commissionType} onValueChange={setCommissionType}>
-                      <SelectTrigger id="commissionType" className="w-full">
-                        <SelectValue placeholder={t("Select Commission Type")}/>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fixed">{t("Fixed")}</SelectItem>
-                        <SelectItem value="percentage">{t("Percentage")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <div className="w-1/2 mr-2">
+                        <Label htmlFor="commissionType" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
+                        <Select value={commissionType} onValueChange={setCommissionType}>
+                            <SelectTrigger id="commissionType" className="w-full">
+                                <SelectValue placeholder={t("Select Commission Type")}/>
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="fixed">{t("Fixed")}</SelectItem>
+                                <SelectItem value="percentage">{t("Percentage")}</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                  <div>
-                    <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Value")}</Label>
-                    <Input
-                      type="number"
-                      id="commissionValue"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      value={commissionValue}
-                      onChange={(e) => setCommissionValue(e.target.value)}
-                      placeholder={t("Enter commission value")}
-                    />
-                  </div>
+                    <div className="w-1/2">
+                        <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Value")}</Label>
+                        <Input
+                            type="number"
+                            id="commissionValue"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            value={commissionValue}
+                            onChange={(e) => setCommissionValue(e.target.value)}
+                            placeholder={t("Enter commission value")}
+                        />
+                    </div>
                 </div>
 
                 <div>
@@ -332,18 +332,18 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="md:flex md:items-center md:justify-between mt-8">
-            <Button type="submit">
-              {t("Save Settings")}
-            </Button>
-            <Button variant="secondary" onClick={goBackToDashboard}>
-              {t("Back to Dashboard")}
-            </Button>
+          <div className="md:flex md:items-center md:justify-end mt-8">
+              <div className="md:mr-auto">
+                  <Button variant="secondary" onClick={goBackToDashboard}>
+                      {t("Back to Dashboard")}
+                  </Button>
+              </div>
+              <Button type="submit">
+                  {t("Save Settings")}
+              </Button>
           </div>
         </form>
       </Form>
     </div>
   );
 }
-
-
