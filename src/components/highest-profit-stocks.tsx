@@ -32,6 +32,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {PortfolioStock} from "@/types";
+import { SellStockModal } from "@/components/sell-stock-modal";
 
 export interface Stock {
     symbol: string;
@@ -98,37 +99,37 @@ export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOr
     };
 
     return (
-
+        
             
                 
                     
                         
                             
-                                {`${t("Symbol")} ${sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Name")} ${sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Quantity")} ${sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Purchase Price")} ${sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Current Price")} ${sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                              
-                                {`${t("Daily %")} ${sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Daily %")} {sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Profit")} ${sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Profit")} {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Market")} ${sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
-                                {`${t("Capitalization")} ${sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                                {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
                             
                             
                                 {t("Actions")}
