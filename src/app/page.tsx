@@ -1,13 +1,11 @@
-"use client";
+;"use client";
 
 import {useEffect, useState, useCallback} from "react";
 import {useToast} from "@/hooks/use-toast";
-import {NewsSection} from "@/components/news-section"; // Import the NewsSection component
-import {HighestProfitStocks} from "@/components/highest-profit-stocks";
+import {NewsSection} from "@/components/news-section";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -35,6 +33,18 @@ import {
 import {useI18n} from "@/hooks/use-i18n";
 import {SidebarLayout} from "@/components/sidebar-layout";
 import {Stock} from "@/types";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
 
 const mockPortfolio = [
   {
@@ -286,3 +296,221 @@ const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellS
     </Dialog>
   );
 };
+
+interface TableComponentProps {
+  portfolio: Stock[];
+  onSellStock: (stock: Stock) => void;
+}
+
+const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock }) => {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const {t} = useI18n();
+  const itemsPerPage = 5;
+
+  const columns: ColumnDef<Stock>[] = React.useMemo(() => [
+      {
+          accessorKey: 'symbol',
+          header: ({column}) => (
+            
+              {t("Symbol")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'name',
+          header: ({column}) => (
+            
+              {t("Name")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'quantity',
+          header: ({column}) => (
+            
+              {t("Quantity")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'purchasePrice',
+          header: ({column}) => (
+            
+              {t("Purchase Price")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'currentPrice',
+          header: ({column}) => (
+            
+              {t("Current Price")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'changePercent',
+          header: ({column}) => (
+            
+              {t("Daily %")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+          cell: ({row}) => {
+              const value = row.getValue<number>('changePercent');
+              return (
+                
+                  {value}%
+                
+              );
+          },
+      },
+      {
+          accessorKey: 'capitalization',
+          header: ({column}) => (
+            
+              {t("Capitalization")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+      {
+          accessorKey: 'market',
+          header: ({column}) => (
+            
+              {t("Market")}
+              {column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? ' 🔽'
+                  : ' 🔼'
+                : null}
+            
+          ),
+      },
+  ], [t]);
+
+  const table = useReactTable({
+      data: portfolio,
+      columns,
+      state: {
+          sorting,
+          columnVisibility,
+          columnFilters,
+      },
+      enableRowSelection: false,
+      onSortingChange: setSorting,
+      onColumnVisibilityChange: setColumnVisibility,
+      onColumnFiltersChange: setColumnFilters,
+      getCoreRowModel: getCoreRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      debugTable: true,
+  });
+
+  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const goToPreviousPage = () => {
+      setCurrentPage(currentPage => Math.max(1, currentPage - 1));
+  };
+
+  const goToNextPage = () => {
+      setCurrentPage(currentPage => Math.min(totalPages, currentPage + 1));
+  };
+
+  return (
+    
+      
+        
+          
+            
+                {table.getHeaderGroups().map((headerGroup) => (
+                  
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        
+                      );
+                    })}
+                  
+                ))}
+            
+          
+          
+            {table.getRowModel().rows.slice(startIndex, endIndex).map(row => {
+              return (
+                
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      
+                    );
+                  })}
+                
+              );
+            })}
+          
+        
+      
+
+      
+        <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
+          Previous
+        </Button>
+        
+          Page {currentPage} of {totalPages}
+        
+        <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
+          Next
+        </Button>
+      
+    
+  );
+};
+
+export { TableComponent, calculateProfit, mockPortfolio };

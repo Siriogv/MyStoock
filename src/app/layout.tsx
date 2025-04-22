@@ -1,12 +1,14 @@
-'use client';
+'use client'
 
 import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {SidebarLayout} from "@/components/sidebar-layout";
-
+import {I18nextProvider} from "react-i18next";
+import i18n from "@/i18n/i18n";
+import { useI18n } from "@/hooks/use-i18n";
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -28,15 +30,19 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const {i18n} = useI18n();
+
     return (
-        <html lang={'en'}>
+        <html lang={i18n?.language || 'en'}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-            <SidebarLayout>
-                {children}
-                <Toaster/>
-            </SidebarLayout>
-        </Providers>
+
+            <Providers>
+                <SidebarLayout>
+                    {children}
+                    <Toaster/>
+                </SidebarLayout>
+            </Providers>
+
         </body>
         </html>
     );
@@ -44,11 +50,8 @@ export default function RootLayout({
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <>
+        <I18nextProvider i18n={i18n}>
             {children}
-        </>
+        </I18nextProvider>
     )
 }
-
-
-

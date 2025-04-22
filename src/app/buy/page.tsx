@@ -119,15 +119,15 @@ interface StockSearchInputProps {
 
 function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch, t }: StockSearchInputProps) {
   return (
-    <div className="flex items-center mb-4">
+    <div className="flex flex-wrap items-center mb-4">
       <Input
         type="text"
         placeholder={t("Enter stock symbol or name")}
         value={symbol}
         onChange={(e) => setSymbol(e.target.value)}
-        className="mr-2"
+        className="mr-2 mb-2 md:mb-0"
       />
-      <Select value={market} onValueChange={setMarket}>
+      <Select value={market} onValueChange={setMarket} className="mr-2 mb-2 md:mb-0">
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder={t("Select Market")} />
         </SelectTrigger>
@@ -152,7 +152,7 @@ interface StockInfoDisplayProps {
 
 function StockInfoDisplay({ stockInfo }: StockInfoDisplayProps) {
   return (
-    <div>
+    <div className="w-full">
       <p>{t("Name")}: {stockInfo.name}</p>
       <p>{t("Price")}: {stockInfo.price}</p>
       <p>
@@ -174,7 +174,7 @@ interface QuantityInputProps {
 
 function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputProps) {
   return (
-    <div>
+    <div className="w-full">
       <label htmlFor="quantity" className="mr-2 block">{t("Quantity")}:</label>
       <Input
         type="number"
@@ -187,3 +187,4 @@ function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputPro
     </div>
   );
 }
+

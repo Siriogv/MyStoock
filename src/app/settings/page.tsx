@@ -167,6 +167,10 @@ export default function SettingsPage() {
     }
   };
 
+  const goBackToDashboard = () => {
+    router.push('/');
+  };
+
   return (
     <SidebarLayout>
       <div className="container mx-auto p-4">
@@ -343,3 +347,4 @@ export default function SettingsPage() {
     </SidebarLayout>
   );
 }
+

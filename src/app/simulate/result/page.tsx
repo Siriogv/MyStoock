@@ -11,6 +11,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ResponsiveContainer
 } from 'recharts';
 import { formatCurrency } from "@/lib/utils";
 import { useI18n } from "@/hooks/use-i18n";
@@ -61,20 +62,22 @@ export default function SimulationResultPage() {
                 <CardTitle className="text-xl text-center">{t("Profit and Loss Analysis")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <AreaChart width={500} height={400} data={data}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="name" />
-                  <YAxis tickFormatter={(value) => formatCurrency(value)}/>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <Tooltip formatter={(value) => formatCurrency(value)}/>
-                  <Area type="monotone" dataKey="value" stroke="#82ca9d" fillOpacity={1} fill="url(#profitGradient)" />
-                </AreaChart>
+                <ResponsiveContainer width="100%" height={400}>
+                  <AreaChart data={data}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" />
+                    <YAxis tickFormatter={(value) => formatCurrency(value)}/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip formatter={(value) => formatCurrency(value)}/>
+                    <Area type="monotone" dataKey="value" stroke="#82ca9d" fillOpacity={1} fill="url(#profitGradient)" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -102,3 +105,4 @@ export default function SimulationResultPage() {
     </SidebarLayout>
   );
 }
+
