@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useI18n } from "@/hooks/use-i18n";
 
 interface NewsArticle {
   title: string;
@@ -45,6 +46,7 @@ async function fetchNews(query: string = "finance") {
 export const NewsSection = () => {
   const [generalNews, setGeneralNews] = useState<NewsArticle[]>([]);
   const [portfolioNews, setPortfolioNews] = useState<NewsArticle[]>([]);
+    const {t} = useI18n();
 
   useEffect(() => {
     async function loadNews() {
@@ -75,7 +77,7 @@ export const NewsSection = () => {
     <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>General Finance News</CardTitle>
+          <CardTitle>{t("General Finance News")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ScrollArea className="h-[300px] w-full">
@@ -85,7 +87,7 @@ export const NewsSection = () => {
                   <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline">
                     {article.title}
                   </a>
-                  <p className="text-xs text-muted-foreground">Source: {article.source}</p>
+                  <p className="text-xs text-muted-foreground">{t("Source")}: {article.source}</p>
                 </div>
               ))}
             </div>
@@ -95,7 +97,7 @@ export const NewsSection = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Portfolio Stocks News</CardTitle>
+          <CardTitle>{t("Portfolio Stocks News")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ScrollArea className="h-[300px] w-full">
@@ -106,11 +108,11 @@ export const NewsSection = () => {
                     <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-sm hover:underline">
                       {article.title}
                     </a>
-                    <p className="text-xs text-muted-foreground">Source: {article.source}</p>
+                    <p className="text-xs text-muted-foreground">{t("Source")}: {article.source}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">No news found for your portfolio stocks.</p>
+                <p className="text-sm text-muted-foreground">{t("No news found for your portfolio stocks.")}</p>
               )}
             </div>
           </ScrollArea>
@@ -119,3 +121,4 @@ export const NewsSection = () => {
     </div>
   );
 };
+

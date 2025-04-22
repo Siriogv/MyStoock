@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useI18n } from "@/hooks/use-i18n";
 
 interface BuyPageProps {
     onBuySuccess?: () => void;
@@ -25,6 +26,7 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [market, setMarket] = useState('NASDAQ');
+  const { t } = useI18n();
 
   const handleSearch = async () => {
     try {
@@ -38,16 +40,16 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
       if (!info) {
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Failed to retrieve stock information. Please check the symbol and try again.",
+          title: t("Error"),
+          description: t("Failed to retrieve stock information. Please check the symbol and try again."),
         });
       }
     } catch (error: any) {
       console.error("Error fetching stock info:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to retrieve stock information.",
+        title: t("Error"),
+        description: error.message || t("Failed to retrieve stock information."),
       });
       setStockInfo(null);
     }
@@ -56,16 +58,16 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
   const handleBuy = () => {
     if (stockInfo) {
       toast({
-        title: "Success",
-        description: `Successfully bought ${quantity} shares of ${stockInfo.symbol}`,
+        title: t("Success"),
+        description: t("Successfully bought") + ` ${quantity} ` + t("shares of") + ` ${stockInfo.symbol}`,
       });
       onBuySuccess?.();
       router.push('/');
     } else {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Stock information not found. Please search for a stock first.",
+        title: t("Error"),
+        description: t("Stock information not found. Please search for a stock first."),
       });
     }
   };
@@ -76,13 +78,14 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Buy Stock</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("Buy Stock")}</h1>
       <StockSearchInput
         symbol={symbol}
         setSymbol={setSymbol}
         market={market}
         setMarket={setMarket}
         handleSearch={handleSearch}
+        t={t}
       />
 
       {stockInfo && (
@@ -92,11 +95,12 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
               quantity={quantity}
               setQuantity={setQuantity}
               handleBuy={handleBuy}
+              t={t}
             />
           </div>
       )}
 
-      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
+      <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
     </div>
   );
 }
@@ -107,21 +111,22 @@ interface StockSearchInputProps {
   market: string;
   setMarket: (market: string) => void;
   handleSearch: () => Promise<void>;
+    t: (key: string) => string;
 }
 
-function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch }: StockSearchInputProps) {
+function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch, t }: StockSearchInputProps) {
   return (
     <div className="flex items-center mb-4">
       <Input
         type="text"
-        placeholder="Enter stock symbol or name"
+        placeholder={t("Enter stock symbol or name")}
         value={symbol}
         onChange={(e) => setSymbol(e.target.value)}
         className="mr-2"
       />
       <Select value={market} onValueChange={setMarket}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Market" />
+          <SelectValue placeholder={t("Select Market")} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="NASDAQ">NASDAQ</SelectItem>
@@ -132,7 +137,7 @@ function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch }
       </Select>
       <Button onClick={handleSearch} className="ml-2">
         <Search className="mr-2 h-4 w-4" />
-        Search
+        {t("Search")}
       </Button>
     </div>
   );
@@ -145,10 +150,10 @@ interface StockInfoDisplayProps {
 function StockInfoDisplay({ stockInfo }: StockInfoDisplayProps) {
   return (
     <div>
-      <p>Name: {stockInfo.name}</p>
-      <p>Price: {stockInfo.price}</p>
+      <p>{t("Name")}: {stockInfo.name}</p>
+      <p>{t("Price")}: {stockInfo.price}</p>
       <p>
-        Change Percent:
+        {t("Change Percent")}:
         <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
           {stockInfo.changePercent}
         </span>
@@ -161,12 +166,13 @@ interface QuantityInputProps {
   quantity: number;
   setQuantity: (quantity: number) => void;
   handleBuy: () => void;
+    t: (key: string) => string;
 }
 
-function QuantityInput({ quantity, setQuantity, handleBuy }: QuantityInputProps) {
+function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputProps) {
   return (
     <div>
-      <label htmlFor="quantity" className="mr-2 block">Quantity:</label>
+      <label htmlFor="quantity" className="mr-2 block">{t("Quantity")}:</label>
       <Input
         type="number"
         id="quantity"
@@ -174,7 +180,8 @@ function QuantityInput({ quantity, setQuantity, handleBuy }: QuantityInputProps)
         onChange={(e) => setQuantity(Number(e.target.value))}
         className="w-24 mr-2"
       />
-      <Button onClick={handleBuy}>Buy</Button>
+      <Button onClick={handleBuy}>{t("Buy")}</Button>
     </div>
   );
 }
+

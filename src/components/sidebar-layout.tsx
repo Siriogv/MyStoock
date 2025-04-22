@@ -16,9 +16,11 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { useI18n } from "@/hooks/use-i18n";
 
 export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     const { toast } = useToast();
+    const { t } = useI18n();
 
     return (
         <div className="flex h-screen">
@@ -30,13 +32,13 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
             >
                 <SidebarContent>
                     <SidebarGroup>
-                        <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+                        <SidebarGroupLabel>{t("Dashboard")}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <Link href="/" passHref>
                                     <SidebarMenuButton href="#" isActive>
                                         <Icons.home className="mr-2 h-4 w-4" />
-                                        <span>Dashboard</span>
+                                        <span>{t("Dashboard")}</span>
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
@@ -44,7 +46,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                                 <Link href="/transaction-history" passHref>
                                     <SidebarMenuButton href="/transaction-history">
                                         <Icons.workflow className="mr-2 h-4 w-4" />
-                                        <span>Transaction History</span>
+                                        <span>{t("Transaction History")}</span>
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
@@ -52,13 +54,13 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                     </SidebarGroup>
 
                     <SidebarGroup>
-                        <SidebarGroupLabel>Trade</SidebarGroupLabel>
+                        <SidebarGroupLabel>{t("Trade")}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <Link href="/buy" passHref>
                                     <SidebarMenuButton href="/buy">
                                         <Icons.building className="mr-2 h-4 w-4" />
-                                        <span>Buy Stock</span>
+                                        <span>{t("Buy Stock")}</span>
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
@@ -66,13 +68,13 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                     </SidebarGroup>
 
                     <SidebarGroup>
-                        <SidebarGroupLabel>Simulation</SidebarGroupLabel>
+                        <SidebarGroupLabel>{t("Simulation")}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <Link href="/simulate" passHref>
                                     <SidebarMenuButton href="/simulate">
                                         <Icons.edit className="mr-2 h-4 w-4" />
-                                        <span>Simulation Page</span>
+                                        <span>{t("Simulation Page")}</span>
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
@@ -80,13 +82,13 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                     </SidebarGroup>
                     <SidebarSeparator />
                     <SidebarGroup>
-                        <SidebarGroupLabel>Settings</SidebarGroupLabel>
+                        <SidebarGroupLabel>{t("Settings")}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <Link href="/settings" passHref>
                                     <SidebarMenuButton href="/settings">
                                         <Icons.settings className="mr-2 h-4 w-4" />
-                                        <span>User Settings</span>
+                                        <span>{t("User Settings")}</span>
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
@@ -100,13 +102,13 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                         className="w-full"
                         onClick={() =>
                             toast({
-                                title: "Logged out!",
-                                description: "See you soon.",
+                                title: t("Logged out!"),
+                                description: t("See you soon."),
                             })
                         }
                     >
                         <Icons.logOut className="mr-2 h-4 w-4" />
-                        Logout
+                        {t("Logout")}
                     </Button>
                 </SidebarFooter>
             </Sidebar>
@@ -116,3 +118,4 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
     );
 };
+

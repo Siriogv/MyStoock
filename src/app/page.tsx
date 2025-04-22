@@ -32,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useI18n } from "@/hooks/use-i18n";
 
 const mockPortfolio = [
   { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500 , changePercent: 2},
@@ -58,6 +59,7 @@ export default function Home() {
   const [portfolio, setPortfolio] = useState(mockPortfolio);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+    const {t} = useI18n();
 
   useEffect(() => {
     setTimeout(() => {
@@ -91,24 +93,24 @@ export default function Home() {
   return (
     
         <div className="p-4">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold">{t("Dashboard")}</h1>
           <p className="text-muted-foreground">
-            Welcome to your investment portfolio overview.
+              {t("Welcome to your investment portfolio overview.")}
           </p>
 
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">Total Purchase Value</h2>
+              <h2 className="text-lg font-semibold">{t("Total Purchase Value")}</h2>
               <p className="text-2xl">{formatCurrency(totalPurchaseValue)}</p>
             </div>
 
             <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">Current Total Value</h2>
+              <h2 className="text-lg font-semibold">{t("Current Total Value")}</h2>
               <p className="text-2xl">{formatCurrency(currentTotalValue)}</p>
             </div>
 
             <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">Total Profit/Loss</h2>
+              <h2 className="text-lg font-semibold">{t("Total Profit/Loss")}</h2>
               <p className={`text-2xl ${totalProfitLoss >= 0 ? 'success' : 'error'}`}>{formatCurrency(totalProfitLoss)}</p>
             </div>
           </div>
@@ -142,12 +144,13 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
   const [commission, setCommission] = useState<number>(0);
   const [isFixedCommission, setIsFixedCommission] = useState(true);
   const { toast } = useToast();
+    const {t} = useI18n();
 
   const handleSell = () => {
     if (!stock || !sellPrice) {
       toast({
-        title: "Error",
-        description: "Please select a stock and enter a sell price.",
+        title: t("Error"),
+        description: t("Please select a stock and enter a sell price."),
         variant: "destructive",
       });
       return;
@@ -165,8 +168,8 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
     setPortfolio(updatedPortfolio);
 
     toast({
-      title: "Success",
-      description: `Successfully sold ${stock.quantity} shares of ${stock.symbol} for ${formatCurrency(netProfit)}`,
+      title: t("Success"),
+      description: t("Successfully sold") + ` ${stock.quantity} ` + t("shares of") + ` ${stock.symbol} ` + t("for") + ` ${formatCurrency(netProfit)}`,
     });
     onClose();
   };
@@ -179,57 +182,57 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Sell {stock.name}</DialogTitle>
+          <DialogTitle>{t("Sell")} {stock.name}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to sell your shares of {stock.symbol}?
+              {t("Are you sure you want to sell your shares of")} {stock.symbol}?
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="sellPrice" className="text-right">
-              Sell Price
+              {t("Sell Price")}
             </Label>
             <Input
               type="number"
               id="sellPrice"
-              placeholder="Enter sell price"
+              placeholder={t("Enter sell price")}
               className="col-span-3"
               onChange={(e) => setSellPrice(Number(e.target.value))}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="commission" className="text-right">
-              Commission
+              {t("Commission")}
             </Label>
             <Input
               type="number"
               id="commission"
-              placeholder="Enter commission amount"
+              placeholder={t("Enter commission amount")}
               className="col-span-3"
               onChange={(e) => setCommission(Number(e.target.value))}
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="isFixedCommission" className="text-right">
-              Fixed Commission
+              {t("Fixed Commission")}
             </Label>
             <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)} >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Fixed or Percentage" />
+                <SelectValue placeholder={t("Fixed or Percentage")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="true">Fixed</SelectItem>
-                <SelectItem value="false">Percentage</SelectItem>
+                <SelectItem value="true">{t("Fixed")}</SelectItem>
+                <SelectItem value="false">{t("Percentage")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         <DialogFooter>
           <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button type="button" onClick={handleSell}>
-            Sell
+            {t("Sell")}
           </Button>
         </DialogFooter>
       </DialogContent>

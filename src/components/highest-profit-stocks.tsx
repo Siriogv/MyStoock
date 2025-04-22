@@ -114,9 +114,10 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, setSortColumn
 
     const renderHeader = (labelKey: string, column: keyof Stock) => {
         return (
-            <>{t(labelKey)}{" "}
-                {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
-            </>
+          <>
+            {t(labelKey)}{" "}
+            {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
+          </>
         );
     };
 
@@ -133,7 +134,7 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, setSortColumn
     return (
         <Card>
           <CardHeader>
-            <CardTitle>{t("Highest Profit Stocks")}</CardTitle>
+            <CardTitle>{t("Stocks in Portfolio")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
