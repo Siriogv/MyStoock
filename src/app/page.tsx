@@ -190,6 +190,13 @@ const TableComponent = () => {
   );
 };
 
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
+
 export default function Home() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -199,6 +206,19 @@ export default function Home() {
       setLoading(false);
     }, 500);
   }, []);
+
+    // Calculate total purchase value
+    const totalPurchaseValue = mockPortfolio.reduce((acc, stock) => {
+      return acc + (stock.purchasePrice * stock.quantity);
+    }, 0);
+
+    // Calculate current total value
+    const currentTotalValue = mockPortfolio.reduce((acc, stock) => {
+      return acc + (stock.currentPrice * stock.quantity);
+    }, 0);
+
+    // Calculate total profit/loss
+    const totalProfitLoss = currentTotalValue - totalPurchaseValue;
 
   return (
     <SidebarProvider>
@@ -321,17 +341,17 @@ export default function Home() {
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h2 className="text-lg font-semibold">Total Purchase Value</h2>
-              <p className="text-2xl">$100,000</p>
+              <p className="text-2xl">{formatCurrency(totalPurchaseValue)}</p>
             </div>
 
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h2 className="text-lg font-semibold">Current Total Value</h2>
-              <p className="text-2xl">$110,000</p>
+              <p className="text-2xl">{formatCurrency(currentTotalValue)}</p>
             </div>
 
             <div className="rounded-lg border bg-card p-4 shadow-sm">
               <h2 className="text-lg font-semibold">Total Profit/Loss</h2>
-              <p className="text-2xl success">+$10,000</p>
+              <p className={`text-2xl ${totalProfitLoss >= 0 ? 'success' : 'error'}`}>{formatCurrency(totalProfitLoss)}</p>
             </div>
           </div>
 
