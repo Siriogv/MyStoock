@@ -1,3 +1,4 @@
+
 'use client';
 
 import {Button} from "@/components/ui/button";
@@ -319,14 +320,17 @@ export default function SettingsPage() {
 
                 <div>
                   <Label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-2">{t("Tassazione")}</Label>
-                  <Input
-                    type="number"
-                    id="taxRate"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={taxRate}
-                    onChange={(e) => setTaxRate(e.target.value)}
-                    placeholder={t("Enter tax rate")}
-                  /> %
+                  <div className="flex items-center">
+                    <Input
+                      type="number"
+                      id="taxRate"
+                      className="mt-1 block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      value={taxRate}
+                      onChange={(e) => setTaxRate(e.target.value)}
+                      placeholder={t("Enter tax rate")}
+                    />
+                    <span className="ml-2">%</span>
+                  </div>
                 </div>
               </div>
             </div>
