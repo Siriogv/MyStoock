@@ -124,3 +124,4 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+

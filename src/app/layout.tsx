@@ -5,9 +5,6 @@ import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
 import {SidebarLayout} from "@/components/sidebar-layout";
-import {I18nextProvider} from "react-i18next";
-import {SidebarProvider} from "@/components/ui/sidebar";
-import {useI18n} from "@/hooks/use-i18n";
 import React, {useEffect, useState} from "react";
 
 
@@ -32,10 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const { i18n, isInitialized } = useI18n();
-
     return (
-        <html lang={i18n?.language || 'en'}>
+        <html lang={'en'}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
             <SidebarLayout>
@@ -49,14 +44,11 @@ export default function RootLayout({
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const { i18n } = useI18n();
-
     return (
-        <I18nextProvider i18n={i18n}>
-            <SidebarProvider>
-                    {children}
-            </SidebarProvider>
-        </I18nextProvider>
+        <>
+            {children}
+        </>
     )
 }
+
 
