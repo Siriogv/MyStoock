@@ -97,7 +97,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         const netProfit = totalProfit - commissionAmount - taxAmount;
 
         // Aggiorna il portafoglio
-        const updatedPortfolio = portfolio.map(stock => {
+        const updatedPortfolio = stocks.map(stock => {
             if (stock.symbol === selectedStock.symbol) {
                 return {
                     ...stock,
