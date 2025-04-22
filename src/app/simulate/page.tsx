@@ -50,84 +50,86 @@ export default function SimulationPage() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Simulation Page</h1>
 
-      <div className="mb-4">
-        <label htmlFor="symbol" className="block text-sm font-medium text-gray-700">
-          Stock Symbol
-        </label>
-        <Input
-          type="text"
-          id="symbol"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={symbol}
-          onChange={(e) => setSymbol(e.target.value)}
-          placeholder="Enter stock symbol"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-          Quantity
-        </label>
-        <Input
-          type="number"
-          id="quantity"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          placeholder="Enter quantity"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="purchasePrice" className="block text-sm font-medium text-gray-700">
-          Purchase Price
-        </label>
-        <Input
-          type="number"
-          id="purchasePrice"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={purchasePrice}
-          onChange={(e) => setPurchasePrice(Number(e.target.value))}
-          placeholder="Enter purchase price"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="salePrice" className="block text-sm font-medium text-gray-700">
-          Sale Price
-        </label>
-        <Input
-          type="number"
-          id="salePrice"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={salePrice}
-          onChange={(e) => setSalePrice(Number(e.target.value))}
-          placeholder="Enter sale price"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="commission" className="block text-sm font-medium text-gray-700">
-          Commission
-        </label>
-        <Input
-          type="number"
-          id="commission"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={commission}
-          onChange={(e) => setCommission(Number(e.target.value))}
-          placeholder="Enter commission amount"
-        />
-        <div className="mt-2">
-          <label className="inline-flex items-center">
-            <Input
-              type="checkbox"
-              className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              checked={isFixedCommission}
-              onChange={() => setIsFixedCommission(!isFixedCommission)}
-            />
-            <span className="ml-2 text-gray-700">Fixed Commission</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-4">
+          <label htmlFor="symbol" className="block text-sm font-medium text-gray-700">
+            Stock Symbol
           </label>
+          <Input
+            type="text"
+            id="symbol"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            placeholder="Enter stock symbol"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
+            Quantity
+          </label>
+          <Input
+            type="number"
+            id="quantity"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            placeholder="Enter quantity"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="purchasePrice" className="block text-sm font-medium text-gray-700">
+            Purchase Price
+          </label>
+          <Input
+            type="number"
+            id="purchasePrice"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={purchasePrice}
+            onChange={(e) => setPurchasePrice(Number(e.target.value))}
+            placeholder="Enter purchase price"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="salePrice" className="block text-sm font-medium text-gray-700">
+            Sale Price
+          </label>
+          <Input
+            type="number"
+            id="salePrice"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={salePrice}
+            onChange={(e) => setSalePrice(Number(e.target.value))}
+            placeholder="Enter sale price"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="commission" className="block text-sm font-medium text-gray-700">
+            Commission
+          </label>
+          <Input
+            type="number"
+            id="commission"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={commission}
+            onChange={(e) => setCommission(Number(e.target.value))}
+            placeholder="Enter commission amount"
+          />
+          <div className="mt-2">
+            <label className="inline-flex items-center">
+              <Input
+                type="checkbox"
+                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                checked={isFixedCommission}
+                onChange={() => setIsFixedCommission(!isFixedCommission)}
+              />
+              <span className="ml-2 text-gray-700">Fixed Commission</span>
+            </label>
+          </div>
         </div>
       </div>
 

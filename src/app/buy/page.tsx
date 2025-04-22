@@ -86,15 +86,14 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
       />
 
       {stockInfo && (
-        <StockInfoDisplay stockInfo={stockInfo} />
-      )}
-
-      {stockInfo && (
-        <QuantityInput
-          quantity={quantity}
-          setQuantity={setQuantity}
-          handleBuy={handleBuy}
-        />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <StockInfoDisplay stockInfo={stockInfo} />
+            <QuantityInput
+              quantity={quantity}
+              setQuantity={setQuantity}
+              handleBuy={handleBuy}
+            />
+          </div>
       )}
 
       <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
@@ -145,7 +144,7 @@ interface StockInfoDisplayProps {
 
 function StockInfoDisplay({ stockInfo }: StockInfoDisplayProps) {
   return (
-    <div className="mb-4">
+    <div>
       <p>Name: {stockInfo.name}</p>
       <p>Price: {stockInfo.price}</p>
       <p>
@@ -166,8 +165,8 @@ interface QuantityInputProps {
 
 function QuantityInput({ quantity, setQuantity, handleBuy }: QuantityInputProps) {
   return (
-    <div className="flex items-center">
-      <label htmlFor="quantity" className="mr-2">Quantity:</label>
+    <div>
+      <label htmlFor="quantity" className="mr-2 block">Quantity:</label>
       <Input
         type="number"
         id="quantity"
@@ -179,3 +178,4 @@ function QuantityInput({ quantity, setQuantity, handleBuy }: QuantityInputProps)
     </div>
   );
 }
+
