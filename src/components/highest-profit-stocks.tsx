@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Stock {
     symbol: string;
@@ -32,16 +33,19 @@ export const HighestProfitStocks = () => {
     }, []);
 
     return (
-        <div>
-            <h2 className="text-lg font-semibold mb-2">Highest Profit Stocks</h2>
-            <ul>
-                {highestProfitStocks.map((stock, index) => (
-                    <li key={index} className="mb-2">
-                        {stock.name} ({stock.symbol}): Profit - ${calculateProfit(stock)}
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>Highest Profit Stocks</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ul>
+                    {highestProfitStocks.map((stock, index) => (
+                        <li key={index} className="mb-2">
+                            {stock.name} ({stock.symbol}): Profit - ${calculateProfit(stock)}
+                        </li>
+                    ))}
+                </ul>
+            </CardContent>
+        </Card>
     );
 };
-
