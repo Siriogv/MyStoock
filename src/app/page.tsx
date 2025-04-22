@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
@@ -31,19 +31,29 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { calculateProfit, mockPortfolio } from "@/components/highest-profit-stocks";
+import { calculateProfit } from "@/utils";
 import { PortfolioStock } from "@/types";
 import { SellStockModal } from "@/components/sell-stock-modal";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/hooks/use-i18n";
 import { Icons } from "@/components/icons";
 import { SidebarLayout } from "@/components/sidebar-layout";
+import {getMockPortfolio} from "@/lib/db"; // Import database function
 
 const DashboardPage: React.FC = () => {
     const { t } = useI18n();
-    const [portfolio, setPortfolio] = useState<PortfolioStock[]>(mockPortfolio);
+    const [portfolio, setPortfolio] = useState<PortfolioStock[]>([]);
     const [isSellModalOpen, setIsSellModalOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState<PortfolioStock | null>(null);
+
+    useEffect(() => {
+        const loadMockPortfolio = async () => {
+            const data = await getMockPortfolio();
+            setPortfolio(data as PortfolioStock[]);
+        };
+
+        loadMockPortfolio();
+    }, []);
 
     const totalPurchaseValue = useMemo(() => {
         return portfolio.reduce((acc, stock) => acc + (stock.purchasePrice * stock.quantity), 0);

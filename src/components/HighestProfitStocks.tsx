@@ -52,6 +52,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {getAllStocks} from "@/lib/db"; // Import database function
 
 export interface Stock {
     symbol: string;
@@ -63,14 +64,6 @@ export interface Stock {
     capitalization: number;
     changePercent:number;
 };
-
-const mockPortfolio: Stock[] = [
-    { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500, changePercent: -4 },
-    { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800, changePercent: 6 },
-    { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500, changePercent: 0 },
-    { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800, changePercent: 8 },
-];
 
 const calculateProfit = (stock: Stock) => {
     return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
@@ -90,11 +83,11 @@ const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProp
         setIsLoading(true);
         // Sort the mock portfolio based on profit
         setTimeout(() => {
-          setHighestProfitStocks(mockPortfolio);
+          setHighestProfitStocks(portfolio);
           setIsLoading(false);
         }, 1000);
 
-    }, []);
+    }, [portfolio]);
 
     return (
         <Card className="overflow-x-auto shadow">
@@ -157,4 +150,4 @@ const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProp
     );
 };
 
-export { HighestProfitStocks, calculateProfit, mockPortfolio };
+export { HighestProfitStocks, calculateProfit };

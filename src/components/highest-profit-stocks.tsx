@@ -46,14 +46,6 @@ export interface Stock {
     changePercent:number;
 };
 
-const mockPortfolio: Stock[] = [
-    { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500, changePercent: -4 },
-    { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800, changePercent: 6 },
-    { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500, changePercent: 0 },
-    { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800, changePercent: 8 },
-];
-
 const calculateProfit = (stock: Stock) => {
     return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
@@ -61,135 +53,82 @@ const calculateProfit = (stock: Stock) => {
 interface HighestProfitStocksProps {
     portfolio: Stock[];
     onSellStock: (stock: Stock) => void;
-    sortColumn: keyof Stock;
-    sortOrder: 'asc' | 'desc';
-    setSortColumn: (column: keyof Stock) => void;
-    setSortOrder: (order: 'asc' | 'desc') => void;
 }
 
-const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, setSortColumn, setSortOrder, sortOrder }: HighestProfitStocksProps) => {
+const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProps) => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const { t } = useI18n();
-    const [isSellModalOpen, setIsSellModalOpen] = useState(false);
-    const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-
-    const sortedStocks = useMemo(() => {
-        return [...portfolio].sort((a, b) => {
-            const profitA = calculateProfit(a);
-            const profitB = calculateProfit(b);
-            return sortOrder === 'asc' ? profitA - profitB : profitB - profitA;
-        });
-    }, [portfolio, sortOrder]);
 
     useEffect(() => {
         setIsLoading(true);
         // Sort the mock portfolio based on profit
         setTimeout(() => {
-          setHighestProfitStocks(sortedStocks);
+          setHighestProfitStocks(portfolio);
           setIsLoading(false);
         }, 1000);
 
-    }, [sortedStocks]);
-
-    const handleSellStock = (stock: Stock) => {
-        setSelectedStock(stock);
-        setIsSellModalOpen(true);
-        onSellStock(stock);
-    };
-
-    const handleCloseSellModal = () => {
-        setIsSellModalOpen(false);
-        setSelectedStock(null);
-    };
-
-    const handleSort = (column: keyof Stock) => {
-        if (sortColumn === column) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortColumn(column);
-            setSortOrder('asc');
-        }
-    };
-
-    const renderHeader = (labelKey: string, column: keyof Stock) => {
-        return (
-          <>
-            {t(labelKey)}{" "}
-            {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
-          </>
-        );
-    };
-
-    const renderTableCell = (content: string | number) => {
-        return isLoading ? (
-            <TableCell>
-                <Skeleton className="h-4 w-24" />
-            </TableCell>
-        ) : (
-            <TableCell>{content}</TableCell>
-        );
-    };
+    }, [portfolio]);
 
     return (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("Stocks in Portfolio")}</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <Card className="overflow-x-auto shadow">
+            
+                
+                    {t("Stocks in Portfolio")}
+                
+            
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead onClick={() => handleSort("symbol")}>
-                      {renderHeader("Symbol", "symbol")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("name")}>
-                      {renderHeader("Name", "name")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("quantity")}>
-                      {renderHeader("Quantity", "quantity")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("purchasePrice")}>
-                      {renderHeader("Purchase Price", "purchasePrice")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("currentPrice")}>
-                      {renderHeader("Current Price", "currentPrice")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("changePercent")}>
-                      {renderHeader("Daily %", "changePercent")}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("profit" as keyof Stock)}>
-                      {renderHeader("Profit", "profit" as keyof Stock)}
-                  </TableHead>
-                  <TableHead onClick={() => handleSort("market")}>
-                      {renderHeader("Market", "market")}
-                  </TableHead>
-                  <TableHead>{t("Actions")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {highestProfitStocks.map((stock) => (
-                  <TableRow key={stock.symbol}>
-                    <TableCell>{stock.symbol}</TableCell>
-                    <TableCell>{stock.name}</TableCell>
-                    <TableCell>{stock.quantity}</TableCell>
-                    <TableCell>{stock.purchasePrice}</TableCell>
-                    <TableCell>{stock.currentPrice}</TableCell>
-                    <TableCell>{stock.changePercent}%</TableCell>
-                    <TableCell>{calculateProfit(stock)}</TableCell>
-                    <TableCell>{stock.market}</TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" onClick={() => handleSellStock(stock)}>
-                        {t("Sell")}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="text-left">{t("Symbol")}</TableHead>
+                        <TableHead className="text-left">{t("Name")}</TableHead>
+                        <TableHead className="text-left">{t("Quantity")}</TableHead>
+                        <TableHead className="text-left">{t("Purchase Price")}</TableHead>
+                        <TableHead className="text-left">{t("Current Price")}</TableHead>
+                        <TableHead className="text-left">{t("Daily %")}</TableHead>
+                        <TableHead className="text-left">{t("Profit")}</TableHead>
+                        <TableHead className="text-left">{t("Market")}</TableHead>
+                        <TableHead className="text-left">{t("Actions")}</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {highestProfitStocks.map((stock) => (
+                        
+                            
+                                {stock.symbol}
+                            
+                            
+                                {stock.name}
+                            
+                            
+                                {stock.quantity}
+                            
+                            
+                                {stock.purchasePrice}
+                            
+                            
+                                {stock.currentPrice}
+                            
+                            
+                                {stock.changePercent}%
+                            
+                            
+                                {calculateProfit(stock)}
+                            
+                            
+                                {stock.market}
+                            
+                            
+                                <Button variant="outline" size="sm" onClick={() => onSellStock(stock)}>
+                                    {t("Sell")}
+                                </Button>
+                            
+                        
+                    ))}
+                </TableBody>
             </Table>
-          </CardContent>
         </Card>
-      );
+    );
 };
 
-export { HighestProfitStocks, calculateProfit, mockPortfolio };
+export { HighestProfitStocks, calculateProfit };

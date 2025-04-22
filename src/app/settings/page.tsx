@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 import {useToast} from "@/hooks/use-toast";
-import {TextDatabase} from "@/services/text-database";
-import {Input} from "@/components/ui/input";
 import * as countries from 'countries-list';
 import {useEffectOnce} from "@/hooks/use-effect-once";
 import {SidebarLayout} from "@/components/sidebar-layout";
@@ -29,6 +27,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useI18n} from "@/hooks/use-i18n";
+import {getSettings, saveSettings} from "@/lib/db"; // Import database functions
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -68,9 +67,10 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const loadSettings = async () => {
-      const textDb = new TextDatabase();
       try {
-        const settings = await textDb.loadSettings();
+        // Replace with your actual user ID retrieval logic
+        const userId = '1'; // example ID
+        const settings = await getSettings(userId);
         if (settings) {
           setCurrency(settings.currency || "EUR");
           setMarket(settings.market || "NYSE");
@@ -139,9 +139,10 @@ export default function SettingsPage() {
   };
 
   const handleSaveSettings = async (values: z.infer<typeof formSchema>) => {
-    const textDb = new TextDatabase();
     try {
-      await textDb.saveSettings({
+      // Replace with your actual user ID retrieval logic
+      const userId = '1'; // Example user ID
+      await saveSettings(userId, {
         currency,
         market,
         theme,
@@ -151,6 +152,7 @@ export default function SettingsPage() {
         language,
         nationality,
         username: values.username,
+        password: values.password,
       });
 
       toast({
@@ -347,4 +349,3 @@ export default function SettingsPage() {
     </SidebarLayout>
   );
 }
-
