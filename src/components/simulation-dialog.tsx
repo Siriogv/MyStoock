@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import {
@@ -104,96 +104,91 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
           <div>
+            <div className="mb-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="symbol" className="text-right">
+                  {t("Stock Symbol")}
+                </Label>
+                <Input
+                  type="text"
+                  id="symbol"
+                  value={symbol}
+                  onChange={(e) => setSymbol(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="quantity" className="text-right">
+                  {t("Quantity")}
+                </Label>
+                <Input
+                  type="number"
+                  id="quantity"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="purchasePrice" className="text-right">
+                  {t("Purchase Price")}
+                </Label>
+                <Input
+                  type="number"
+                  id="purchasePrice"
+                  value={purchasePrice}
+                  onChange={(e) => setPurchasePrice(Number(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="salePrice" className="text-right">
+                  {t("Sale Price")}
+                </Label>
+                <Input
+                  type="number"
+                  id="salePrice"
+                  value={salePrice}
+                  onChange={(e) => setSalePrice(Number(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="commission" className="text-right">
+                  {t("Commission")}
+                </Label>
+                <Input
+                  type="number"
+                  id="commission"
+                  value={commission}
+                  onChange={(e) => setCommission(Number(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+          </div>
+
+           
             
-              
-                
-                  
-                    {t("Stock Symbol")}
-                  
-                  
-                    
-                      type="text"
-                      id="symbol"
-                      value={symbol}
-                      onChange={(e) => setSymbol(e.target.value)}
-                    
-                  
-                
-                
-                  
-                    {t("Quantity")}
-                  
-                  
-                    
-                      type="number"
-                      id="quantity"
-                      value={quantity}
-                      onChange={(e) => setQuantity(Number(e.target.value))}
-                    
-                  
-                
-              
-            
-            
-              
-                
-                  
-                    {t("Purchase Price")}
-                  
-                  
-                    
-                      type="number"
-                      id="purchasePrice"
-                      value={purchasePrice}
-                      onChange={(e) => setPurchasePrice(Number(e.target.value))}
-                    
-                  
-                
-                
-                  
-                    {t("Sale Price")}
-                  
-                  
-                    
-                      type="number"
-                      id="salePrice"
-                      value={salePrice}
-                      onChange={(e) => setSalePrice(Number(e.target.value))}
-                    
-                  
-                
-              
-            
-            
-              
-                {t("Commission")}
-                
-                  
-                    type="number"
-                    id="commission"
-                    value={commission}
-                    onChange={(e) => setCommission(Number(e.target.value))}
-                  
-                
-              
-            
-          
-            
-              
-                Fixed Commission
-              
+              Fixed Commission
             
           
           
             
-              
-                Calculate Tax (26%)
-              
+              Calculate Tax (26%)
             
           
         </div>
 
-           <Button onClick={handleCalculate}>{t("Calculate")}</Button>
+           
+          
+            {t("Calculate")}
+          
+        
 
           {simulationResult && (
               <Card className="shadow-lg border-primary">
@@ -221,15 +216,13 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
               </Card>
           )}
         
-            <DialogFooter>
-              <Button type="button" variant="secondary" onClick={onClose}>
-                {t("Cancel")}
-              </Button>
-            </DialogFooter>
+            
+              {t("Cancel")}
+            
+          
         </DialogContent>
     </Dialog>
   );
 }
 
 export default SimulationDialog;
-"
