@@ -21,6 +21,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
   const { i18n, isInitialized } = useI18n();
+  const {t} = i18n;
 
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
@@ -46,14 +47,14 @@ export default function SettingsPage() {
         console.error("Failed to load settings:", error);
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Failed to load settings. Please try again.",
+          title: t('Error'),
+          description: t("Failed to load settings. Please try again."),
         });
       }
     };
 
     loadSettings();
-  }, [toast, textDb]);
+  }, [toast, textDb, t]);
 
   useEffect(() => {
     if (language && i18n.language !== language && isInitialized) {
@@ -77,29 +78,29 @@ export default function SettingsPage() {
       });
 
       toast({
-        title: "Settings Saved",
-        description: "Your settings have been saved successfully.",
+        title: t("Settings Saved"),
+        description: t("Your settings have been saved successfully."),
       });
     } catch (error) {
       console.error("Failed to save settings:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to save settings. Please try again.",
+        title: t('Error'),
+        description: t("Failed to save settings. Please try again."),
       });
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-8">User Settings</h1>
+      <h1 className="text-2xl font-bold mb-8">{t("User Settings")}</h1>
 
       <div className="space-y-6">
         <div>
-          <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">Currency</Label>
+          <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">{t("Currency")}</Label>
           <Select value={currency} onValueChange={setCurrency}>
             <SelectTrigger id="currency" className="w-full">
-              <SelectValue placeholder="Select Currency"/>
+              <SelectValue placeholder={t("Select Currency")}/>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="EUR">EUR</SelectItem>
@@ -110,10 +111,10 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">Market</Label>
+          <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">{t("Market")}</Label>
           <Select value={market} onValueChange={setMarket}>
             <SelectTrigger id="market" className="w-full">
-              <SelectValue placeholder="Select Market"/>
+              <SelectValue placeholder={t("Select Market")}/>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="NYSE">NYSE</SelectItem>
@@ -125,10 +126,10 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">Theme</Label>
+          <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">{t("Theme")}</Label>
           <Select value={theme} onValueChange={setTheme}>
             <SelectTrigger id="theme" className="w-full">
-              <SelectValue placeholder="Select Theme"/>
+              <SelectValue placeholder={t("Select Theme")}/>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="light">Light</SelectItem>
@@ -139,10 +140,10 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">Language</Label>
+          <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</Label>
           <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger id="language" className="w-full">
-              <SelectValue placeholder="Select Language"/>
+              <SelectValue placeholder={t("Select Language")}/>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
@@ -153,32 +154,32 @@ export default function SettingsPage() {
 
          <div className="grid grid-cols-2 gap-4 items-center">
             <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Commission Type</Label>
+              <Label className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
               <div className="flex items-center space-x-2">
                 <Button
                   variant={commissionType === "fixed" ? "default" : "outline"}
                   onClick={() => setCommissionType("fixed")}
                 >
-                  Fixed
+                  {t("Fixed")}
                 </Button>
                 <Button
                   variant={commissionType === "percentage" ? "default" : "outline"}
                   onClick={() => setCommissionType("percentage")}
                 >
-                  Percentage
+                  {t("Percentage")}
                 </Button>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">Commission Value</Label>
+              <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Value")}</Label>
               <Input
                 type="number"
                 id="commissionValue"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 value={commissionValue}
                 onChange={(e) => setCommissionValue(e.target.value)}
-                placeholder="Enter commission value"
+                placeholder={t("Enter commission value")}
               />
             </div>
           </div>
@@ -188,10 +189,10 @@ export default function SettingsPage() {
 
       <div className="flex justify-between">
         <Button onClick={handleSaveSettings}>
-          Save Settings
+          {t("Save Settings")}
         </Button>
         <Button variant="secondary" onClick={goBackToDashboard}>
-          Back to Dashboard
+          {t("Back to Dashboard")}
         </Button>
       </div>
     </div>

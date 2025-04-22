@@ -11,6 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import {useI18n} from "@/hooks/use-i18n";
 
 export interface Stock {
     symbol: string;
@@ -37,6 +38,7 @@ const calculateProfit = (stock: Stock) => {
 
 export const HighestProfitStocks = () => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
+    const { t } = useI18n();
 
     useEffect(() => {
         // Sort the mock portfolio based on profit

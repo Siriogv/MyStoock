@@ -32,7 +32,7 @@ body {
     --success-foreground: 0 0% 100%;
     --error: 354 70% 51%; /* Red (#e74c3c) */
     --error-foreground: 0 0% 100%;
-    --sidebar-background: 260 25% 15%; /* Slightly lighter indigo */
+    --sidebar-background: 230 25% 35%; /* Slightly lighter indigo */
     --sidebar-foreground: 50 20% 95%;
     --sidebar-primary: 140 50% 50%; /* Teal for active elements */
     --sidebar-primary-foreground: 260 20% 10%;

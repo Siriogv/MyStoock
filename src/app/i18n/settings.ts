@@ -2,7 +2,6 @@
 
 import { createInstance, i18n } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import resources from './locales'
 
 const initI18next = async (locale: string, ns: string) => {
   const i18nInstance = createInstance()
@@ -11,7 +10,9 @@ const initI18next = async (locale: string, ns: string) => {
     .init({
       lng: locale,
       resources: {
-        [locale]: ns,
+        [locale]: {
+          [ns]: {}
+        },
       },
     })
   return i18nInstance
