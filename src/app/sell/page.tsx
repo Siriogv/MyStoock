@@ -15,13 +15,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
 interface PortfolioStock {
   symbol: string;
   name: string;
   quantity: number;
-  price: string;
-  change: string;
-  changePercent: string;
+  purchasePrice: number;
+  currentPrice: number;
 }
 
 export default function SellPage() {
@@ -31,11 +40,11 @@ export default function SellPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [portfolio, setPortfolio] = useState<PortfolioStock[]>([
-    { symbol: 'AAPL', name: 'Apple Inc.', quantity: 10, price: '170.34', change: '+1.50', changePercent: '0.89%' },
-    { symbol: 'MSFT', name: 'Microsoft Corp.', quantity: 5, price: '430.25', change: '-0.50', changePercent: '-0.12%' },
-    { symbol: 'GOOG', name: 'Alphabet Inc.', quantity: 8, price: '150.70', change: '+0.25', changePercent: '0.17%' },
-    { symbol: 'NVDA', name: 'Nvidia Corp.', quantity: 3, price: '1000.00', change: '+10.00', changePercent: '+1.00%' },
-    { symbol: 'TSLA', name: 'Tesla, Inc.', quantity: 4, price: '850.50', change: '+5.00', changePercent: '+0.59%' },
+    { symbol: 'AAPL', name: 'Apple Inc.', quantity: 10, purchasePrice: 150, currentPrice: 170 },
+    { symbol: 'MSFT', name: 'Microsoft Corp.', quantity: 5, purchasePrice: 300, currentPrice: 430 },
+    { symbol: 'GOOG', name: 'Alphabet Inc.', quantity: 8, purchasePrice: 100, currentPrice: 150 },
+    { symbol: 'NVDA', name: 'Nvidia Corp.', quantity: 3, purchasePrice: 500, currentPrice: 1000 },
+    { symbol: 'TSLA', name: 'Tesla, Inc.', quantity: 4, purchasePrice: 700, currentPrice: 850 },
   ]);
 
   useEffect(() => {
@@ -43,9 +52,9 @@ export default function SellPage() {
       setStockInfo({
         symbol: selectedStock.symbol,
         name: selectedStock.name,
-        price: selectedStock.price,
-        change: selectedStock.change,
-        changePercent: selectedStock.changePercent,
+        price: selectedStock.currentPrice.toString(),
+        change: (selectedStock.currentPrice - selectedStock.purchasePrice).toString(),
+        changePercent: (((selectedStock.currentPrice - selectedStock.purchasePrice) / selectedStock.purchasePrice) * 100).toFixed(2) + '%',
       });
     }
   }, [selectedStock]);
@@ -79,30 +88,37 @@ export default function SellPage() {
           Select Stock from Portfolio
         </label>
 
-          {/* Grid Header */}
-          <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_0.5fr] gap-4 py-2 font-semibold">
-            <div>Name (Symbol)</div>
-            <div>Price</div>
-            <div>Change</div>
-            <div>Quantity</div>
-            <div>Action</div>
-          </div>
-
-        {portfolio.map((stock) => (
-          <div key={stock.symbol} className="grid grid-cols-[1.5fr_1fr_1fr_1fr_0.5fr] gap-4 py-2 border-b">
-            <div className="flex items-center space-x-2">
-              <div>{stock.name} ({stock.symbol})</div>
-            </div>
-            <div>{stock.price}</div>
-            <div>{stock.change} ({stock.changePercent})</div>
-            <div>{stock.quantity}</div>
-            <div className="flex justify-end">
-              <Button variant="link" onClick={() => setSelectedStock(stock)}>
-                Select
-              </Button>
-            </div>
-          </div>
-        ))}
+         <Table>
+            <TableCaption>Select a stock to sell from your portfolio.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name (Symbol)</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Purchase Price</TableHead>
+                <TableHead>Current Price</TableHead>
+                <TableHead className="text-right">Profit/Loss</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {portfolio.map((stock) => (
+                <TableRow
+                  key={stock.symbol}
+                  onClick={() => setSelectedStock(stock)}
+                  className="cursor-pointer hover:bg-accent"
+                >
+                  <TableCell className="font-medium">
+                    {stock.name} ({stock.symbol})
+                  </TableCell>
+                  <TableCell>{stock.quantity}</TableCell>
+                  <TableCell>{stock.purchasePrice}</TableCell>
+                  <TableCell>{stock.currentPrice}</TableCell>
+                  <TableCell className="text-right">
+                    {(stock.currentPrice - stock.purchasePrice) * stock.quantity}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
       </div>
 
       {stockInfo && (
