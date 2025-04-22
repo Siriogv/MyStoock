@@ -4,10 +4,8 @@ import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
-import {SidebarProvider} from "@/components/ui/sidebar";
 import {SidebarLayout} from "@/components/sidebar-layout";
-import { I18nextProvider } from "react-i18next";
-import i18n from "@/i18n/i18n";
+import i18n from "@/i18n/i18n"; // Corrected import path
 import {useEffect} from "react";
 
 const geistSans = Geist({
@@ -61,4 +59,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </I18nextProvider>
     )
 }
+
+
+
+
 
