@@ -55,34 +55,34 @@ export const HighestProfitStocks = () => {
     }, []);
 
     return (
-        <Table>
+        <Table className="mt-4">
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Symbol</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Purchase Price</TableHead>
-                    <TableHead>Current Price</TableHead>
-                    <TableHead>Market Value</TableHead>
-                     <TableHead>Daily %</TableHead>
-                    <TableHead className="text-right">Profit</TableHead>
-                    <TableHead>Market</TableHead>
-                    <TableHead>Capitalization</TableHead>
+                    <TableHead className="w-[80px] text-xs">Symbol</TableHead>
+                    <TableHead className="text-xs">Name</TableHead>
+                    <TableHead className="text-xs">Quantity</TableHead>
+                    <TableHead className="text-xs">Purchase Price</TableHead>
+                    <TableHead className="text-xs">Current Price</TableHead>
+                    <TableHead className="text-xs">Market Value</TableHead>
+                     <TableHead className="text-xs">Daily %</TableHead>
+                    <TableHead className="text-right text-xs">Profit</TableHead>
+                    <TableHead className="text-xs">Market</TableHead>
+                    <TableHead className="text-xs">Capitalization</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {highestProfitStocks.map((stock) => (
                     <TableRow key={stock.symbol}>
-                        <TableCell className="font-medium">{stock.symbol}</TableCell>
-                        <TableCell>{stock.name}</TableCell>
-                        <TableCell>{stock.quantity}</TableCell>
-                        <TableCell>{stock.purchasePrice}</TableCell>
-                        <TableCell>{stock.currentPrice}</TableCell>
-                         <TableCell>{stock.currentPrice * stock.quantity}</TableCell>
-                          <TableCell>{stock.changePercent}</TableCell>
-                        <TableCell className="text-right">{calculateProfit(stock)}</TableCell>
-                        <TableCell>{stock.market}</TableCell>
-                        <TableCell>{stock.capitalization}</TableCell>
+                        <TableCell className="font-medium text-xs">{stock.symbol}</TableCell>
+                        <TableCell className="text-xs">{stock.name}</TableCell>
+                        <TableCell className="text-xs">{stock.quantity}</TableCell>
+                        <TableCell className="text-xs">{stock.purchasePrice}</TableCell>
+                        <TableCell className="text-xs">{stock.currentPrice}</TableCell>
+                         <TableCell className="text-xs">{stock.currentPrice * stock.quantity}</TableCell>
+                          <TableCell className="text-xs">{stock.changePercent}%</TableCell>
+                        <TableCell className="text-right text-xs">{calculateProfit(stock)}</TableCell>
+                        <TableCell className="text-xs">{stock.market}</TableCell>
+                        <TableCell className="text-xs">{stock.capitalization}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
