@@ -1,5 +1,9 @@
 {
   "User Settings": "User Settings",
+  "Username": "Username",
+  "Password": "Password",
+  "Nationality": "Nationality",
+  "Select Nationality": "Select Nationality",
   "Currency": "Currency",
   "Select Currency": "Select Currency",
   "Market": "Market",
@@ -13,11 +17,17 @@
   "Percentage": "Percentage",
   "Commission Value": "Commission Value",
   "Enter commission value": "Enter commission value",
+  "Tax Rate": "Tax Rate",
+  "Enter tax rate": "Enter tax rate",
   "Save Settings": "Save Settings",
   "Back to Dashboard": "Back to Dashboard",
   "Settings Saved": "Settings Saved",
   "Your settings have been saved successfully.": "Your settings have been saved successfully.",
   "Error": "Error",
   "Failed to save settings. Please try again.": "Failed to save settings. Please try again.",
-  "You must be logged in to save settings.": "You must be logged in to save settings."
+  "You must be logged in to save settings.": "You must be logged in to save settings.",
+  "English": "English",
+  "Italiano": "Italiano",
+  "United States": "United States",
+  "Italy": "Italy"
 }

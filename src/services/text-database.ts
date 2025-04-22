@@ -1,4 +1,3 @@
-
 export class TextDatabase {
     async saveSettings(settings: any): Promise<void> {
         try {

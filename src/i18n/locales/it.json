@@ -1,5 +1,9 @@
 {
   "User Settings": "Impostazioni Utente",
+  "Username": "Nome utente",
+  "Password": "Password",
+  "Nationality": "Nazionalità",
+  "Select Nationality": "Seleziona Nazionalità",
   "Currency": "Valuta",
   "Select Currency": "Seleziona Valuta",
   "Market": "Mercato",
@@ -13,11 +17,17 @@
   "Percentage": "Percentuale",
   "Commission Value": "Valore Commissione",
   "Enter commission value": "Inserisci valore commissione",
+  "Tax Rate": "Tasso di tassazione",
+  "Enter tax rate": "Immetti il tasso di tassazione",
   "Save Settings": "Salva Impostazioni",
   "Back to Dashboard": "Torna alla Dashboard",
   "Settings Saved": "Impostazioni Salva",
   "Your settings have been saved successfully.": "Le tue impostazioni sono state salvate con successo.",
   "Error": "Errore",
   "Failed to save settings. Please try again.": "Impossibile salvare le impostazioni. Per favore riprova.",
-  "You must be logged in to save settings.": "Devi essere loggato per salvare le impostazioni."
+  "You must be logged in to save settings.": "Devi essere loggato per salvare le impostazioni.",
+  "English": "Inglese",
+  "Italiano": "Italiano",
+  "United States": "Stati Uniti",
+  "Italy": "Italia"
 }
