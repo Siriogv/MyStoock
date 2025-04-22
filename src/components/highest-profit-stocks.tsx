@@ -115,7 +115,8 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
     const renderHeader = (labelKey: string, column: keyof Stock) => {
         return (
             
-                {t(labelKey)} {sortColumn === column && (sortOrder === 'asc' ? '▲' : '▼')}
+                {t(labelKey)}{" "}
+                {sortColumn === column && (sortOrder === 'asc' ? '▲' : '▼')}
             
         );
     };
@@ -137,44 +138,28 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
                     
                         
                             
-                                
-                                    {renderHeader("Symbol", "symbol")}
-                                
+                                {renderHeader("Symbol", "symbol")}
                             
                             
-                                
-                                    {renderHeader("Name", "name")}
-                                
+                                {renderHeader("Name", "name")}
                             
                             
-                                
-                                    {renderHeader("Quantity", "quantity")}
-                                
+                                {renderHeader("Quantity", "quantity")}
                             
                             
-                                
-                                    {renderHeader("Purchase Price", "purchasePrice")}
-                                
+                                {renderHeader("Purchase Price", "purchasePrice")}
                             
                             
-                                
-                                    {renderHeader("Current Price", "currentPrice")}
-                                
+                                {renderHeader("Current Price", "currentPrice")}
                             
                              
-                                
-                                    {renderHeader("Daily %", "changePercent")}
-                                
+                                {renderHeader("Daily %", "changePercent")}
                             
                             
-                                
-                                    {renderHeader("Profit", "profit")}
-                                
+                                {renderHeader("Profit", "profit")}
                             
                             
-                                
-                                    {renderHeader("Market", "market")}
-                                
+                                {renderHeader("Market", "market")}
                             
                             
                                 Actions
@@ -223,4 +208,4 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
 
 export { HighestProfitStocks, calculateProfit, mockPortfolio };
 "
-
+```
