@@ -517,3 +517,4 @@ const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock 
 
 export { TableComponent, calculateProfit, mockPortfolio };
 "
+
