@@ -31,6 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
@@ -149,6 +150,7 @@ interface SimulationDialogProps {
 
 function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
   const { t } = useI18n();
+  const router = useRouter();
 
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -179,6 +181,10 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
       title: t("Simulation complete"),
       description: t("The simulation has been successfully calculated."),
     });
+
+    // Redirect to the result page with parameters
+    router.push(`/simulate/result?totalPurchaseCost=${totalPurchaseCost}&totalSaleRevenue=${totalSaleRevenue}&commissionAmount=${commissionAmount}&profitLoss=${profitLoss}&tax=${tax}&netProfit=${netProfit}`);
+    onClose();
   };
 
   return (
