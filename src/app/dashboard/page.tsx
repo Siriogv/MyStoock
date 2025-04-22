@@ -1,33 +1,45 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 const DashboardPage: React.FC = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        // Check authentication status (example: check for a token in localStorage)
-        const isAuthenticated = localStorage.getItem('isLoggedIn');
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isLoggedIn');
+    const userRole = localStorage.getItem('userRole');
 
-        if (!isAuthenticated) {
-            // If not authenticated, redirect to the login page
-            router.push('/login');
-        }
-    }, [router]);
-    return (
+    if (!isAuthenticated) {
+      router.push('/login');
+    } else {
+      // Redirect based on user role (example)
+      switch (userRole) {
+        case 'administrator':
+          // Additional admin-specific logic
+          break;
+        case 'operator':
+          // Additional operator-specific logic
+          break;
+        default:
+          // Default user logic
+          break;
+      }
+    }
+  }, [router]);
+
+  return (
+    
+      
         
-            
-                
-                    Dashboard
-                
-                
-                    Welcome to your dashboard!
-                
-            
+          Dashboard
         
-    );
+        
+          Welcome to your dashboard!
+        
+      
+    
+  );
 };
 
 export default DashboardPage;

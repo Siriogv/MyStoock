@@ -17,15 +17,25 @@ import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { useI18n } from "@/hooks/use-i18n";
 import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SimulationDialog from "@/components/simulation-dialog";
+import { UserRole, User } from "@/types/user";
 
 export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { t } = useI18n();
   const router = useRouter();
-
   const [isSimulationOpen, setIsSimulationOpen] = useState(false);
+    const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Retrieve authentication status and user role from localStorage
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const storedUserRole = localStorage.getItem('userRole');
+    setIsAuthenticated(!!isLoggedIn);
+    setUserRole(storedUserRole as UserRole || null);
+  }, []);
 
   const openSimulation = () => setIsSimulationOpen(true);
   const closeSimulation = () => setIsSimulationOpen(false);
@@ -52,6 +62,8 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <SidebarContent>
             <SidebarTrigger/>
+            {isAuthenticated && (
+              <>
             <SidebarGroup>
               <SidebarGroupLabel>{t("Dashboard")}</SidebarGroupLabel>
               <SidebarMenu>
@@ -65,10 +77,9 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <Link href="/transaction-history" passHref>
-                    <SidebarMenuButton href="/transaction-history">
-                      <Icons.workflow className="mr-2 h-4 w-4" />
-                      <span>{t("Transaction History")}</span>
-                    </SidebarMenuButton>
+                    <Icons.workflow className="mr-2 h-4 w-4" />
+                    <span>{t("Transaction History")}</span>
+                  </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -78,11 +89,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
               <SidebarGroupLabel>{t("Trade")}</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <Link href="/buy" passHref>
-                    <SidebarMenuButton href="/buy">
+                    <Link href="/buy" passHref>
+                  <SidebarMenuButton href="/buy">
                       <Icons.building className="mr-2 h-4 w-4" />
                       <span>{t("Buy Stock")}</span>
-                    </SidebarMenuButton>
+                  </SidebarMenuButton>
                   </Link>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -109,11 +120,14 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                       <Icons.settings className="mr-2 h-4 w-4" />
                       <span>{t("User Settings")}</span>
                     </SidebarMenuButton>
-                  </Link>
+                    </Link>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroup>
+              </>
+            )}
           </SidebarContent>
+            {isAuthenticated && (
           <SidebarFooter>
             <Button
               variant="outline"
@@ -125,6 +139,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
               {t("Logout")}
             </Button>
           </SidebarFooter>
+            )}
         </Sidebar>
         
           {children}

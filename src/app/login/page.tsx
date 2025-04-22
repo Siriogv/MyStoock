@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { authenticateUser } from "@/services/auth"; // Import authentication service
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   const { toast } = useToast();
@@ -17,7 +18,11 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username === 'user' && password === 'password') {
+    const user = await authenticateUser(email, password);
+
+    if (user) {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', user.role); // Store user role
       toast({
         title: "Login successful",
         description: "Redirecting to dashboard...",
@@ -41,13 +46,13 @@ export default function LoginPage() {
         <CardContent className="grid gap-4">
           <form onSubmit={handleSubmit}>
             <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
-                type="text"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                type="email"
               />
             </div>
             <div className="grid gap-2">
@@ -69,4 +74,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
