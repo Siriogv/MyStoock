@@ -15,15 +15,14 @@ import {useToast} from "@/hooks/use-toast";
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
-// import { useSession } from "next-auth/react"; // Removed next-auth
 import {TextDatabase} from "@/services/text-database";
-
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
   const { i18n, isInitialized } = useI18n();
-  //const { data: session } = useSession() // Removed next-auth
 
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
@@ -34,31 +33,31 @@ export default function SettingsPage() {
   const [textDb, setTextDb] = useState<TextDatabase>(new TextDatabase());
 
   useEffect(() => {
-      const loadSettings = async () => {
-          try {
-              const settings = await textDb.loadSettings();
-              if (settings) {
-                  setCurrency(settings.currency);
-                  setMarket(settings.market);
-                  setTheme(settings.theme);
-                  setCommissionType(settings.commissionType);
-                  setCommissionValue(settings.commissionValue);
-                  setLanguage(settings.language);
-              }
-          } catch (error) {
-              console.error("Failed to load settings:", error);
-              toast({
-                  variant: "destructive",
-                  title: "Error",
-                  description: "Failed to load settings. Please try again.",
-              });
-          }
-      };
+    const loadSettings = async () => {
+      try {
+        const settings = await textDb.loadSettings();
+        if (settings) {
+          setCurrency(settings.currency);
+          setMarket(settings.market);
+          setTheme(settings.theme);
+          setCommissionType(settings.commissionType);
+          setCommissionValue(settings.commissionValue);
+          setLanguage(settings.language);
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load settings. Please try again.",
+        });
+      }
+    };
 
-      loadSettings();
+    loadSettings();
   }, [toast, textDb]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (language && i18n.language !== language && isInitialized) {
       i18n.changeLanguage(language);
     }
@@ -69,134 +68,127 @@ export default function SettingsPage() {
   };
 
   const handleSaveSettings = async () => {
-    // if (!session?.user?.email) { // Removed next-auth
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Error",
-    //     description: "You must be logged in to save settings.",
-    //   });
-    //   return;
-    // }
-      try {
-          await textDb?.saveSettings({
-              currency,
-              market,
-              theme,
-              commissionType,
-              commissionValue,
-              language,
-          });
+    try {
+      await textDb?.saveSettings({
+        currency,
+        market,
+        theme,
+        commissionType,
+        commissionValue,
+        language,
+      });
 
-          toast({
-            title: "Settings Saved",
-            description: "Your settings have been saved successfully.",
-          });
-        } catch (error) {
-          console.error("Failed to save settings:", error);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Failed to save settings. Please try again.",
-          });
-        }
+      toast({
+        title: "Settings Saved",
+        description: "Your settings have been saved successfully.",
+      });
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save settings. Please try again.",
+      });
+    }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">User Settings</h1>
+      <h1 className="text-2xl font-bold mb-8">User Settings</h1>
 
-      <div className="mb-4">
-        <Label htmlFor="currency">Currency</Label>
-        <Select value={currency} onValueChange={setCurrency}>
-          <SelectTrigger id="currency">
-            <SelectValue placeholder="Select Currency"/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="EUR">EUR</SelectItem>
-            <SelectItem value="USD">USD</SelectItem>
-            <SelectItem value="GBP">GBP</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <div className="space-y-6">
+        <div>
+          <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">Currency</Label>
+          <Select value={currency} onValueChange={setCurrency}>
+            <SelectTrigger id="currency" className="w-full">
+              <SelectValue placeholder="Select Currency"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="EUR">EUR</SelectItem>
+              <SelectItem value="USD">USD</SelectItem>
+              <SelectItem value="GBP">GBP</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="mb-4">
-        <Label htmlFor="market">Market</Label>
-        <Select value={market} onValueChange={setMarket}>
-          <SelectTrigger id="market">
-            <SelectValue placeholder="Select Market"/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="NYSE">NYSE</SelectItem>
-            <SelectItem value="NASDAQ">NASDAQ</SelectItem>
-            <SelectItem value="MIL">MIL</SelectItem>
-            <SelectItem value="LSE">LSE</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        <div>
+          <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">Market</Label>
+          <Select value={market} onValueChange={setMarket}>
+            <SelectTrigger id="market" className="w-full">
+              <SelectValue placeholder="Select Market"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NYSE">NYSE</SelectItem>
+              <SelectItem value="NASDAQ">NASDAQ</SelectItem>
+              <SelectItem value="MIL">MIL</SelectItem>
+              <SelectItem value="LSE">LSE</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="mb-4">
-        <Label htmlFor="theme">Theme</Label>
-        <Select value={theme} onValueChange={setTheme}>
-          <SelectTrigger id="theme">
-            <SelectValue placeholder="Select Theme"/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Light</SelectItem>
-            <SelectItem value="dark">Dark</SelectItem>
-            <SelectItem value="system">System</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        <div>
+          <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">Theme</Label>
+          <Select value={theme} onValueChange={setTheme}>
+            <SelectTrigger id="theme" className="w-full">
+              <SelectValue placeholder="Select Theme"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="mb-4">
-        <Label htmlFor="language">Language</Label>
-        <Select value={language} onValueChange={setLanguage}>
-          <SelectTrigger id="language">
-            <SelectValue placeholder="Select Language"/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="it">Italiano</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+        <div>
+          <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">Language</Label>
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger id="language" className="w-full">
+              <SelectValue placeholder="Select Language"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="it">Italiano</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="mb-4">
-        <Label>Commission Type</Label>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant={commissionType === "fixed" ? "default" : "outline"}
-            onClick={() => setCommissionType("fixed")}
-          >
-            Fixed
-          </Button>
-          <Button
-            variant={commissionType === "percentage" ? "default" : "outline"}
-            onClick={() => setCommissionType("percentage")}
-          >
-            Percentage
-          </Button>
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">Commission Type</Label>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant={commissionType === "fixed" ? "default" : "outline"}
+              onClick={() => setCommissionType("fixed")}
+            >
+              Fixed
+            </Button>
+            <Button
+              variant={commissionType === "percentage" ? "default" : "outline"}
+              onClick={() => setCommissionType("percentage")}
+            >
+              Percentage
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">Commission Value</Label>
+          <Input
+            type="number"
+            id="commissionValue"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={commissionValue}
+            onChange={(e) => setCommissionValue(e.target.value)}
+            placeholder="Enter commission value"
+          />
         </div>
       </div>
-
-      <div className="mb-4">
-        <Label htmlFor="commissionValue">Commission Value</Label>
-        <input
-          type="number"
-          id="commissionValue"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          value={commissionValue}
-          onChange={(e) => setCommissionValue(e.target.value)}
-          placeholder="Enter commission value"
-        />
+       <Separator className="my-4"/>
+       <div className="flex justify-center">
+          <Button onClick={handleSaveSettings} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
+            Save Settings
+          </Button>
       </div>
-
-      <Button onClick={handleSaveSettings} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Save Settings
-      </Button>
-
-      <Button variant="secondary" onClick={goBackToDashboard}>Back to Dashboard</Button>
     </div>
   );
 }
-
