@@ -27,6 +27,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import * as countries from 'countries-list';
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -106,22 +107,27 @@ export default function SettingsPage() {
   const handleNationalityChange = (newNationality: string) => {
     setNationality(newNationality);
 
-    switch (newNationality) {
-      case 'IT':
-        setLanguage('it');
-        setMarket('MIL');
-        setTaxRate('26');
-        break;
-      case 'US':
-        setLanguage('en');
-        setMarket('NYSE');
-        setTaxRate('0');
-        break;
-      // Add more cases for other nationalities as needed
-      default:
-        setLanguage('en');
-        setMarket('NYSE');
-        setTaxRate('0');
+    // Logic to set default language, market, and tax rate based on nationality
+    // This is just an example, you'll need to adjust it based on your needs
+    const countryData = countries.countries[newNationality];
+    if (countryData) {
+      switch (newNationality) {
+        case 'IT':
+          setLanguage('it');
+          setMarket('MIL');
+          setTaxRate('26');
+          break;
+        case 'US':
+          setLanguage('en');
+          setMarket('NYSE');
+          setTaxRate('0');
+          break;
+        // Add more cases for other nationalities as needed
+        default:
+          setLanguage('en');
+          setMarket('NYSE');
+          setTaxRate('0');
+      }
     }
   };
 
@@ -199,9 +205,11 @@ export default function SettingsPage() {
                       <SelectValue placeholder={t("Select Nationality")}/>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="US">United States</SelectItem>
-                      <SelectItem value="IT">Italy</SelectItem>
-                      {/* Add more nationalities as needed */}
+                      {Object.keys(countries.countries).map((countryCode) => (
+                          <SelectItem key={countryCode} value={countryCode}>
+                              {countries.countries[countryCode].name}
+                          </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
