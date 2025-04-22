@@ -72,7 +72,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('symbol');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [stocks, setStocks] = useState<PortfolioStock[]>(portfolio);
+    const [stocks, setStocks] = useState<PortfolioStock[]>(portfolio || []);
 
     useEffect(() => {
         setStocks(portfolio);
@@ -321,28 +321,43 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
             
                 
                     
-                         {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         {/* Use React.Fragment to group the translated string and the sort indicator */}
+                         
+                            {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
-                         {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
-                         {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
-                         {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
-                         {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
                         {t("Profit/Loss")}
                     
                     
-                         {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                     
-                         {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                            {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
                     
                 
             
@@ -390,4 +405,3 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
         
     );
 };
-
