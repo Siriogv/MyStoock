@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 import {useToast} from "@/hooks/use-toast";
-import { useTranslation } from 'react-i18next';
-import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
 import {TextDatabase} from "@/services/text-database";
 import { Input } from "@/components/ui/input";
@@ -153,41 +151,48 @@ export default function SettingsPage() {
           </Select>
         </div>
 
-        <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">Commission Type</Label>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant={commissionType === "fixed" ? "default" : "outline"}
-              onClick={() => setCommissionType("fixed")}
-            >
-              Fixed
-            </Button>
-            <Button
-              variant={commissionType === "percentage" ? "default" : "outline"}
-              onClick={() => setCommissionType("percentage")}
-            >
-              Percentage
-            </Button>
-          </div>
-        </div>
+         <div className="grid grid-cols-2 gap-4 items-center">
+            <div>
+              <Label className="block text-sm font-medium text-gray-700 mb-2">Commission Type</Label>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant={commissionType === "fixed" ? "default" : "outline"}
+                  onClick={() => setCommissionType("fixed")}
+                >
+                  Fixed
+                </Button>
+                <Button
+                  variant={commissionType === "percentage" ? "default" : "outline"}
+                  onClick={() => setCommissionType("percentage")}
+                >
+                  Percentage
+                </Button>
+              </div>
+            </div>
 
-        <div>
-          <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">Commission Value</Label>
-          <Input
-            type="number"
-            id="commissionValue"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            value={commissionValue}
-            onChange={(e) => setCommissionValue(e.target.value)}
-            placeholder="Enter commission value"
-          />
-        </div>
+            <div>
+              <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">Commission Value</Label>
+              <Input
+                type="number"
+                id="commissionValue"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                value={commissionValue}
+                onChange={(e) => setCommissionValue(e.target.value)}
+                placeholder="Enter commission value"
+              />
+            </div>
+          </div>
       </div>
-       <Separator className="my-4"/>
-       <div className="flex justify-center">
-          <Button onClick={handleSaveSettings} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded">
-            Save Settings
-          </Button>
+
+      <Separator className="my-4"/>
+
+      <div className="flex justify-between">
+        <Button onClick={handleSaveSettings}>
+          Save Settings
+        </Button>
+        <Button variant="secondary" onClick={goBackToDashboard}>
+          Back to Dashboard
+        </Button>
       </div>
     </div>
   );
