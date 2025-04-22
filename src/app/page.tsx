@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
 import {Stock} from "@/components/highest-profit-stocks";
@@ -14,8 +14,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
+import { PortfolioStock } from "@/types";
+import { useRouter } from 'next/navigation';
 
-const mockPortfolio: Stock[] = [
+const mockPortfolio: PortfolioStock[] = [
   { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500 , changePercent: 2},
   { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500 , changePercent: -4},
   { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800 , changePercent: 6},
@@ -23,24 +25,24 @@ const mockPortfolio: Stock[] = [
   { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800 , changePercent: 8},
 ];
 
-const calculateProfit = (stock: Stock) => {
+const calculateProfit = (stock: PortfolioStock) => {
   return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
 const itemsPerPage = 5;
 
-const TableComponent = () => {
+const TableComponent = ({portfolio}: {portfolio: PortfolioStock[]}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState<keyof Stock>('profit');
+  const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('profit');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [filterMarket, setFilterMarket] = useState<string>('All');
 
-  const totalPages = Math.ceil(mockPortfolio.length / itemsPerPage);
+  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const sortedStocks = [...mockPortfolio].sort((a, b) => {
+  const sortedStocks = [...portfolio].sort((a, b) => {
     const profitA = calculateProfit(a);
     const profitB = calculateProfit(b);
 
@@ -68,7 +70,7 @@ const TableComponent = () => {
 
   const currentStocks = filteredStocks.slice(startIndex, endIndex);
 
-  const handleSort = (column: keyof Stock) => {
+  const handleSort = (column: keyof PortfolioStock) => {
     if (column === sortColumn) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -165,6 +167,7 @@ const formatCurrency = (amount: number) => {
 export default function Home() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+    const [portfolio, setPortfolio] = useState<PortfolioStock[]>(mockPortfolio);
 
   useEffect(() => {
     setTimeout(() => {
@@ -172,13 +175,17 @@ export default function Home() {
     }, 500);
   }, []);
 
+    const handleSell = (updatedPortfolio: PortfolioStock[]) => {
+        setPortfolio(updatedPortfolio);
+    };
+
     // Calculate total purchase value
-    const totalPurchaseValue = mockPortfolio.reduce((acc, stock) => {
+    const totalPurchaseValue = portfolio.reduce((acc, stock) => {
       return acc + (stock.purchasePrice * stock.quantity);
     }, 0);
 
     // Calculate current total value
-    const currentTotalValue = mockPortfolio.reduce((acc, stock) => {
+    const currentTotalValue = portfolio.reduce((acc, stock) => {
       return acc + (stock.currentPrice * stock.quantity);
     }, 0);
 
@@ -210,10 +217,13 @@ export default function Home() {
             </div>
           </div>
 
-          <TableComponent/>
+          <TableComponent portfolio={portfolio}/>
+          
+            
+           {/*<SellPage portfolio={portfolio} onSell={handleSell} />*/}
+          
           <NewsSection />
         </div>
     
   );
 }
-

@@ -19,17 +19,22 @@ import {
 
 const itemsPerPage = 5;
 
-export default function SellPage() {
+interface SellPageProps {
+    portfolio: PortfolioStock[];
+    onSell: (updatedPortfolio: PortfolioStock[]) => void;
+}
+
+export default function SellPage({portfolio, onSell}: SellPageProps) {
     const [selectedStock, setSelectedStock] = useState<PortfolioStock | null>(null);
     const [quantity, setQuantity] = useState(1);
     const { toast } = useToast();
     const router = useRouter();
-    const [portfolio, setPortfolio] = useState<PortfolioStock[]>([]); // Assuming mockPortfolio is initialized elsewhere
+    //const [portfolio, setPortfolio] = useState<PortfolioStock[]>([]); // Assuming mockPortfolio is initialized elsewhere
     const [currentPage, setCurrentPage] = useState(1);
     const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('profit');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-    useEffect(() => {
+    /*useEffect(() => {
         const storedPortfolio = localStorage.getItem('portfolio');
         if (storedPortfolio) {
             setPortfolio(JSON.parse(storedPortfolio));
@@ -38,7 +43,7 @@ export default function SellPage() {
 
     useEffect(() => {
         localStorage.setItem('portfolio', JSON.stringify(portfolio));
-    }, [portfolio]);
+    }, [portfolio]);*/
 
     const totalPages = Math.ceil(portfolio.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -55,7 +60,9 @@ export default function SellPage() {
                         ...updatedPortfolio[sellingStockIndex],
                         quantity: updatedPortfolio[sellingStockIndex].quantity - quantity,
                     };
-                    setPortfolio(updatedPortfolio.filter(stock => stock.quantity > 0));
+                    const filteredPortfolio = updatedPortfolio.filter(stock => stock.quantity > 0);
+                    //setPortfolio(updatedPortfolio.filter(stock => stock.quantity > 0));
+                    onSell(filteredPortfolio);
 
                     toast({
                         title: "Success",
