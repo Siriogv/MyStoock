@@ -169,20 +169,7 @@ export default function SellPage() {
           Select Stock from Portfolio
         </label>
 
-           <div className="flex justify-between items-center mb-4">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Filter by Market
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setFilterMarket('All')}>All Markets</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setFilterMarket('NASDAQ')}>NASDAQ</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setFilterMarket('NYSE')}>NYSE</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+           
 
             <Table>
                 <TableCaption>Select a stock to sell from your portfolio.</TableCaption>
