@@ -198,7 +198,9 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
     
       
         
-          <span>{t("Simulation Page")}</span>
+          
+            {t("Simulation Page")}
+          
           
             {t("Simulate investment scenarios to evaluate potential profits and losses.")}
           
@@ -208,65 +210,89 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
             
               
                 
-                  {t("Stock Symbol")}
                   
-                    type="text"
-                    id="symbol"
-                    value={symbol}
-                    onChange={(e) => setSymbol(e.target.value)}
+                    {t("Stock Symbol")}
+                  
+                  
+                    
+                      type="text"
+                      id="symbol"
+                      value={symbol}
+                      onChange={(e) => setSymbol(e.target.value)}
+                    
                   
                 
                 
-                  {t("Quantity")}
+                  
+                    {t("Quantity")}
+                  
+                  
+                    
+                      type="number"
+                      id="quantity"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                    
+                  
+                
+              
+            
+            
+              
+                
+                  
+                    {t("Purchase Price")}
+                  
+                  
+                    
+                      type="number"
+                      id="purchasePrice"
+                      value={purchasePrice}
+                      onChange={(e) => setPurchasePrice(Number(e.target.value))}
+                    
+                  
+                
+                
+                  
+                    {t("Sale Price")}
+                  
+                  
+                    
+                      type="number"
+                      id="salePrice"
+                      value={salePrice}
+                      onChange={(e) => setSalePrice(Number(e.target.value))}
+                    
+                  
+                
+              
+            
+            
+              
+                {t("Commission")}
+                
                   
                     type="number"
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    id="commission"
+                    value={commission}
+                    onChange={(e) => setCommission(Number(e.target.value))}
                   
                 
-              
-            
-            
-              
-                
-                  {t("Purchase Price")}
-                  
-                    type="number"
-                    id="purchasePrice"
-                    value={purchasePrice}
-                    onChange={(e) => setPurchasePrice(Number(e.target.value))}
-                  
-                
-                
-                  {t("Sale Price")}
-                  
-                    type="number"
-                    id="salePrice"
-                    value={salePrice}
-                    onChange={(e) => setSalePrice(Number(e.target.value))}
-                  
-                
-              
-            
-            
-              {t("Commission")}
-              
-                type="number"
-                id="commission"
-                value={commission}
-                onChange={(e) => setCommission(Number(e.target.value))}
               
             
           
           
             
-              Fixed Commission
+              
+                Fixed Commission
+              
             
           
           
             
-              Calculate Tax (26%)
+              
+                Calculate Tax (26%)
+              
             
           
         
@@ -276,6 +302,7 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
           
         
   
+
         {simulationResult && (
           
             

@@ -57,13 +57,13 @@ export default function RootLayout({
         <html lang={i18n?.language || 'en'}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {isAuthenticated ? (
-            
-                    <SidebarLayout>
-                        {children}
-                        <Toaster/>
-                    </SidebarLayout>
-            
-        ) : null}
+          <SidebarLayout>
+            {children}
+            <Toaster />
+          </SidebarLayout>
+        ) : (
+          children
+        )}
 
         </body>
         </html>
@@ -73,11 +73,9 @@ export default function RootLayout({
 export function Providers({ children }: { children: React.ReactNode }) {
     const {i18n} = useI18n();
     return (
-        <I18nextProvider i18n={i18n}>
-            <SidebarLayout>
-                {children}
-            </SidebarLayout>
-        </I18nextProvider>
+      <I18nextProvider i18n={i18n}>
+        {children}
+      </I18nextProvider>
     )
 }
 
