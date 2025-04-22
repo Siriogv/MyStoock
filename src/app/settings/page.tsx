@@ -21,14 +21,14 @@ export default function SettingsPage() {
   const router = useRouter();
   const {toast} = useToast();
   const { i18n, isInitialized } = useI18n();
-  const {t} = i18n;
+  const {t} = i18n || {t: (str: string) => str};
 
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
   const [theme, setTheme] = useState("light");
   const [commissionType, setCommissionType] = useState("fixed");
   const [commissionValue, setCommissionValue] = useState("5");
-  const [language, setLanguage] = useState(i18n.language);
+  const [language, setLanguage] = useState(i18n?.language || 'en');
   const [textDb, setTextDb] = useState<TextDatabase>(new TextDatabase());
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function SettingsPage() {
   }, [toast, textDb, t]);
 
   useEffect(() => {
-    if (language && i18n.language !== language && isInitialized) {
+    if (language && i18n?.language !== language && isInitialized) {
       i18n.changeLanguage(language);
     }
   }, [language, i18n, isInitialized]);
