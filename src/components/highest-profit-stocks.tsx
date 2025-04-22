@@ -66,7 +66,7 @@ interface HighestProfitStocksProps {
     setSortOrder: (order: 'asc' | 'desc') => void;
 }
 
-export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, setSortColumn, setSortOrder }: HighestProfitStocksProps) => {
+const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, setSortColumn, setSortOrder }: HighestProfitStocksProps) => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
     const { t } = useI18n();
     const [isSellModalOpen, setIsSellModalOpen] = useState(false);
@@ -98,6 +98,14 @@ export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOr
         }
     };
 
+    const renderHeader = (labelKey: string, column: keyof Stock) => {
+        return (
+            
+                {t(labelKey)} {sortColumn === column && (sortOrder === 'asc' ? '▲' : '▼')}
+            
+        );
+    };
+
     return (
         
             
@@ -105,34 +113,31 @@ export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOr
                     
                         
                             
-                                {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Symbol")}
                             
                             
-                                {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Name")}
                             
                             
-                                {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Quantity")}
                             
                             
-                                {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Purchase Price")}
                             
                             
-                                {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Current Price")}
                             
                              
-                                {t("Daily %")} {sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Daily %")}
                             
                             
-                                {t("Profit")} {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Profit")}
                             
                             
-                                {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                {t("Market")}
                             
                             
-                                {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
-                            
-                            
-                                {t("Actions")}
+                                Actions
                             
                         
                     
@@ -162,12 +167,6 @@ export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOr
                                 {calculateProfit(stock)}
                             
                             
-                                {stock.market}
-                            
-                            
-                                {stock.capitalization}
-                            
-                            
                                 
                             
                         
@@ -177,4 +176,6 @@ export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOr
         
     );
 };
+
+export { HighestProfitStocks, calculateProfit, mockPortfolio };
 "
