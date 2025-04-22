@@ -32,7 +32,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {PortfolioStock} from "@/types";
-import { SellStockModal } from "@/components/sell-stock-modal";
+import {SellStockModal} from "@/components/sell-stock-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export interface Stock {
@@ -67,7 +67,7 @@ interface HighestProfitStocksProps {
     setSortOrder: (order: 'asc' | 'desc') => void;
 }
 
-const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, setSortColumn, setSortOrder }: HighestProfitStocksProps) => {
+const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, setSortColumn, setSortOrder, sortOrder }: HighestProfitStocksProps) => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const { t } = useI18n();
@@ -112,12 +112,12 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
         }
     };
 
-    const renderHeader = (labelKey: string, column: keyof Stock) => (
-        <>
-          {t(labelKey)}{" "}
-          {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
-        </>
-      );
+    const renderHeader = (labelKey: string, column: keyof Stock) => {
+        return (
+            <>{t(labelKey)}{" "}
+                {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
+            </>
+        );
     };
 
     const renderTableCell = (content: string | number) => {
@@ -139,14 +139,30 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead onClick={() => handleSort("symbol")}>{renderHeader("Symbol", "symbol")}</TableHead>
-                  <TableHead onClick={() => handleSort("name")}>{renderHeader("Name", "name")}</TableHead>
-                  <TableHead onClick={() => handleSort("quantity")}>{renderHeader("Quantity", "quantity")}</TableHead>
-                  <TableHead onClick={() => handleSort("purchasePrice")}>{renderHeader("Purchase Price", "purchasePrice")}</TableHead>
-                  <TableHead onClick={() => handleSort("currentPrice")}>{renderHeader("Current Price", "currentPrice")}</TableHead>
-                  <TableHead onClick={() => handleSort("changePercent")}>{renderHeader("Daily %", "changePercent")}</TableHead>
-                  <TableHead onClick={() => handleSort("profit" as keyof Stock)}>{renderHeader("Profit", "profit" as keyof Stock)}</TableHead>
-                  <TableHead onClick={() => handleSort("market")}>{renderHeader("Market", "market")}</TableHead>
+                  <TableHead onClick={() => handleSort("symbol")}>
+                      {renderHeader("Symbol", "symbol")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("name")}>
+                      {renderHeader("Name", "name")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("quantity")}>
+                      {renderHeader("Quantity", "quantity")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("purchasePrice")}>
+                      {renderHeader("Purchase Price", "purchasePrice")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("currentPrice")}>
+                      {renderHeader("Current Price", "currentPrice")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("changePercent")}>
+                      {renderHeader("Daily %", "changePercent")}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("profit" as keyof Stock)}>
+                      {renderHeader("Profit", "profit" as keyof Stock)}
+                  </TableHead>
+                  <TableHead onClick={() => handleSort("market")}>
+                      {renderHeader("Market", "market")}
+                  </TableHead>
                   <TableHead>{t("Actions")}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -176,5 +192,3 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
 };
 
 export { HighestProfitStocks, calculateProfit, mockPortfolio };
-"
-```
