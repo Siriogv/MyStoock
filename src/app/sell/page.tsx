@@ -295,7 +295,7 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
     };
 
     return (
-          
+        
             
                 
                     
@@ -381,5 +381,4 @@ const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({ children }) => (
 );
 
 AlertDialogFooter.displayName = "AlertDialogFooter";
-"
-    
+
