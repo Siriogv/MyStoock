@@ -36,7 +36,7 @@ import { useRouter } from 'next/navigation';
 export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
   const { toast } = useToast();
   const { t } = useI18n();
-    const router = useRouter();
+  const router = useRouter();
 
   const [isSimulationOpen, setIsSimulationOpen] = useState(false);
 
