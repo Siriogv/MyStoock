@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -29,7 +28,17 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
-import {HighestProfitStocks} from "@/components/highest-profit-stocks";
+import {HighestProfitStocks, Stock} from "@/components/highest-profit-stocks";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 export default function Home() {
   const { toast } = useToast();
@@ -175,8 +184,9 @@ export default function Home() {
               <p className="text-2xl success">+$10,000</p>
             </div>
           </div>
-          <NewsSection /> {/* Include the NewsSection component */}
+
           <HighestProfitStocks/>
+          <NewsSection />
         </div>
       </SidebarInset>
     </SidebarProvider>

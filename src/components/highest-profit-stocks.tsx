@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 
 interface Stock {
     symbol: string;
@@ -33,19 +42,30 @@ export const HighestProfitStocks = () => {
     }, []);
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <CardTitle>Highest Profit Stocks</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <ul>
-                    {highestProfitStocks.map((stock, index) => (
-                        <li key={index} className="mb-2">
-                            {stock.name} ({stock.symbol}): Profit - ${calculateProfit(stock)}
-                        </li>
-                    ))}
-                </ul>
-            </CardContent>
-        </Card>
+        <Table>
+            <TableCaption>Stocks with the highest profit.</TableCaption>
+            <TableHeader>
+                <TableRow>
+                    <TableHead className="w-[100px]">Symbol</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Purchase Price</TableHead>
+                    <TableHead>Current Price</TableHead>
+                    <TableHead className="text-right">Profit</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {highestProfitStocks.map((stock) => (
+                    <TableRow key={stock.symbol}>
+                        <TableCell className="font-medium">{stock.symbol}</TableCell>
+                        <TableCell>{stock.name}</TableCell>
+                        <TableCell>{stock.quantity}</TableCell>
+                        <TableCell>{stock.purchasePrice}</TableCell>
+                        <TableCell>{stock.currentPrice}</TableCell>
+                        <TableCell className="text-right">{calculateProfit(stock)}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
     );
 };
