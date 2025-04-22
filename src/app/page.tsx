@@ -157,7 +157,7 @@ const DashboardPage: React.FC = () => {
             },
             cell: ({ row }) => (
                 
-                    {row.getValue("changePercent")}%
+                    {`${row.getValue("changePercent")}%`}
                 
             ),
         },
@@ -298,3 +298,4 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
+
