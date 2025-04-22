@@ -32,7 +32,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
-import { HighestProfitStocks } from "@/components/highest-profit-stocks";
 import { useEffect } from 'react';
 import { useI18n } from "@/hooks/use-i18n";
 
@@ -52,7 +51,10 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
     const [taxRate, setTaxRate] = useState("26");
     const [quantityToSell, setQuantityToSell] = useState(1);
     const { t } = useI18n();
-
+    const itemsPerPage = 5; // Define itemsPerPage
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('symbol');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     const handleSell = () => {
         if (!selectedStock || !salePrice) {
@@ -113,15 +115,56 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         router.push('/');
     };
 
+      // Pagination logic
+    const totalPages = portfolio ? Math.ceil(portfolio.length / itemsPerPage) : 0;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    // Sorting function
+     const sortedStocks = portfolio
+        ? [...portfolio].sort((a, b) => {
+            const aValue = a[sortColumn] || '';
+            const bValue = b[sortColumn] || '';
+
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+            }
+
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            }
+            return 0;
+        })
+        : [];
+
+    const currentStocks = sortedStocks ? sortedStocks.slice(startIndex, endIndex) : [];
+
+        const goToPreviousPage = () => {
+        setCurrentPage(currentPage => Math.max(currentPage - 1, 1));
+    };
+
+    const goToNextPage = () => {
+        setCurrentPage(currentPage => Math.min(currentPage + 1, totalPages));
+    };
+
+
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">{t("Sell Stock")}</h1>
 
             {portfolio && (
                 <PortfolioTable
-                    portfolio={portfolio}
+                    portfolio={currentStocks}
                     setSelectedStock={setSelectedStock}
                     setIsDialogOpen={setIsDialogOpen}
+                    sortColumn={sortColumn}
+                    sortOrder={sortOrder}
+                    setSortColumn={setSortColumn}
+                    setSortOrder={setSortOrder}
+                    goToPreviousPage={goToPreviousPage}
+                    goToNextPage={goToNextPage}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
                 />
             )}
 
@@ -204,16 +247,22 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
                         </div>
                     </div>
                     
-                        {t("Cancel")}
                         
-                            {t("Confirm")}
+                            {t("Cancel")}
+                        
+                        
+                            
+                                {t("Confirm")}
+                            
                         
                     
                 </AlertDialogContent>
             </AlertDialog>
 
             
-                {t("Back to Dashboard")}
+                
+                    {t("Back to Dashboard")}
+                
             
         </div>
     );
@@ -223,11 +272,17 @@ interface PortfolioTableProps {
     portfolio: PortfolioStock[];
     setSelectedStock: (stock: PortfolioStock | null) => void;
     setIsDialogOpen: (isOpen: boolean) => void;
+    sortColumn: keyof PortfolioStock;
+    sortOrder: 'asc' | 'desc';
+    setSortColumn: (column: keyof PortfolioStock) => void;
+    setSortOrder: (order: 'asc' | 'desc') => void;
+    goToPreviousPage: () => void;
+    goToNextPage: () => void;
+    currentPage: number;
+    totalPages: number;
 }
 
-const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen }: PortfolioTableProps) => {
-    const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('symbol');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColumn, sortOrder, setSortColumn, setSortOrder, goToPreviousPage, goToNextPage, currentPage, totalPages }: PortfolioTableProps) => {
     const { t } = useI18n();
 
     const handleSort = (column: keyof PortfolioStock) => {
@@ -240,49 +295,37 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen }: Portfo
     };
 
     return (
-        
+          
             
                 
                     
                         {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                        {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                     
-                        {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                     
-                        {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                     
-                        {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                     
                         {t("Profit/Loss")}
                     
                     
-                        {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                     
-                        {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
+                        {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼'))}
                     
                 
             
             
-                {Array.isArray(portfolio) && portfolio.sort((a, b) => {
-                    const aValue = a[sortColumn] || '';
-                    const bValue = b[sortColumn] || '';
-
-                    if (typeof aValue === 'number' && typeof bValue === 'number') {
-                        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-                    }
-
-                    if (typeof aValue === 'string' && typeof bValue === 'string') {
-                        return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-                    }
-                    return 0;
-                }).map((stock) => (
+                {Array.isArray(portfolio) && portfolio.map((stock) => (
                     
                         
                             {stock.symbol}
@@ -310,6 +353,18 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen }: Portfo
                         
                     
                 ))}
+             
+              
+
+               
+                    
+                
+                
+                    Page {currentPage} of {totalPages}
+                
+                
+                    
+                
             
         
     );
