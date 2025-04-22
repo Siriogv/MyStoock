@@ -1,4 +1,3 @@
-
 'use client';
 
 import {Button} from "@/components/ui/button";
@@ -29,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as countries from 'countries-list';
+import { useEffectOnce } from "@/hooks/use-effect-once";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -60,17 +60,11 @@ export default function SettingsPage() {
     },
   });
 
-  useEffect(() => {
-    if (i18n && isInitialized) {
-      setLanguage(i18n.language);
-    }
-  }, [i18n, isInitialized]);
-
-  useEffect(() => {
-    if (language && i18n && i18n.language !== language && isInitialized) {
-      changeLanguage(language);
-    }
-  }, [language, i18n, isInitialized, changeLanguage]);
+  useEffectOnce(() => {
+        if (isInitialized && i18n && i18n.language !== language) {
+            changeLanguage(language);
+        }
+    }, [language, i18n, isInitialized, changeLanguage]);
 
   useEffect(() => {
     const loadSettings = async () => {

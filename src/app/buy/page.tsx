@@ -178,4 +178,3 @@ function QuantityInput({ quantity, setQuantity, handleBuy }: QuantityInputProps)
     </div>
   );
 }
-
