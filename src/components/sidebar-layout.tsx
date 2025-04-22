@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
   SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -118,3 +119,4 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
