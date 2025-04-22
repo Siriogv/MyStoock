@@ -22,6 +22,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/hooks/use-i18n";
 import { useRouter } from 'next/navigation';
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Tooltip,
+  XAxis,
+  YAxis,
+  ResponsiveContainer
+} from 'recharts';
+import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 interface SimulationDialogProps {
   isOpen: boolean;
@@ -42,47 +54,56 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
   const [calculateTax, setCalculateTax] = useState(false);
   const [simulationResult, setSimulationResult] = useState<any>(null);
 
-  const handleCalculate = () => {
-    let totalPurchaseCost = quantity * purchasePrice;
-    let totalSaleRevenue = quantity * salePrice;
-    let commissionAmount = isFixedCommission ? commission : (totalPurchaseCost + totalSaleRevenue) * (commission / 100);
-    let profitLoss = totalSaleRevenue - totalPurchaseCost - commissionAmount;
-    let tax = calculateTax && profitLoss > 0 ? profitLoss * 0.26 : 0;
-    let netProfit = profitLoss - tax;
+  const calculateSimulation = () => {
+      let totalPurchaseCost = quantity * purchasePrice;
+      let totalSaleRevenue = quantity * salePrice;
+      let commissionAmount = isFixedCommission ? commission : (totalPurchaseCost + totalSaleRevenue) * (commission / 100);
+      let profitLoss = totalSaleRevenue - totalPurchaseCost - commissionAmount;
+      let tax = calculateTax && profitLoss > 0 ? profitLoss * 0.26 : 0;
+      let netProfit = profitLoss - tax;
 
-    setSimulationResult({
-      totalPurchaseCost,
-      totalSaleRevenue,
-      commissionAmount,
-      profitLoss,
-      tax,
-      netProfit,
-    });
+      return {
+          totalPurchaseCost,
+          totalSaleRevenue,
+          commissionAmount,
+          profitLoss,
+          tax,
+          netProfit,
+      };
+  };
+
+  const handleCalculate = () => {
+    const result = calculateSimulation();
+    setSimulationResult(result);
 
     toast({
       title: t("Simulation complete"),
       description: t("The simulation has been successfully calculated."),
     });
-
-    router.push(`/simulate/result?totalPurchaseCost=${totalPurchaseCost}&totalSaleRevenue=${totalSaleRevenue}&commissionAmount=${commissionAmount}&profitLoss=${profitLoss}&tax=${tax}&netProfit=${netProfit}`);
-    onClose();
   };
 
+    const data = [
+        { name: t("Purchase Cost"), value: simulationResult?.totalPurchaseCost || 0 },
+        { name: t("Sale Revenue"), value: simulationResult?.totalSaleRevenue || 0 },
+        { name: t("Commission"), value: simulationResult?.commissionAmount || 0 },
+        { name: t("Profit/Loss"), value: simulationResult?.profitLoss || 0 },
+        { name: t("Tax"), value: simulationResult?.tax || 0 },
+        { name: t("Net Profit"), value: simulationResult?.netProfit || 0 },
+    ];
+
+
   return (
-    
-      
-        
-          
-            {t("Simulation Page")}
-          
-          
-            
-              {t("Simulate investment scenarios to evaluate potential profits and losses.")}
-            
-          
-        
-        
-          
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[800px]">
+        <DialogHeader>
+          <DialogTitle>{t("Simulation Page")}</DialogTitle>
+          <DialogDescription>
+            {t("Simulate investment scenarios to evaluate potential profits and losses.")}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+          <div>
             
               
                 
@@ -157,7 +178,6 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
               
             
           
-          
             
               
                 Fixed Commission
@@ -171,41 +191,43 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
               
             
           
-        
-        
-          
-            {t("Calculate")}
-          
-        
-  
+        </div>
 
-        {simulationResult && (
-          
-            
-              {t("Simulation Result")}
-            
-            
-              {t("Total Purchase Cost")}: {simulationResult.totalPurchaseCost}
-            
-            
-              {t("Total Sale Revenue")}: {simulationResult.totalSaleRevenue}
-            
-            
-              {t("Commission Amount")}: {simulationResult.commissionAmount}
-            
-            
-              {t("Profit/Loss")}: {simulationResult.profitLoss}
-            
-            
-              {t("Tax (26%)")}: {simulationResult.tax}
-            
-            
-              {t("Net Profit")}: {simulationResult.netProfit}
-            
-          
-        )}
-      
-    
+           <Button onClick={handleCalculate}>{t("Calculate")}</Button>
+
+          {simulationResult && (
+              <Card className="shadow-lg border-primary">
+                  <CardHeader className="pb-4">
+                      <CardTitle className="text-xl text-center">{t("Profit and Loss Analysis")}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                      <ResponsiveContainer width="100%" height={400}>
+                          <AreaChart data={data}
+                                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                              <defs>
+                                  <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                                  </linearGradient>
+                              </defs>
+                              <XAxis dataKey="name" />
+                              <YAxis tickFormatter={(value) => formatCurrency(value)}/>
+                              <CartesianGrid strokeDasharray="3 3"/>
+                              <Tooltip formatter={(value) => formatCurrency(value)}/>
+                              <Area type="monotone" dataKey="value" stroke="#82ca9d" fillOpacity={1} fill="url(#profitGradient)" />
+                          </AreaChart>
+                      </ResponsiveContainer>
+                  </CardContent>
+              </Card>
+          )}
+        
+            <DialogFooter>
+              <Button type="button" variant="secondary" onClick={onClose}>
+                {t("Cancel")}
+              </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
   );
 }
 
