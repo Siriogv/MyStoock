@@ -159,6 +159,7 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
   const [salePrice, setSalePrice] = useState(0);
   const [commission, setCommission] = useState(0);
   const [isFixedCommission, setIsFixedCommission] = useState(true);
+  const [calculateTax, setCalculateTax] = useState(false);
   const [simulationResult, setSimulationResult] = useState<any>(null);
 
   const handleCalculate = () => {
@@ -166,8 +167,8 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
     let totalSaleRevenue = quantity * salePrice;
     let commissionAmount = isFixedCommission ? commission : (totalPurchaseCost + totalSaleRevenue) * (commission / 100);
     let profitLoss = totalSaleRevenue - totalPurchaseCost - commissionAmount;
-    const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
-    const netProfit = profitLoss - tax;
+    let tax = calculateTax && profitLoss > 0 ? profitLoss * 0.26 : 0;
+    let netProfit = profitLoss - tax;
 
     setSimulationResult({
       totalPurchaseCost,
@@ -247,6 +248,7 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
               onChange={(e) => setCommission(Number(e.target.value))}
             />
           </div>
+
           <div className="flex items-center space-x-2">
             <Checkbox
               id="fixedCommission"
@@ -254,6 +256,15 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
               onCheckedChange={() => setIsFixedCommission(!isFixedCommission)}
             />
             <Label htmlFor="fixedCommission">{t("Fixed Commission")}</Label>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="calculateTax"
+              checked={calculateTax}
+              onCheckedChange={() => setCalculateTax(!calculateTax)}
+            />
+            <Label htmlFor="calculateTax">{t("Calculate Tax (26%)")}</Label>
           </div>
         </div>
         <DialogFooter>
