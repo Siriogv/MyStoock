@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
+import { HighestProfitStocks } from "@/components/highest-profit-stocks";
 
 interface SellPageProps {
     portfolio: PortfolioStock[];
@@ -112,11 +113,13 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Sell Stock</h1>
 
-            <PortfolioTable
-                portfolio={portfolio}
-                setSelectedStock={setSelectedStock}
-                setIsDialogOpen={setIsDialogOpen}
-            />
+            {portfolio && (
+                <PortfolioTable
+                    portfolio={portfolio}
+                    setSelectedStock={setSelectedStock}
+                    setIsDialogOpen={setIsDialogOpen}
+                />
+            )}
 
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <AlertDialogTrigger asChild>
@@ -220,19 +223,22 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen }: Portfo
     const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('symbol');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-    const sortedStocks = [...portfolio].sort((a, b) => {
-        const aValue = a[sortColumn] || '';
-        const bValue = b[sortColumn] || '';
+    // Check if portfolio is an array before attempting to iterate
+    const sortedStocks = Array.isArray(portfolio)
+        ? [...portfolio].sort((a, b) => {
+            const aValue = a[sortColumn] || '';
+            const bValue = b[sortColumn] || '';
 
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-            return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-        }
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+            }
 
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-            return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-        }
-        return 0;
-    });
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            }
+            return 0;
+        })
+        : [];
 
     const handleSort = (column: keyof PortfolioStock) => {
         if (column === sortColumn) {
