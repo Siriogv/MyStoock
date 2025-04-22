@@ -10,6 +10,8 @@ import {
     flexRender,
     getFilteredRowModel,
     getSortedRowModel,
+    getCoreRowModel,
+    getPaginationRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -18,9 +20,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  getCoreRowModel, getPaginationRowModel
-} from "@tanstack/react-table";
-import {
     Table,
     TableBody,
     TableCaption,
@@ -28,12 +27,12 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { PortfolioStock } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/hooks/use-i18n";
-import {cn} from "@/lib/utils";
-import {getMockPortfolio} from "@/lib/db";
+import { cn } from "@/lib/utils";
+import { getMockPortfolio } from "@/lib/db";
 import { SellStockModal } from '@/components/sell-stock-modal';
 
 const DashboardPage: React.FC = () => {    
@@ -70,9 +69,9 @@ const DashboardPage: React.FC = () => {
         return currentTotalValue - totalPurchaseValue;
     }, [currentTotalValue, totalPurchaseValue]);
 
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+    const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
     const columns: ColumnDef<PortfolioStock>[] = useMemo(() => [
         {
@@ -97,9 +96,9 @@ const DashboardPage: React.FC = () => {
         },
         {
             accessorKey: "changePercent",
-            header: ({ column }) => <TableHeaderCell column={column} title={t("Daily %")}/> ,
+            header: ({ column }) => <TableHeaderCell column={column} title={t("Daily %")}/>,
             cell: ({ row }) => (
-                    `${row.getValue("changePercent")}%`
+                `${row.getValue("changePercent")}%`
             ),
         },
         {
@@ -112,7 +111,7 @@ const DashboardPage: React.FC = () => {
         },
     ], [t]);
 
-      const table = useReactTable({
+    const table = useReactTable({
         data: portfolio,
         columns,
         onColumnVisibilityChange: setColumnVisibility,
@@ -124,81 +123,90 @@ const DashboardPage: React.FC = () => {
             sorting,
         },
         getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(), getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-      })
+    });
 
-        const handleSellStock = (stock: PortfolioStock) => {
-            setSelectedStock(stock);
-            setIsSellModalOpen(true);
-        };
+    const handleSellStock = (stock: PortfolioStock) => {
+        setSelectedStock(stock);
+        setIsSellModalOpen(true);
+    };
 
-        const handleCloseSellModal = () => {
-            setIsSellModalOpen(false);
-            setSelectedStock(null);
-        };
+    const handleCloseSellModal = () => {
+        setIsSellModalOpen(false);
+        setSelectedStock(null);
+    };
 
-        if (isLoading) {
-            return <div className="flex justify-center items-center h-screen">Loading...</div>;
-        }
+    if (isLoading) {
+        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    }
 
-        if (error) {
-            return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
-        }
+    if (error) {
+        return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
+    }
+
     return (
-        <>
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">{t("Dashboard")}</h1>
             
-                
-                    {t("Dashboard")}
-                
-                
-                    
-                        {t("Total Purchase Value")}: ${totalPurchaseValue}
-                        {t("Current Total Value")}: ${currentTotalValue}
-                        {t("Total Profit/Loss")}: ${totalProfitLoss}
-                    
-                
-                <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(header.column.columnDef.header, header.getContext())}
-                                        </TableHead>
-                                    ))}
-                                    <TableHead>Actions</TableHead>
-                                </TableRow>
-                            ))} 
-                        </TableHeader>
-                        <TableBody>
-                            {table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                    <TableCell>
-                                        <Button variant="outline" size="sm" onClick={() => handleSellStock(row.original)}>
-                                            {t("Sell")}
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+            <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-4 border rounded bg-slate-50">
+                    <p>{t("Total Purchase Value")}: ${totalPurchaseValue.toFixed(2)}</p>
                 </div>
-                {selectedStock && (
-                    <SellStockModal isOpen={isSellModalOpen} onClose={handleCloseSellModal} stock={selectedStock} />
-                )}
-            </>
+                <div className="p-4 border rounded bg-slate-50">
+                    <p>{t("Current Total Value")}: ${currentTotalValue.toFixed(2)}</p>
+                </div>
+                <div className="p-4 border rounded bg-slate-50">
+                    <p>{t("Total Profit/Loss")}: ${totalProfitLoss.toFixed(2)}</p>
+                </div>
+            </div>
+            
+            <div className="rounded-md border mb-6">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
+                                <TableHead>{t("Actions")}</TableHead>
+                            </TableRow>
+                        ))} 
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                                <TableCell>
+                                    <Button variant="outline" size="sm" onClick={() => handleSellStock(row.original)}>
+                                        {t("Sell")}
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
+            
+            {selectedStock && (
+                <SellStockModal 
+                    isOpen={isSellModalOpen} 
+                    onClose={handleCloseSellModal} 
+                    stock={selectedStock} 
+                />
+            )}
+        </div>
     );
 };
-
 
 function TableHeaderCell({ column, title }: { column: any; title: string }) {
     return (
@@ -207,6 +215,5 @@ function TableHeaderCell({ column, title }: { column: any; title: string }) {
         </div>
     );
 }
-
 
 export default DashboardPage;
