@@ -7,6 +7,9 @@ import {Toaster} from "@/components/ui/toaster";
 import {SidebarLayout} from "@/components/sidebar-layout";
 import i18n from "@/i18n/i18n"; // Corrected import path
 import {useEffect} from "react";
+import {I18nextProvider} from "react-i18next";
+import {SidebarProvider} from "@/components/ui/sidebar";
+
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -59,9 +62,3 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </I18nextProvider>
     )
 }
-
-
-
-
-
-
