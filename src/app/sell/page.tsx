@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
@@ -32,8 +32,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
-import { useEffect } from 'react';
 import { useI18n } from "@/hooks/use-i18n";
+import { useEffectOnce } from "@/hooks/use-effect-once";
 
 interface SellPageProps {
     portfolio: PortfolioStock[];
@@ -55,6 +55,11 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('symbol');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [stocks, setStocks] = useState<PortfolioStock[]>(portfolio);
+
+    useEffect(() => {
+        setStocks(portfolio);
+    }, [portfolio]);
 
     const handleSell = () => {
         if (!selectedStock || !salePrice) {
@@ -116,13 +121,13 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
     };
 
       // Pagination logic
-    const totalPages = portfolio ? Math.ceil(portfolio.length / itemsPerPage) : 0;
+    const totalPages = stocks ? Math.ceil(stocks.length / itemsPerPage) : 0;
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
     // Sorting function
-     const sortedStocks = portfolio
-        ? [...portfolio].sort((a, b) => {
+    const sortedStocks = stocks
+        ? [...stocks].sort((a, b) => {
             const aValue = a[sortColumn] || '';
             const bValue = b[sortColumn] || '';
 
@@ -139,7 +144,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
 
     const currentStocks = sortedStocks ? sortedStocks.slice(startIndex, endIndex) : [];
 
-        const goToPreviousPage = () => {
+    const goToPreviousPage = () => {
         setCurrentPage(currentPage => Math.max(currentPage - 1, 1));
     };
 
@@ -152,7 +157,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">{t("Sell Stock")}</h1>
 
-            {portfolio && (
+            {stocks && (
                 <PortfolioTable
                     portfolio={currentStocks}
                     setSelectedStock={setSelectedStock}
@@ -299,28 +304,28 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
             
                 
                     
-                         {(t("Symbol"))} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                         {(t("Name"))} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                         {(t("Quantity"))} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                         {(t("Purchase Price"))} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                         {(t("Current Price"))} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
                         {t("Profit/Loss")}
                     
                     
-                         {(t("Market"))} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                         {(t("Capitalization"))} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                         {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                 
             
@@ -382,3 +387,4 @@ const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({ children }) => (
 
 AlertDialogFooter.displayName = "AlertDialogFooter";
 
+"
