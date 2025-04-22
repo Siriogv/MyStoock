@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Table,
@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import {PortfolioStock} from "@/types";
 import { SellStockModal } from "@/components/sell-stock-modal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface Stock {
     symbol: string;
@@ -43,7 +44,7 @@ export interface Stock {
     market: string;
     capitalization: number;
     changePercent:number;
-}
+};
 
 const mockPortfolio: Stock[] = [
     { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
@@ -68,15 +69,28 @@ interface HighestProfitStocksProps {
 
 const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, setSortColumn, setSortOrder }: HighestProfitStocksProps) => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
     const { t } = useI18n();
     const [isSellModalOpen, setIsSellModalOpen] = useState(false);
     const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
 
+    const sortedStocks = useMemo(() => {
+        return [...portfolio].sort((a, b) => {
+            const profitA = calculateProfit(a);
+            const profitB = calculateProfit(b);
+            return sortOrder === 'asc' ? profitA - profitB : profitB - profitA;
+        });
+    }, [portfolio, sortOrder]);
+
     useEffect(() => {
+        setIsLoading(true);
         // Sort the mock portfolio based on profit
-        const sortedStocks = [...portfolio].sort((a, b) => calculateProfit(b) - calculateProfit(a));
-        setHighestProfitStocks(sortedStocks);
-    }, [portfolio]);
+        setTimeout(() => {
+          setHighestProfitStocks(sortedStocks);
+          setIsLoading(false);
+        }, 1000);
+
+    }, [sortedStocks]);
 
     const handleSellStock = (stock: Stock) => {
         setSelectedStock(stock);
@@ -98,10 +112,27 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
         }
     };
 
-    const renderHeader = (labelKey: string, column: keyof Stock) => {
-        return (
-            
-                {t(labelKey)} {sortColumn === column && (sortOrder === 'asc' ? '▲' : '▼')}
+    const renderTableCell = (content: string | number, isHeader: boolean = false) => {
+        if (isLoading) {
+          return (
+              <TableCell>
+                  <Skeleton className="h-4 w-24" />
+              </TableCell>
+          );
+        }
+        return isHeader ? (
+            <TableHead>{content}</TableHead>
+        ): (
+            <TableCell>{content}</TableCell>
+        )
+    };
+
+    const renderHeader = (labelKey: string, column: keyof Stock, isProfitHeader = false) => {
+      if (isLoading && isProfitHeader) {
+        return <Skeleton className="h-4 w-24" />
+      }
+        return (           
+            {t(labelKey)} {sortColumn === column && (sortOrder === 'asc' ? '▲' : '▼')}
             
         );
     };
@@ -114,88 +145,81 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
                         
                             
                                 
-                                    {t("Symbol")}
-                                    {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Symbol", "symbol")}
                                 
                             
                             
                                 
-                                    {t("Name")}
-                                    {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Name", "name")}
                                 
                             
                             
                                 
-                                    {t("Quantity")}
-                                    {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Quantity", "quantity")}
                                 
                             
                             
                                 
-                                    {t("Purchase Price")}
-                                    {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Purchase Price", "purchasePrice")}
                                 
                             
                             
                                 
-                                    {t("Current Price")}
-                                    {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Current Price", "currentPrice")}
                                 
                             
                              
                                 
-                                    {t("Daily %")}
-                                    {sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Daily %", "changePercent")}
                                 
                             
                             
                                 
-                                    {t("Profit")}
-                                    {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Profit", "profit",true)}
                                 
                             
                             
                                 
-                                    {t("Market")}
-                                    {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                    {renderHeader("Market", "market")}
                                 
                             
                             
                                 Actions
                             
                         
-                    
-                
-                
-                    {highestProfitStocks.map((stock) => (
-                        
-                            
-                                {stock.symbol}
-                            
-                            
-                                {stock.name}
-                            
-                            
-                                {stock.quantity}
-                            
-                            
-                                {stock.purchasePrice}
-                            
-                            
-                                {stock.currentPrice}
-                            
-                             
-                                {stock.changePercent}%
-                            
-                            
-                                {calculateProfit(stock)}
-                            
-                            
-                                
-                            
-                        
-                    ))}
-                
+                    </TableHeader>
+                { isLoading && (
+                   <TableRow>
+                        <TableCell colSpan={10}>
+                            <Skeleton className="h-4 w-[100%]" />
+                        </TableCell>
+                    </TableRow>
+                )}
+                {
+                  highestProfitStocks.length === 0 && !isLoading && (
+                      <TableRow>
+                          <TableCell colSpan={10} className="text-center">
+                              {t("No data available")}
+                          </TableCell>
+                      </TableRow>
+                  )
+                }
+                <TableBody>
+                  {highestProfitStocks.map((stock) => (
+                      <TableRow key={stock.symbol}>
+                        {renderTableCell(stock.symbol)}
+                        {renderTableCell(stock.name)}
+                        {renderTableCell(stock.quantity)}
+                        {renderTableCell(stock.purchasePrice)}
+                        {renderTableCell(stock.currentPrice)}
+                        {renderTableCell(stock.changePercent + "%")}
+                        {renderTableCell(calculateProfit(stock))}
+                        {renderTableCell(stock.market)}
+
+                      </TableRow>
+                  ))}
+                </TableBody>
+                </Table>
             
         
     );
