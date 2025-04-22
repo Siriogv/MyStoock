@@ -100,6 +100,22 @@ export default function SettingsPage() {
     loadSettings();
   }, [toast, t, form]);
 
+    useEffect(() => {
+        // Apply theme on the client side
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            // For system theme, you might want to listen to OS preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+    }, [theme]);
+
   const goBackToDashboard = () => {
     router.push('/');
   };
@@ -329,3 +345,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
