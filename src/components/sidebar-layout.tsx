@@ -334,3 +334,4 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
     
   );
 }
+
