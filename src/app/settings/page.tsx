@@ -318,7 +318,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-2">{t("Tax Rate")}</Label>
+                  <Label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-2">{t("Tassazione")}</Label>
                   <Input
                     type="number"
                     id="taxRate"
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                     value={taxRate}
                     onChange={(e) => setTaxRate(e.target.value)}
                     placeholder={t("Enter tax rate")}
-                  />
+                  /> %
                 </div>
               </div>
             </div>
@@ -345,4 +345,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
 
