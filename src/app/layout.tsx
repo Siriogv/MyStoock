@@ -62,3 +62,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </I18nextProvider>
     )
 }
+
+
