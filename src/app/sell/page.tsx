@@ -373,4 +373,3 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
         
     );
 };
-
