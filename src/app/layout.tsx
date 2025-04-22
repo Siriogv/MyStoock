@@ -1,13 +1,14 @@
-'use client'
+'use client';
 
 import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {SidebarLayout} from "@/components/sidebar-layout";
 import {I18nextProvider} from "react-i18next";
 import { useI18n } from "@/hooks/use-i18n";
+import { useRouter } from 'next/navigation';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -30,16 +31,36 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const {i18n} = useI18n();
+    const {i18n, isInitialized} = useI18n();
+    const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Example authentication state
 
+    useEffect(() => {
+      // Simulate authentication check (replace with your actual auth logic)
+      const checkAuth = () => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        setIsAuthenticated(!!isLoggedIn);
+      };
+  
+      checkAuth();
+      // For simplicity, we're not setting up a real-time listener for auth changes here
+      // Implement a more robust solution for production apps
+    }, []);
+  
+    useEffect(() => {
+      if (!isAuthenticated) {
+        router.push('/login');
+      }
+    }, [isAuthenticated, router]);
     return (
         <html lang={i18n?.language || 'en'}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-
-            <Providers>
+        {isAuthenticated ? (
+            
                     {children}
                     <Toaster/>
-            </Providers>
+            
+        ) : null}
 
         </body>
         </html>
@@ -49,12 +70,10 @@ export default function RootLayout({
 export function Providers({ children }: { children: React.ReactNode }) {
     const {i18n} = useI18n();
     return (
-        <I18nextProvider i18n={i18n}>
-            <SidebarLayout>
+        
+            
                 {children}
-            </SidebarLayout>
-        </I18nextProvider>
+            
+        
     )
 }
-
-

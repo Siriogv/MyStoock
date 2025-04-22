@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { NewsSection } from "@/components/news-section";
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
+import {useI18n} from "@/hooks/use-i18n";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,497 +25,293 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
-import { useI18n } from "@/hooks/use-i18n";
-import { SidebarLayout } from "@/components/sidebar-layout";
-import { Stock } from "@/types";
+import {PortfolioStock} from "@/types";
+import {SellStockModal} from "@/components/sell-stock-modal";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import { SellStockModal } from "@/components/sell-stock-modal";
+    ColumnDef,
+    ColumnFiltersState,
+    SortingState,
+    VisibilityState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
+  } from "@tanstack/react-table"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useRouter } from 'next/navigation';
 
-const mockPortfolio = [
-  {
-    symbol: 'AAPL',
-    name: 'Apple Inc.',
-    purchasePrice: 150,
-    currentPrice: 170,
-    quantity: 10,
-    market: 'NASDAQ',
-    capitalization: 1500,
-    changePercent: 2
-  },
-  {
-    symbol: 'MSFT',
-    name: 'Microsoft Corp.',
-    purchasePrice: 300,
-    currentPrice: 430,
-    quantity: 5,
-    market: 'NASDAQ',
-    capitalization: 1500,
-    changePercent: -4
-  },
-  {
-    symbol: 'GOOG',
-    name: 'Alphabet Inc.',
-    purchasePrice: 100,
-    currentPrice: 150,
-    quantity: 8,
-    market: 'NASDAQ',
-    capitalization: 800,
-    changePercent: 6
-  },
-  {
-    symbol: 'NVDA',
-    name: 'Nvidia Corp.',
-    purchasePrice: 500,
-    currentPrice: 1000,
-    quantity: 3,
-    market: 'NASDAQ',
-    capitalization: 1500,
-    changePercent: 0
-  },
-  {
-    symbol: 'TSLA',
-    name: 'Tesla, Inc.',
-    purchasePrice: 700,
-    currentPrice: 850,
-    quantity: 4,
-    market: 'NASDAQ',
-    capitalization: 2800,
-    changePercent: 8
-  },
+export interface Stock {
+    symbol: string;
+    name: string;
+    purchasePrice: number;
+    currentPrice: number;
+    quantity: number;
+    market: string;
+    capitalization: number;
+    changePercent:number;
+};
+
+const mockPortfolio: Stock[] = [
+    { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
+    { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500, changePercent: -4 },
+    { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800, changePercent: 6 },
+    { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500, changePercent: 0 },
+    { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800, changePercent: 8 },
 ];
 
-const calculateProfit = (stock: any) => {
-  return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
+const calculateProfit = (stock: Stock) => {
+    return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-};
-
-export default function Home() {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(true);
-  const [portfolio, setPortfolio] = useState(mockPortfolio);
-  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
-  const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-  const { t } = useI18n();
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, []);
-
-  // Calculate total purchase value
-  const totalPurchaseValue = portfolio.reduce((acc, stock) => {
-    return acc + (stock.purchasePrice * stock.quantity);
-  }, 0);
-
-  // Calculate current total value
-  const currentTotalValue = portfolio.reduce((acc, stock) => {
-    return acc + (stock.currentPrice * stock.quantity);
-  }, 0);
-
-  // Calculate total profit/loss
-  const totalProfitLoss = currentTotalValue - totalPurchaseValue;
-
-  const handleSellStock = (stock: Stock) => {
-    setSelectedStock(stock);
-    setIsSellModalOpen(true);
-  };
-
-  const handleCloseSellModal = () => {
-    setIsSellModalOpen(false);
-    setSelectedStock(null);
-  };
-
-  return (
-    <SidebarLayout>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">{t("Dashboard")}</h1>
-        <p className="text-muted-foreground">
-          {t("Welcome to your investment portfolio overview.")}
-        </p>
-
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">{t("Total Purchase Value")}</h2>
-            <p className="text-2xl">{formatCurrency(totalPurchaseValue)}</p>
-          </div>
-
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">{t("Current Total Value")}</h2>
-            <p className="text-2xl">{formatCurrency(currentTotalValue)}</p>
-          </div>
-
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">{t("Total Profit/Loss")}</h2>
-            <p className={`text-2xl ${totalProfitLoss >= 0 ? 'success' : 'error'}`}>{formatCurrency(totalProfitLoss)}</p>
-          </div>
-        </div>
-
-        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
-
-        <SellStockModal
-          isOpen={isSellModalOpen}
-          onClose={handleCloseSellModal}
-          stock={selectedStock}
-          setPortfolio={setPortfolio}
-          portfolio={portfolio}
-        />
-
-        <NewsSection />
-      </div>
-    </SidebarLayout>
-  );
+interface HighestProfitStocksProps {
+    portfolio: Stock[];
+    onSellStock: (stock: Stock) => void;
+    sortColumn: keyof Stock;
+    sortOrder: 'asc' | 'desc';
+    setSortColumn: (column: keyof Stock) => void;
+    setSortOrder: (order: 'asc' | 'desc') => void;
 }
 
-interface SellStockModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  stock: Stock | null;
-  setPortfolio: (portfolio: Stock[]) => void;
-  portfolio: Stock[];
-}
+const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, setSortColumn, sortOrder,
+ }: HighestProfitStocksProps) => {
+    const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const { t } = useI18n();
+    const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+    const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
 
-const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: SellStockModalProps) => {
-  const [sellPrice, setSellPrice] = useState<number | null>(null);
-  const [commission, setCommission] = useState<number>(0);
-  const [isFixedCommission, setIsFixedCommission] = useState(true);
-  const { toast } = useToast();
-  const { t } = useI18n();
+    const sortedStocks = useMemo(() => {
+        return [...portfolio].sort((a, b) => {
+            const profitA = calculateProfit(a);
+            const profitB = calculateProfit(b);
+            return sortOrder === 'asc' ? profitA - profitB : profitB - profitA;
+        });
+    }, [portfolio, sortOrder]);
 
-  const handleSell = () => {
-    if (!stock || !sellPrice) {
-      toast({
-        title: t("Error"),
-        description: t("Please select a stock and enter a sell price."),
-        variant: "destructive",
-      });
-      return;
-    }
+    useEffect(() => {
+        setIsLoading(true);
+        // Sort the mock portfolio based on profit
+        setTimeout(() => {
+          setHighestProfitStocks(sortedStocks);
+          setIsLoading(false);
+        }, 1000);
 
-    // Calculate commission amount
-    let commissionAmount = isFixedCommission ? commission : (stock.purchasePrice + sellPrice) * (commission / 100);
-    // Calculate profit loss
-    let profitLoss = (sellPrice - stock.purchasePrice) * stock.quantity - commissionAmount;
-      const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
-      const netProfit = profitLoss - tax;
+    }, [sortedStocks]);
 
-    // Update the portfolio by removing the sold stock
-    const updatedPortfolio = portfolio.filter(item => item.symbol !== stock.symbol);
-    setPortfolio(updatedPortfolio);
+    const handleSellStock = (stock: Stock) => {
+        setSelectedStock(stock);
+        setIsSellModalOpen(true);
+        onSellStock(stock);
+    };
 
-    toast({
-      title: t("Success"),
-      description: t("Successfully sold") + ` ${stock.quantity} ` + t("shares of") + ` ${stock.symbol} ` + t("for") + ` ${formatCurrency(netProfit)}`,
-    });
-    onClose();
-  };
+    const handleCloseSellModal = () => {
+        setIsSellModalOpen(false);
+        setSelectedStock(null);
+    };
 
-  if (!stock) {
-    return null;
-  }
+    const handleSort = (column: keyof Stock) => {
+        if (sortColumn === column) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortOrder('asc');
+        }
+    };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{t("Sell")} {stock.name}</DialogTitle>
-          <DialogDescription>
-              {t("Are you sure you want to sell your shares of")} {stock.symbol}?
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="sellPrice" className="text-right">
-              {t("Sell Price")}
-            </Label>
-            <Input
-              type="number"
-              id="sellPrice"
-              placeholder={t("Enter sell price")}
-              className="col-span-3"
-              onChange={(e) => setSellPrice(Number(e.target.value))}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="commission" className="text-right">
-              {t("Commission")}
-            </Label>
-            <Input
-              type="number"
-              id="commission"
-              placeholder={t("Enter commission amount")}
-              className="col-span-3"
-              onChange={(e) => setCommission(Number(e.target.value))}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="isFixedCommission" className="text-right">
-              {t("Fixed Commission")}
-            </Label>
-            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)} >
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder={t("Fixed or Percentage")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="true">{t("Fixed")}</SelectItem>
-                <SelectItem value="false">{t("Percentage")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="button" variant="secondary" onClick={onClose}>
-            {t("Cancel")}
-          </Button>
-          <Button type="button" onClick={handleSell}>
-            {t("Sell")}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+    const renderHeader = (labelKey: string, column: keyof Stock) => {
+        return (
+          
+            {t(labelKey)}{" "}
+            {sortColumn === column && (sortOrder === "asc" ? "▲" : "▼")}
+          
+        );
+    };
+
+    const renderTableCell = (content: string | number) => {
+        return isLoading ? (
+            
+                <Skeleton className="h-4 w-24" />
+            
+        ) : (
+            
+                {content}
+            
+        );
+    };
+
+    return (
+        
+          
+            {t("Stocks in Portfolio")}
+          
+          
+            
+              
+                
+                  {renderHeader("Symbol", "symbol")}
+                
+                
+                  {renderHeader("Name", "name")}
+                
+                
+                  {renderHeader("Quantity", "quantity")}
+                
+                
+                  {renderHeader("Purchase Price", "purchasePrice")}
+                
+                
+                  {renderHeader("Current Price", "currentPrice")}
+                
+                
+                  {renderHeader("Daily %", "changePercent")}
+                
+                
+                  {renderHeader("Profit", "profit" as keyof Stock)}
+                
+                
+                  {renderHeader("Market", "market")}
+                
+                
+                  {t("Actions")}
+                
+              
+            
+            
+              {highestProfitStocks.map((stock) => (
+                
+                  
+                    {stock.symbol}
+                  
+                  
+                    {stock.name}
+                  
+                  
+                    {stock.quantity}
+                  
+                  
+                    {stock.purchasePrice}
+                  
+                  
+                    {stock.currentPrice}
+                  
+                  
+                    {stock.changePercent}%
+                  
+                  
+                    {calculateProfit(stock)}
+                  
+                  
+                    {stock.market}
+                  
+                  
+                    {t("Sell")}
+                  
+                
+              ))}
+            
+          
+        
+      );
 };
 
-interface TableComponentProps {
-  portfolio: Stock[];
-  onSellStock: (stock: Stock) => void;
+export { HighestProfitStocks, calculateProfit, mockPortfolio };
+
+"])</content>
+ </change>
+  <change>
+    <file>src/app/layout.tsx</file>
+    <description>Add use client, fix i18next and check authentication and redirect to login page.</description>
+   <content><![CDATA['use client';
+
+import type {Metadata} from 'next';
+import {Geist, Geist_Mono} from 'next/font/google';
+import './globals.css';
+import {Toaster} from "@/components/ui/toaster";
+import React, { useEffect, useState } from "react";
+import {SidebarLayout} from "@/components/sidebar-layout";
+import {I18nextProvider} from "react-i18next";
+import { useI18n } from "@/hooks/use-i18n";
+import { useRouter } from 'next/navigation';
+
+const geistSans = Geist({
+    variable: '--font-geist-sans',
+    subsets: ['latin'],
+});
+
+const geistMono = Geist_Mono({
+    variable: '--font-geist-mono',
+    subsets: ['latin'],
+});
+
+// Removing metadata export from here as it's a client component
+// export const metadata: Metadata = {
+//   title: 'Stoock',
+//   description: 'Generated by Firebase Studio',
+// };
+
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    const {i18n, isInitialized} = useI18n();
+    const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Example authentication state
+
+    useEffect(() => {
+      // Simulate authentication check (replace with your actual auth logic)
+      const checkAuth = () => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        setIsAuthenticated(!!isLoggedIn);
+      };
+  
+      checkAuth();
+      // For simplicity, we're not setting up a real-time listener for auth changes here
+      // Implement a more robust solution for production apps
+    }, []);
+  
+    useEffect(() => {
+      if (!isAuthenticated) {
+        router.push('/login');
+      }
+    }, [isAuthenticated, router]);
+    return (
+        <html lang={i18n?.language || 'en'}>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {isAuthenticated ? (
+            
+                    {children}
+                    <Toaster/>
+            
+        ) : null}
+
+        </body>
+        </html>
+    );
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock }) => {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const { t } = useI18n();
-  const itemsPerPage = 5;
-
-  const columns: ColumnDef<Stock>[] = React.useMemo(() => [
-      {
-          accessorKey: 'symbol',
-          header: ({ column }) => {
-            return (
-              
-                {t("Symbol")}
-                {column.getIsSorted()
-                  ? column.getIsSorted() === 'asc'
-                    ? ' 🔽'
-                    : ' 🔼'
-                  : null}
-              
-            );
-          },
-      },
-      {
-          accessorKey: 'name',
-          header: ({ column }) => (
-              
-                  {t("Name")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-      {
-          accessorKey: 'quantity',
-          header: ({ column }) => (
-              
-                  {t("Quantity")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-      {
-          accessorKey: 'purchasePrice',
-          header: ({ column }) => (
-              
-                  {t("Purchase Price")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-      {
-          accessorKey: 'currentPrice',
-          header: ({ column }) => (
-              
-                  {t("Current Price")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-      {
-          accessorKey: 'changePercent',
-          header: ({ column }) => (
-              
-                  {t("Daily %")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-          cell: ({ row }) => {
-              const value = row.getValue('changePercent');
-              return (
-                  
-                      {value}%
-                  
-              );
-          },
-      },
-      {
-          accessorKey: 'capitalization',
-          header: ({ column }) => (
-              
-                  {t("Capitalization")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-      {
-          accessorKey: 'market',
-          header: ({ column }) => (
-              
-                  {t("Market")}
-                  {column.getIsSorted()
-                      ? column.getIsSorted() === 'asc'
-                          ? ' 🔽'
-                          : ' 🔼'
-                      : null}
-              
-          ),
-      },
-  ], [t]);
-
-  const table = useReactTable({
-      data: portfolio,
-      columns,
-      state: {
-          sorting,
-          columnVisibility,
-          columnFilters,
-      },
-      enableRowSelection: false,
-      onSortingChange: setSorting,
-      onColumnVisibilityChange: setColumnVisibility,
-      onColumnFiltersChange: setColumnFilters,
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      debugTable: true,
-  });
-
-  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const goToPreviousPage = () => {
-      setCurrentPage(currentPage => Math.max(1, currentPage - 1));
-  };
-
-  const goToNextPage = () => {
-      setCurrentPage(currentPage => Math.min(totalPages, currentPage + 1));
-  };
-
-  return (
-      
-          
-              
-                  
-                      {table.getHeaderGroups().map((headerGroup) => (
-                          
-                              {headerGroup.headers.map((header) => {
-                                  return (
-                                      
-                                          {header.isPlaceholder
-                                              ? null
-                                              : flexRender(
-                                                  header.column.columnDef.header,
-                                                  header.getContext()
-                                              )}
-                                      
-                                  );
-                              })}
-                          
-                      ))}
-                  
-              
-              
-                  {table.getRowModel().rows.slice(startIndex, endIndex).map(row => {
-                      return (
-                          
-                              {row.getVisibleCells().map(cell => {
-                                  return (
-                                      
-                                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                      
-                                  );
-                              })}
-                          
-                      );
-                  })}
-              
-          
-      
-
-      
-          <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
-              Previous
-          </Button>
-          
-              Page {currentPage} of {totalPages}
-          
-          <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-              Next
-          </Button>
-      
-    
-  );
-};
-
-export { TableComponent, calculateProfit, mockPortfolio };
-"
+export function Providers({ children }: { children: React.ReactNode }) {
+    const {i18n} = useI18n();
+    return (
+        <I18nextProvider i18n={i18n}>
+            <SidebarLayout>
+                {children}
+            </SidebarLayout>
+        </I18nextProvider>
+    )
+}
 
