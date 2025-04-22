@@ -122,36 +122,36 @@ const TableComponent = () => {
       
 
       <Table>
-        <TableHeader>
+        <TableHeader className="mb-4">
           <TableRow>
-            <TableHead onClick={() => handleSort('symbol')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('symbol')} className="cursor-pointer p-4">
               Symbol {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('name')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('name')} className="cursor-pointer p-4">
               Name {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('quantity')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('quantity')} className="cursor-pointer p-4">
               Quantity {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('purchasePrice')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('purchasePrice')} className="cursor-pointer p-4">
               Purchase Price {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('currentPrice')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('currentPrice')} className="cursor-pointer p-4">
               Current Price {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-             <TableHead >
+             <TableHead className="p-4" >
               Market Value
             </TableHead>
-             <TableHead >
+             <TableHead className="p-4" >
               Daily %
             </TableHead>
-            <TableHead onClick={() => handleSort('profit')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('profit')} className="cursor-pointer p-4">
               Profit {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('market')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('market')} className="cursor-pointer p-4">
               Market {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
-            <TableHead onClick={() => handleSort('capitalization')} className="cursor-pointer">
+            <TableHead onClick={() => handleSort('capitalization')} className="cursor-pointer p-4">
               Capitalization {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
             </TableHead>
           </TableRow>
@@ -330,7 +330,7 @@ export default function Home() {
       </Sidebar>
       <SidebarInset>
         <div className="p-4">
-          <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground">
             Welcome to your investment portfolio overview.
           </p>
@@ -359,4 +359,5 @@ export default function Home() {
     </SidebarProvider>
   );
 }
+
 
