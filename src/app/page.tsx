@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
-import {Stock, HighestProfitStocks} from "@/components/highest-profit-stocks";
+import { Stock, HighestProfitStocks } from "@/components/highest-profit-stocks";
 import {
   Table,
   TableBody,
@@ -33,13 +33,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useI18n } from "@/hooks/use-i18n";
+import { SidebarLayout } from "@/components/sidebar-layout";
 
 const mockPortfolio = [
-  { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500 , changePercent: 2},
-  { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500 , changePercent: -4},
-  { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800 , changePercent: 6},
-  { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500 , changePercent: 0},
-  { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800 , changePercent: 8},
+  { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
+  { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500, changePercent: -4 },
+  { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800, changePercent: 6 },
+  { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500, changePercent: 0 },
+  { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800, changePercent: 8 },
 ];
 
 const calculateProfit = (stock: any) => {
@@ -59,7 +60,7 @@ export default function Home() {
   const [portfolio, setPortfolio] = useState(mockPortfolio);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-    const {t} = useI18n();
+  const { t } = useI18n();
 
   useEffect(() => {
     setTimeout(() => {
@@ -67,18 +68,18 @@ export default function Home() {
     }, 500);
   }, []);
 
-    // Calculate total purchase value
-    const totalPurchaseValue = portfolio.reduce((acc, stock) => {
-      return acc + (stock.purchasePrice * stock.quantity);
-    }, 0);
+  // Calculate total purchase value
+  const totalPurchaseValue = portfolio.reduce((acc, stock) => {
+    return acc + (stock.purchasePrice * stock.quantity);
+  }, 0);
 
-    // Calculate current total value
-    const currentTotalValue = portfolio.reduce((acc, stock) => {
-      return acc + (stock.currentPrice * stock.quantity);
-    }, 0);
+  // Calculate current total value
+  const currentTotalValue = portfolio.reduce((acc, stock) => {
+    return acc + (stock.currentPrice * stock.quantity);
+  }, 0);
 
-    // Calculate total profit/loss
-    const totalProfitLoss = currentTotalValue - totalPurchaseValue;
+  // Calculate total profit/loss
+  const totalProfitLoss = currentTotalValue - totalPurchaseValue;
 
   const handleSellStock = (stock: Stock) => {
     setSelectedStock(stock);
@@ -91,43 +92,43 @@ export default function Home() {
   };
 
   return (
-    
-        <div className="p-4">
-          <h1 className="text-2xl font-bold">{t("Dashboard")}</h1>
-          <p className="text-muted-foreground">
-              {t("Welcome to your investment portfolio overview.")}
-          </p>
+    <SidebarLayout>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold">{t("Dashboard")}</h1>
+        <p className="text-muted-foreground">
+          {t("Welcome to your investment portfolio overview.")}
+        </p>
 
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">{t("Total Purchase Value")}</h2>
-              <p className="text-2xl">{formatCurrency(totalPurchaseValue)}</p>
-            </div>
-
-            <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">{t("Current Total Value")}</h2>
-              <p className="text-2xl">{formatCurrency(currentTotalValue)}</p>
-            </div>
-
-            <div className="rounded-lg border bg-card p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">{t("Total Profit/Loss")}</h2>
-              <p className={`text-2xl ${totalProfitLoss >= 0 ? 'success' : 'error'}`}>{formatCurrency(totalProfitLoss)}</p>
-            </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-lg border bg-card p-4 shadow-sm">
+            <h2 className="text-lg font-semibold">{t("Total Purchase Value")}</h2>
+            <p className="text-2xl">{formatCurrency(totalPurchaseValue)}</p>
           </div>
 
-          <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
+          <div className="rounded-lg border bg-card p-4 shadow-sm">
+            <h2 className="text-lg font-semibold">{t("Current Total Value")}</h2>
+            <p className="text-2xl">{formatCurrency(currentTotalValue)}</p>
+          </div>
 
-          <SellStockModal
-            isOpen={isSellModalOpen}
-            onClose={handleCloseSellModal}
-            stock={selectedStock}
-            setPortfolio={setPortfolio}
-            portfolio={portfolio}
-          />
-          
-          <NewsSection />
+          <div className="rounded-lg border bg-card p-4 shadow-sm">
+            <h2 className="text-lg font-semibold">{t("Total Profit/Loss")}</h2>
+            <p className={`text-2xl ${totalProfitLoss >= 0 ? 'success' : 'error'}`}>{formatCurrency(totalProfitLoss)}</p>
+          </div>
         </div>
-    
+
+        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
+
+        <SellStockModal
+          isOpen={isSellModalOpen}
+          onClose={handleCloseSellModal}
+          stock={selectedStock}
+          setPortfolio={setPortfolio}
+          portfolio={portfolio}
+        />
+
+        <NewsSection />
+      </div>
+    </SidebarLayout>
   );
 }
 
@@ -144,7 +145,7 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
   const [commission, setCommission] = useState<number>(0);
   const [isFixedCommission, setIsFixedCommission] = useState(true);
   const { toast } = useToast();
-    const {t} = useI18n();
+  const { t } = useI18n();
 
   const handleSell = () => {
     if (!stock || !sellPrice) {
@@ -160,8 +161,8 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
     let commissionAmount = isFixedCommission ? commission : (stock.purchasePrice + sellPrice) * (commission / 100);
     // Calculate profit loss
     let profitLoss = (sellPrice - stock.purchasePrice) * stock.quantity - commissionAmount;
-      const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
-      const netProfit = profitLoss - tax;
+    const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
+    const netProfit = profitLoss - tax;
 
     // Update the portfolio by removing the sold stock
     const updatedPortfolio = portfolio.filter(item => item.symbol !== stock.symbol);
@@ -184,7 +185,7 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
         <DialogHeader>
           <DialogTitle>{t("Sell")} {stock.name}</DialogTitle>
           <DialogDescription>
-              {t("Are you sure you want to sell your shares of")} {stock.symbol}?
+            {t("Are you sure you want to sell your shares of")} {stock.symbol}?
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

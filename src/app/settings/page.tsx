@@ -1,8 +1,8 @@
 'use client';
 
-import {Button} from "@/components/ui/button";
-import {useRouter} from 'next/navigation';
-import {useState, useEffect, useCallback} from "react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from "react";
 import {
   Select,
   SelectContent,
@@ -10,10 +10,10 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import {useToast} from "@/hooks/use-toast";
-import {useI18n} from "@/hooks/use-i18n";
-import {TextDatabase} from "@/services/text-database";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/hooks/use-i18n";
+import { TextDatabase } from "@/services/text-database";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -29,6 +29,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as countries from 'countries-list';
 import { useEffectOnce } from "@/hooks/use-effect-once";
+import { SidebarLayout } from "@/components/sidebar-layout";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -41,8 +42,8 @@ const formSchema = z.object({
 
 export default function SettingsPage() {
   const router = useRouter();
-  const {toast} = useToast();
-  const {t, i18n, isInitialized, changeLanguage} = useI18n();
+  const { toast } = useToast();
+  const { t, i18n, isInitialized, changeLanguage } = useI18n();
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
   const [theme, setTheme] = useState("light");
@@ -61,10 +62,10 @@ export default function SettingsPage() {
   });
 
   useEffectOnce(() => {
-        if (isInitialized && i18n && i18n.language !== language) {
-            changeLanguage(language);
-        }
-    }, [language, i18n, isInitialized, changeLanguage]);
+    if (isInitialized && i18n && i18n.language !== language) {
+      changeLanguage(language);
+    }
+  }, [language, i18n, isInitialized, changeLanguage]);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -95,21 +96,21 @@ export default function SettingsPage() {
     loadSettings();
   }, [toast, t, form]);
 
-    useEffect(() => {
-        // Apply theme on the client side
-        if (theme === 'light') {
-            document.documentElement.classList.remove('dark');
-        } else if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            // For system theme, you might want to listen to OS preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-    }, [theme]);
+  useEffect(() => {
+    // Apply theme on the client side
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      // For system theme, you might want to listen to OS preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, [theme]);
 
   const goBackToDashboard = () => {
     router.push('/');
@@ -172,177 +173,178 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-8">{t("User Settings")}</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSaveSettings)} className="space-y-6">
-          <div className="md:grid md:grid-cols-2 md:gap-6">
-            <div className="md:col-span-1">
-              <div className="space-y-6">
-                <div>
-                  <FormItem>
-                    <FormLabel htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">{t("Username")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        id="username"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        {...form.register("username")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </div>
+    <SidebarLayout>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-8">{t("User Settings")}</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSaveSettings)} className="space-y-6">
+            <div className="md:grid md:grid-cols-2 md:gap-6">
+              <div className="md:col-span-1">
+                <div className="space-y-6">
+                  <div>
+                    <FormItem>
+                      <FormLabel htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">{t("Username")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          id="username"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          {...form.register("username")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
 
-                <div>
-                  <FormItem>
-                    <FormLabel htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">{t("Password")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        id="password"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        {...form.register("password")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </div>
+                  <div>
+                    <FormItem>
+                      <FormLabel htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">{t("Password")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          id="password"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          {...form.register("password")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </div>
 
-                <div>
-                  <Label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-2">{t("Nationality")}</Label>
-                  <Select value={nationality} onValueChange={handleNationalityChange}>
-                    <SelectTrigger id="nationality" className="w-full">
-                      <SelectValue placeholder={t("Select Nationality")}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(countries.countries).map((countryCode) => (
+                  <div>
+                    <Label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-2">{t("Nationality")}</Label>
+                    <Select value={nationality} onValueChange={handleNationalityChange}>
+                      <SelectTrigger id="nationality" className="w-full">
+                        <SelectValue placeholder={t("Select Nationality")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.keys(countries.countries).map((countryCode) => (
                           <SelectItem key={countryCode} value={countryCode}>
-                              {countries.countries[countryCode].name}
+                            {countries.countries[countryCode].name}
                           </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">{t("Currency")}</Label>
-                  <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger id="currency" className="w-full">
-                      <SelectValue placeholder={t("Select Currency")}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="EUR">EUR</SelectItem>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="GBP">GBP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div>
+                    <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">{t("Currency")}</Label>
+                    <Select value={currency} onValueChange={setCurrency}>
+                      <SelectTrigger id="currency" className="w-full">
+                        <SelectValue placeholder={t("Select Currency")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EUR">EUR</SelectItem>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="GBP">GBP</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">{t("Market")}</Label>
-                  <Select value={market} onValueChange={setMarket}>
-                    <SelectTrigger id="market" className="w-full">
-                      <SelectValue placeholder={t("Select Market")}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NYSE">NYSE</SelectItem>
-                      <SelectItem value="NASDAQ">NASDAQ</SelectItem>
-                      <SelectItem value="MIL">MIL</SelectItem>
-                      <SelectItem value="LSE">LSE</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div>
+                    <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">{t("Market")}</Label>
+                    <Select value={market} onValueChange={setMarket}>
+                      <SelectTrigger id="market" className="w-full">
+                        <SelectValue placeholder={t("Select Market")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="NYSE">NYSE</SelectItem>
+                        <SelectItem value="NASDAQ">NASDAQ</SelectItem>
+                        <SelectItem value="MIL">MIL</SelectItem>
+                        <SelectItem value="LSE">LSE</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</Label>
-                  <Select value={language} onValueChange={setLanguage}>
-                    <SelectTrigger id="language" className="w-full">
-                      <SelectValue placeholder={t("Select Language")}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="it">Italiano</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  <div>
+                    <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</Label>
+                    <Select value={language} onValueChange={setLanguage}>
+                      <SelectTrigger id="language" className="w-full">
+                        <SelectValue placeholder={t("Select Language")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="it">Italiano</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                <div>
-                  <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">{t("Theme")}</Label>
-                  <Select value={theme} onValueChange={setTheme}>
-                    <SelectTrigger id="theme" className="w-full">
-                      <SelectValue placeholder={t("Select Theme")}/>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div>
+                    <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">{t("Theme")}</Label>
+                    <Select value={theme} onValueChange={setTheme}>
+                      <SelectTrigger id="theme" className="w-full">
+                        <SelectValue placeholder={t("Select Theme")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="md:col-span-1">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
+              <div className="md:col-span-1">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
                     <div className="w-1/2 mr-2">
-                        <Label htmlFor="commissionType" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
-                        <Select value={commissionType} onValueChange={setCommissionType}>
-                            <SelectTrigger id="commissionType" className="w-full">
-                                <SelectValue placeholder={t("Select Commission Type")}/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="fixed">{t("Fixed")}</SelectItem>
-                                <SelectItem value="percentage">{t("Percentage")}</SelectItem>
-                            </SelectContent>
-                        </Select>
+                      <Label htmlFor="commissionType" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
+                      <Select value={commissionType} onValueChange={setCommissionType}>
+                        <SelectTrigger id="commissionType" className="w-full">
+                          <SelectValue placeholder={t("Select Commission Type")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="fixed">{t("Fixed")}</SelectItem>
+                          <SelectItem value="percentage">{t("Percentage")}</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="w-1/2">
-                        <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Value")}</Label>
-                        <Input
-                            type="number"
-                            id="commissionValue"
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            value={commissionValue}
-                            onChange={(e) => setCommissionValue(e.target.value)}
-                            placeholder={t("Enter commission value")}
-                        />
+                      <Label htmlFor="commissionValue" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Value")}</Label>
+                      <Input
+                        type="number"
+                        id="commissionValue"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        value={commissionValue}
+                        onChange={(e) => setCommissionValue(e.target.value)}
+                        placeholder={t("Enter commission value")}
+                      />
                     </div>
-                </div>
+                  </div>
 
-                <div>
-                  <Label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-2">{t("Tassazione")}</Label>
-                  <div className="flex items-center">
-                    <Input
-                      type="number"
-                      id="taxRate"
-                      className="mt-1 block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      value={taxRate}
-                      onChange={(e) => setTaxRate(e.target.value)}
-                      placeholder={t("Enter tax rate")}
-                    />
-                    <span className="ml-2">%</span>
+                  <div>
+                    <Label htmlFor="taxRate" className="block text-sm font-medium text-gray-700 mb-2">{t("Tassazione")}</Label>
+                    <div className="flex items-center">
+                      <Input
+                        type="number"
+                        id="taxRate"
+                        className="mt-1 block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        value={taxRate}
+                        onChange={(e) => setTaxRate(e.target.value)}
+                        placeholder={t("Enter tax rate")}
+                      />
+                      <span className="ml-2">%</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="md:flex md:items-center md:justify-end mt-8">
+            <div className="md:flex md:items-center md:justify-end mt-8">
               <div className="md:mr-auto">
-                  <Button variant="secondary" onClick={goBackToDashboard}>
-                      {t("Back to Dashboard")}
-                  </Button>
+                <Button variant="secondary" onClick={goBackToDashboard}>
+                  {t("Back to Dashboard")}
+                </Button>
               </div>
               <Button type="submit">
-                  {t("Save Settings")}
+                {t("Save Settings")}
               </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </SidebarLayout>
   );
 }
-

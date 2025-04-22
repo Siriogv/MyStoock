@@ -15,11 +15,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useI18n } from "@/hooks/use-i18n";
+import { SidebarLayout } from "@/components/sidebar-layout";
 
 interface BuyPageProps {
-    onBuySuccess?: () => void;
+  onBuySuccess?: () => void;
 }
-export default function BuyPage({onBuySuccess}: BuyPageProps) {
+export default function BuyPage({ onBuySuccess }: BuyPageProps) {
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
@@ -77,18 +78,19 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{t("Buy Stock")}</h1>
-      <StockSearchInput
-        symbol={symbol}
-        setSymbol={setSymbol}
-        market={market}
-        setMarket={setMarket}
-        handleSearch={handleSearch}
-        t={t}
-      />
+    <SidebarLayout>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">{t("Buy Stock")}</h1>
+        <StockSearchInput
+          symbol={symbol}
+          setSymbol={setSymbol}
+          market={market}
+          setMarket={setMarket}
+          handleSearch={handleSearch}
+          t={t}
+        />
 
-      {stockInfo && (
+        {stockInfo && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <StockInfoDisplay stockInfo={stockInfo} />
             <QuantityInput
@@ -98,10 +100,11 @@ export default function BuyPage({onBuySuccess}: BuyPageProps) {
               t={t}
             />
           </div>
-      )}
+        )}
 
-      <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
-    </div>
+        <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
+      </div>
+    </SidebarLayout>
   );
 }
 
@@ -111,7 +114,7 @@ interface StockSearchInputProps {
   market: string;
   setMarket: (market: string) => void;
   handleSearch: () => Promise<void>;
-    t: (key: string) => string;
+  t: (key: string) => string;
 }
 
 function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch, t }: StockSearchInputProps) {
@@ -166,7 +169,7 @@ interface QuantityInputProps {
   quantity: number;
   setQuantity: (quantity: number) => void;
   handleBuy: () => void;
-    t: (key: string) => string;
+  t: (key: string) => string;
 }
 
 function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputProps) {
@@ -184,4 +187,3 @@ function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputPro
     </div>
   );
 }
-
