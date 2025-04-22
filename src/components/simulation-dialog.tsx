@@ -232,3 +232,4 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
 }
 
 export default SimulationDialog;
+"
