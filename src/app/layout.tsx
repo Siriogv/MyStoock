@@ -4,8 +4,8 @@ import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
-import {SidebarLayout} from "@/components/sidebar-layout";
 import React from "react";
+import {SidebarLayout} from "@/components/sidebar-layout";
 
 
 const geistSans = Geist({
@@ -49,6 +49,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         </>
     )
 }
+
 
 
 
