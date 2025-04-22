@@ -45,7 +45,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         localStorage.setItem('portfolio', JSON.stringify(portfolio));
     }, [portfolio]);*/
 
-    const totalPages = Math.ceil(portfolio.length / itemsPerPage);
+    const totalPages = portfolio ? Math.ceil(portfolio.length / itemsPerPage) : 0;
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
