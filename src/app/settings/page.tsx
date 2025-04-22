@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback } from "react";
+import {Button} from "@/components/ui/button";
+import {useRouter} from 'next/navigation';
+import {useState, useEffect, useCallback} from "react";
 import {
   Select,
   SelectContent,
@@ -10,12 +10,13 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { useI18n } from "@/hooks/use-i18n";
-import { TextDatabase } from "@/services/text-database";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import {Label} from "@/components/ui/label";
+import {useToast} from "@/hooks/use-toast";
+import {TextDatabase} from "@/services/text-database";
+import {Input} from "@/components/ui/input";
+import * as countries from 'countries-list';
+import {useEffectOnce} from "@/hooks/use-effect-once";
+import {SidebarLayout} from "@/components/sidebar-layout";
 import {
   Form,
   FormControl,
@@ -24,12 +25,10 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as countries from 'countries-list';
-import { useEffectOnce } from "@/hooks/use-effect-once";
-import { SidebarLayout } from "@/components/sidebar-layout";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useI18n} from "@/hooks/use-i18n";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -42,8 +41,8 @@ const formSchema = z.object({
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { toast } = useToast();
-  const { t, i18n, isInitialized, changeLanguage } = useI18n();
+  const {toast} = useToast();
+  const {t, i18n, isInitialized, changeLanguage} = useI18n();
   const [currency, setCurrency] = useState("EUR");
   const [market, setMarket] = useState("NYSE");
   const [theme, setTheme] = useState("light");
@@ -111,10 +110,6 @@ export default function SettingsPage() {
       }
     }
   }, [theme]);
-
-  const goBackToDashboard = () => {
-    router.push('/');
-  };
 
   const handleNationalityChange = (newNationality: string) => {
     setNationality(newNationality);
@@ -215,7 +210,7 @@ export default function SettingsPage() {
                     <Label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-2">{t("Nationality")}</Label>
                     <Select value={nationality} onValueChange={handleNationalityChange}>
                       <SelectTrigger id="nationality" className="w-full">
-                        <SelectValue placeholder={t("Select Nationality")} />
+                        <SelectValue placeholder={t("Select Nationality")}/>
                       </SelectTrigger>
                       <SelectContent>
                         {Object.keys(countries.countries).map((countryCode) => (
@@ -231,7 +226,7 @@ export default function SettingsPage() {
                     <Label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">{t("Currency")}</Label>
                     <Select value={currency} onValueChange={setCurrency}>
                       <SelectTrigger id="currency" className="w-full">
-                        <SelectValue placeholder={t("Select Currency")} />
+                        <SelectValue placeholder={t("Select Currency")}/>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="EUR">EUR</SelectItem>
@@ -245,7 +240,7 @@ export default function SettingsPage() {
                     <Label htmlFor="market" className="block text-sm font-medium text-gray-700 mb-2">{t("Market")}</Label>
                     <Select value={market} onValueChange={setMarket}>
                       <SelectTrigger id="market" className="w-full">
-                        <SelectValue placeholder={t("Select Market")} />
+                        <SelectValue placeholder={t("Select Market")}/>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="NYSE">NYSE</SelectItem>
@@ -260,7 +255,7 @@ export default function SettingsPage() {
                     <Label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</Label>
                     <Select value={language} onValueChange={setLanguage}>
                       <SelectTrigger id="language" className="w-full">
-                        <SelectValue placeholder={t("Select Language")} />
+                        <SelectValue placeholder={t("Select Language")}/>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
@@ -273,7 +268,7 @@ export default function SettingsPage() {
                     <Label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">{t("Theme")}</Label>
                     <Select value={theme} onValueChange={setTheme}>
                       <SelectTrigger id="theme" className="w-full">
-                        <SelectValue placeholder={t("Select Theme")} />
+                        <SelectValue placeholder={t("Select Theme")}/>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="light">Light</SelectItem>
@@ -292,7 +287,7 @@ export default function SettingsPage() {
                       <Label htmlFor="commissionType" className="block text-sm font-medium text-gray-700 mb-2">{t("Commission Type")}</Label>
                       <Select value={commissionType} onValueChange={setCommissionType}>
                         <SelectTrigger id="commissionType" className="w-full">
-                          <SelectValue placeholder={t("Select Commission Type")} />
+                          <SelectValue placeholder={t("Select Commission Type")}/>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="fixed">{t("Fixed")}</SelectItem>

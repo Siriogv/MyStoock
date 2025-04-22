@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
-import { Stock, HighestProfitStocks } from "@/components/highest-profit-stocks";
+import {useEffect, useState, useCallback} from "react";
+import {useToast} from "@/hooks/use-toast";
+import {NewsSection} from "@/components/news-section"; // Import the NewsSection component
+import {HighestProfitStocks} from "@/components/highest-profit-stocks";
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -23,8 +23,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -32,15 +32,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useI18n } from "@/hooks/use-i18n";
-import { SidebarLayout } from "@/components/sidebar-layout";
+import {useI18n} from "@/hooks/use-i18n";
+import {SidebarLayout} from "@/components/sidebar-layout";
+import {Stock} from "@/types";
 
 const mockPortfolio = [
-  { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500, changePercent: 2 },
-  { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500, changePercent: -4 },
-  { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800, changePercent: 6 },
-  { symbol: 'NVDA', name: 'Nvidia Corp.', purchasePrice: 500, currentPrice: 1000, quantity: 3, market: 'NASDAQ', capitalization: 1500, changePercent: 0 },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800, changePercent: 8 },
+  {
+    symbol: 'AAPL',
+    name: 'Apple Inc.',
+    purchasePrice: 150,
+    currentPrice: 170,
+    quantity: 10,
+    market: 'NASDAQ',
+    capitalization: 1500,
+    changePercent: 2
+  },
+  {
+    symbol: 'MSFT',
+    name: 'Microsoft Corp.',
+    purchasePrice: 300,
+    currentPrice: 430,
+    quantity: 5,
+    market: 'NASDAQ',
+    capitalization: 1500,
+    changePercent: -4
+  },
+  {
+    symbol: 'GOOG',
+    name: 'Alphabet Inc.',
+    purchasePrice: 100,
+    currentPrice: 150,
+    quantity: 8,
+    market: 'NASDAQ',
+    capitalization: 800,
+    changePercent: 6
+  },
+  {
+    symbol: 'NVDA',
+    name: 'Nvidia Corp.',
+    purchasePrice: 500,
+    currentPrice: 1000,
+    quantity: 3,
+    market: 'NASDAQ',
+    capitalization: 1500,
+    changePercent: 0
+  },
+  {
+    symbol: 'TSLA',
+    name: 'Tesla, Inc.',
+    purchasePrice: 700,
+    currentPrice: 850,
+    quantity: 4,
+    market: 'NASDAQ',
+    capitalization: 2800,
+    changePercent: 8
+  },
 ];
 
 const calculateProfit = (stock: any) => {
@@ -55,12 +101,12 @@ const formatCurrency = (amount: number) => {
 };
 
 export default function Home() {
-  const { toast } = useToast();
+  const {toast} = useToast();
   const [loading, setLoading] = useState(true);
   const [portfolio, setPortfolio] = useState(mockPortfolio);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
-  const { t } = useI18n();
+  const {t} = useI18n();
 
   useEffect(() => {
     setTimeout(() => {
@@ -116,7 +162,7 @@ export default function Home() {
           </div>
         </div>
 
-        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
+        <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio}/>
 
         <SellStockModal
           isOpen={isSellModalOpen}
@@ -126,7 +172,7 @@ export default function Home() {
           portfolio={portfolio}
         />
 
-        <NewsSection />
+        <NewsSection/>
       </div>
     </SidebarLayout>
   );
@@ -140,12 +186,12 @@ interface SellStockModalProps {
   portfolio: Stock[];
 }
 
-const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: SellStockModalProps) => {
+const SellStockModal = ({isOpen, onClose, stock, setPortfolio, portfolio}: SellStockModalProps) => {
   const [sellPrice, setSellPrice] = useState<number | null>(null);
   const [commission, setCommission] = useState<number>(0);
   const [isFixedCommission, setIsFixedCommission] = useState(true);
-  const { toast } = useToast();
-  const { t } = useI18n();
+  const {toast} = useToast();
+  const {t} = useI18n();
 
   const handleSell = () => {
     if (!stock || !sellPrice) {
@@ -217,9 +263,9 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
             <Label htmlFor="isFixedCommission" className="text-right">
               {t("Fixed Commission")}
             </Label>
-            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)} >
+            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)}>
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder={t("Fixed or Percentage")} />
+                <SelectValue placeholder={t("Fixed or Percentage")}/>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="true">{t("Fixed")}</SelectItem>
@@ -240,4 +286,3 @@ const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: Sel
     </Dialog>
   );
 };
-
