@@ -14,10 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { PortfolioStock } from "@/types";
-import { useRouter } from 'next/navigation';
 
-const mockPortfolio: PortfolioStock[] = [
+const mockPortfolio = [
   { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500 , changePercent: 2},
   { symbol: 'MSFT', name: 'Microsoft Corp.', purchasePrice: 300, currentPrice: 430, quantity: 5, market: 'NASDAQ', capitalization: 1500 , changePercent: -4},
   { symbol: 'GOOG', name: 'Alphabet Inc.', purchasePrice: 100, currentPrice: 150, quantity: 8, market: 'NASDAQ', capitalization: 800 , changePercent: 6},
@@ -25,15 +23,15 @@ const mockPortfolio: PortfolioStock[] = [
   { symbol: 'TSLA', name: 'Tesla, Inc.', purchasePrice: 700, currentPrice: 850, quantity: 4, market: 'NASDAQ', capitalization: 2800 , changePercent: 8},
 ];
 
-const calculateProfit = (stock: PortfolioStock) => {
+const calculateProfit = (stock: any) => {
   return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
 const itemsPerPage = 5;
 
-const TableComponent = ({portfolio}: {portfolio: PortfolioStock[]}) => {
+const TableComponent = ({portfolio}: {portfolio: any[]}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState<keyof PortfolioStock>('profit');
+  const [sortColumn, setSortColumn] = useState<keyof any>('profit');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [filterMarket, setFilterMarket] = useState<string>('All');
 
@@ -70,7 +68,7 @@ const TableComponent = ({portfolio}: {portfolio: PortfolioStock[]}) => {
 
   const currentStocks = filteredStocks.slice(startIndex, endIndex);
 
-  const handleSort = (column: keyof PortfolioStock) => {
+  const handleSort = (column: keyof any) => {
     if (column === sortColumn) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -167,17 +165,13 @@ const formatCurrency = (amount: number) => {
 export default function Home() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-    const [portfolio, setPortfolio] = useState<PortfolioStock[]>(mockPortfolio);
+    const [portfolio, setPortfolio] = useState(mockPortfolio);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, []);
-
-    const handleSell = (updatedPortfolio: PortfolioStock[]) => {
-        setPortfolio(updatedPortfolio);
-    };
 
     // Calculate total purchase value
     const totalPurchaseValue = portfolio.reduce((acc, stock) => {
@@ -218,9 +212,6 @@ export default function Home() {
           </div>
 
           <TableComponent portfolio={portfolio}/>
-          
-            
-           {/*<SellPage portfolio={portfolio} onSell={handleSell} />*/}
           
           <NewsSection />
         </div>

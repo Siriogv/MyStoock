@@ -62,14 +62,6 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                                     </SidebarMenuButton>
                                 </Link>
                             </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <Link href="/sell" passHref>
-                                    <SidebarMenuButton href="/sell">
-                                        <Icons.coins className="mr-2 h-4 w-4" />
-                                        <span>Sell Stock</span>
-                                    </SidebarMenuButton>
-                                </Link>
-                            </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroup>
 
