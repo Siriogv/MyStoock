@@ -105,7 +105,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
               <SidebarGroupLabel>{t("Simulation")}</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={openSimulation}>
+                 <SidebarMenuButton onClick={openSimulation}>
                     <Icons.edit className="mr-2 h-4 w-4" />
                     <span>{t("Simulation")}</span>
                   </SidebarMenuButton>
@@ -202,7 +202,9 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
             {t("Simulation Page")}
           
           
-            {t("Simulate investment scenarios to evaluate potential profits and losses.")}
+            
+              {t("Simulate investment scenarios to evaluate potential profits and losses.")}
+            
           
         
         
