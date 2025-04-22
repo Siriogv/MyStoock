@@ -321,29 +321,28 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
             
                 
                     
-                         {/* Use React.Fragment to group the translated string and the sort indicator */}
                          
-                            {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
-                         
-                    
-                    
-                         
-                            {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Symbol"))} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                     
                          
-                            {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Name"))} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                     
                          
-                            {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Quantity"))} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                     
                          
-                            {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Purchase Price"))} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                         
+                    
+                    
+                         
+                            {(t("Current Price"))} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                     
@@ -351,12 +350,12 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
                     
                     
                          
-                            {t("Market")} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Market"))} {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                     
                          
-                            {t("Capitalization")} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
+                            {(t("Capitalization"))} {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
                          
                     
                 
@@ -405,3 +404,4 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
         
     );
 };
+"
