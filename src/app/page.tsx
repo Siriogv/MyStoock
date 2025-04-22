@@ -76,13 +76,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "symbol",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Symbol")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -90,13 +90,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "name",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Name")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -104,13 +104,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "quantity",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Quantity")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -118,13 +118,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "purchasePrice",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Purchase Price")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -132,13 +132,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "currentPrice",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Current Price")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -146,18 +146,18 @@ const DashboardPage: React.FC = () => {
             accessorKey: "changePercent",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Daily %")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
             cell: ({ row }) => (
                 
-                    {`${row.getValue("changePercent")}%`}
+                    {row.getValue("changePercent")}%
                 
             ),
         },
@@ -165,13 +165,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "market",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Market")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -179,13 +179,13 @@ const DashboardPage: React.FC = () => {
             accessorKey: "capitalization",
             header: ({ column }) => {
                 return (
-                    <>
+                    
                         {t("Capitalization")} {column.getIsSorted()
                             ? column.getIsSorted() === 'asc'
                                 ? ' 🔽'
                                 : ' 🔼'
                             : ''}
-                    </>
+                    
                 );
             },
         },
@@ -298,4 +298,3 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
-
