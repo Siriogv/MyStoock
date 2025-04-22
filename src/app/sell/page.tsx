@@ -34,6 +34,23 @@ import {
 import {Label} from "@/components/ui/label";
 import { useI18n } from "@/hooks/use-i18n";
 import { useEffectOnce } from "@/hooks/use-effect-once";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from "@/components/ui/dropdown-menu"
 
 interface SellPageProps {
     portfolio: PortfolioStock[];
@@ -373,3 +390,4 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
         
     );
 };
+
