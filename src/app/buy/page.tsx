@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { Stock } from "@/services/finance";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -21,17 +21,19 @@ interface BuyPageProps {
   onBuySuccess?: () => void;
 }
 export default function BuyPage({ onBuySuccess }: BuyPageProps) {
-  const [symbol, setSymbol] = useState('');
+  const [symbol, setSymbol] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [stockInfo, setStockInfo] = useState<Stock | null>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const [market, setMarket] = useState('NASDAQ');
+  const [market, setMarket] = useState("NASDAQ");
   const { t } = useI18n();
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`/api/finance/stock-info?symbol=${symbol}&market=${market}`);
+      const response = await fetch(
+        `/api/finance/stock-info?symbol=${symbol}&market=${market}`,
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -42,7 +44,9 @@ export default function BuyPage({ onBuySuccess }: BuyPageProps) {
         toast({
           variant: "destructive",
           title: t("Error"),
-          description: t("Failed to retrieve stock information. Please check the symbol and try again."),
+          description: t(
+            "Failed to retrieve stock information. Please check the symbol and try again.",
+          ),
         });
       }
     } catch (error: any) {
@@ -50,7 +54,8 @@ export default function BuyPage({ onBuySuccess }: BuyPageProps) {
       toast({
         variant: "destructive",
         title: t("Error"),
-        description: error.message || t("Failed to retrieve stock information."),
+        description:
+          error.message || t("Failed to retrieve stock information."),
       });
       setStockInfo(null);
     }
@@ -60,21 +65,27 @@ export default function BuyPage({ onBuySuccess }: BuyPageProps) {
     if (stockInfo) {
       toast({
         title: t("Success"),
-        description: t("Successfully bought") + ` ${quantity} ` + t("shares of") + ` ${stockInfo.symbol}`,
+        description:
+          t("Successfully bought") +
+          ` ${quantity} ` +
+          t("shares of") +
+          ` ${stockInfo.symbol}`,
       });
       onBuySuccess?.();
-      router.push('/');
+      router.push("/");
     } else {
       toast({
         variant: "destructive",
         title: t("Error"),
-        description: t("Stock information not found. Please search for a stock first."),
+        description: t(
+          "Stock information not found. Please search for a stock first.",
+        ),
       });
     }
   };
 
   const goBackToDashboard = () => {
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -102,7 +113,9 @@ export default function BuyPage({ onBuySuccess }: BuyPageProps) {
           </div>
         )}
 
-        <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
+        <Button variant="secondary" onClick={goBackToDashboard}>
+          {t("Back to Dashboard")}
+        </Button>
       </div>
     </SidebarLayout>
   );
@@ -117,7 +130,14 @@ interface StockSearchInputProps {
   t: (key: string) => string;
 }
 
-function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch, t }: StockSearchInputProps) {
+function StockSearchInput({
+  symbol,
+  setSymbol,
+  market,
+  setMarket,
+  handleSearch,
+  t,
+}: StockSearchInputProps) {
   return (
     <div className="flex flex-wrap items-center mb-4">
       <Input
@@ -127,7 +147,11 @@ function StockSearchInput({ symbol, setSymbol, market, setMarket, handleSearch, 
         onChange={(e) => setSymbol(e.target.value)}
         className="mr-2 mb-2 md:mb-0"
       />
-      <Select value={market} onValueChange={setMarket} className="mr-2 mb-2 md:mb-0">
+      <Select
+        value={market}
+        onValueChange={setMarket}
+        className="mr-2 mb-2 md:mb-0"
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder={t("Select Market")} />
         </SelectTrigger>
@@ -153,11 +177,15 @@ interface StockInfoDisplayProps {
 function StockInfoDisplay({ stockInfo }: StockInfoDisplayProps) {
   return (
     <div className="w-full">
-      <p>{t("Name")}: {stockInfo.name}</p>
-      <p>{t("Price")}: {stockInfo.price}</p>
+      <p>
+        {t("Name")}: {stockInfo.name}
+      </p>
+      <p>
+        {t("Price")}: {stockInfo.price}
+      </p>
       <p>
         {t("Change Percent")}:
-        <span className={stockInfo.changePercent >= 0 ? 'success' : 'error'}>
+        <span className={stockInfo.changePercent >= 0 ? "success" : "error"}>
           {stockInfo.changePercent}
         </span>
       </p>
@@ -172,10 +200,17 @@ interface QuantityInputProps {
   t: (key: string) => string;
 }
 
-function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputProps) {
+function QuantityInput({
+  quantity,
+  setQuantity,
+  handleBuy,
+  t,
+}: QuantityInputProps) {
   return (
     <div className="w-full">
-      <label htmlFor="quantity" className="mr-2 block">{t("Quantity")}:</label>
+      <label htmlFor="quantity" className="mr-2 block">
+        {t("Quantity")}:
+      </label>
       <Input
         type="number"
         id="quantity"
@@ -187,4 +222,3 @@ function QuantityInput({ quantity, setQuantity, handleBuy, t }: QuantityInputPro
     </div>
   );
 }
-

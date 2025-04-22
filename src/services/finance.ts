@@ -1,7 +1,8 @@
-// src/services/finance.ts
-// npm install cheerio
-import axios from 'axios';
-//import { load } from 'cheerio';
+/**
+ * This file contains functions to interact with financial data, such as fetching stock information.
+ */
+import axios, { AxiosError } from "axios";
+import { load } from 'cheerio';
 
 /**
  * Represents stock information.
@@ -36,46 +37,66 @@ export interface Stock {
  * @param market The market to search in. Defaults to 'NASDAQ'.
  * @returns A promise that resolves to a Stock object containing stock information, or null if the retrieval fails.
  */
-export async function getStockInfo(query: string, market: string = 'NASDAQ'): Promise<Stock | null> {
+export async function getStockInfo(
+  query: string,
+  market: string = "NASDAQ",
+): Promise<Stock | null> {
   const url = `https://www.google.com/finance/quote/${query}:${market}`;
+  
 
   try {
+    // Fetch the HTML content of the stock quote page.
     const response = await axios.get(url, {
       headers: {
+        // Mimic a browser's user agent to avoid being blocked by the server.
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
       },
     });
 
-    //const html = response.data;
-    //const $ = load(html);
+    // Check if the request was successful.
+    if (response.status !== 200) {
+      throw new Error(`Request failed with status: ${response.status}`);
+    }
 
-    // Nome completo titolo
-    //const name = $("div.zzDege").first().text().trim();
-    const name = "TODO"
+    // Load the HTML content into Cheerio for parsing.
+    const html = response.data;
+    const $ = load(html);
 
-    // Prezzo attuale
-    //const price = $("div.YMlKec.fxKbKc").first().text().trim();
-	const price = "TODO";
+    // Extract stock information from the page.
+    const name = $("div.zzDege").first().text().trim();
+    const price = $("div.YMlKec.fxKbKc").first().text().trim();
+    const changeText = $("div.JwB6zf").first().text().trim();
 
-    // Variazione giornaliera e percentuale
-    //const changeText = $("div.JwB6zf").first().text().trim();
-    //const [change, changePercent] = changeText.split(" ");
-	const change = "TODO";
-	const changePercent = "TODO";
+    // Check if essential data is present.
+      if (!name || !price || !changeText) {
+        console.error(`Incomplete stock information found for: ${query} in ${market}`);
+        return null;
+      }
+    
+      // Split the changeText to get change and changePercent
+      const [change, changePercent] = changeText.split(" ");
 
-    return {
-      symbol: query, // or extract from the page if available
-      name,
-      price,
-      change,
-      changePercent,
-    };
-  } catch (error: any) {
+      return {
+        symbol: query,
+        name,
+        price,
+        change,
+        changePercent,
+      };
+  } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Errore scraping (Axios):", error.message, error.code, error.response?.status, error.response?.data);
+      console.error(
+        `Error fetching stock info for ${query} in ${market} (Axios):`,
+        error.message,
+        error.code,
+        error.response?.status,
+        error.response?.data
+      );
+    } else if (error instanceof Error) {
+      console.error(`Error fetching stock info for ${query} in ${market}:`, error.message);
     } else {
-      console.error("Errore scraping:", error.message);
+      console.error(`An unknown error occurred while fetching stock info for ${query} in ${market}`);
     }
     return null;
   }

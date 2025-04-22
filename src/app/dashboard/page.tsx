@@ -1,44 +1,36 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { useRouter } from 'next/navigation';
 
 const DashboardPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isLoggedIn');
-    const userRole = localStorage.getItem('userRole');
+    const isAuthenticated = localStorage.getItem("isLoggedIn");
+    const userRole = localStorage.getItem("userRole");
 
     if (!isAuthenticated) {
-      router.push('/login');
-    } else {
-      // Redirect based on user role (example)
-      switch (userRole) {
-        case 'administrator':
-          // Additional admin-specific logic
-          break;
-        case 'operator':
-          // Additional operator-specific logic
-          break;
-        default:
-          // Default user logic
-          break;
-      }
+      router.push("/login");
+      return;
+    }
+
+    const roleBasedRedirects: { [key: string]: string } = {
+      administrator: "/admin", // Example redirect
+      operator: "/operator", // Example redirect
+    };
+    if (userRole && roleBasedRedirects[userRole]) {
+      router.push(roleBasedRedirects[userRole]);
     }
   }, [router]);
 
   return (
-    
-      
-        
-          Dashboard
-        
-        
-          Welcome to your dashboard!
-        
-      
-    
+    <div>
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome to your dashboard!</p>
+      </div>      
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { authenticateUser } from "@/services/auth"; // Import authentication service
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -21,13 +21,13 @@ export default function LoginPage() {
     const user = await authenticateUser(email, password);
 
     if (user) {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userRole', user.role); // Store user role
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", user.role); // Store user role
       toast({
         title: "Login successful",
         description: "Redirecting to dashboard...",
       });
-      router.push('/');
+      router.push("/");
     } else {
       toast({
         variant: "destructive",

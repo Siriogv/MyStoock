@@ -1,58 +1,18 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from 'react';
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
-    TableHeader,
     TableRow,
 } from "@/components/ui/table"
 import {useI18n} from "@/hooks/use-i18n";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {PortfolioStock} from "@/types";
-import {SellStockModal} from "@/components/sell-stock-modal";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
-  } from "@tanstack/react-table"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {getAllStocks} from "@/lib/db"; // Import database function
+import { Button } from "@/components/ui/button"; 
+import { Skeleton } from "@/components/ui/skeleton"; 
+
 
 export interface Stock {
     symbol: string;
@@ -69,33 +29,46 @@ const calculateProfit = (stock: Stock) => {
     return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
+const sortStocksByProfit = (stocks: Stock[]): Stock[] => {
+    return [...stocks].sort((a, b) => calculateProfit(b) - calculateProfit(a));
+  };
+
+
 interface HighestProfitStocksProps {
     portfolio: Stock[];
     onSellStock: (stock: Stock) => void;
 }
 
 const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProps) => {
-    const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
+    const [sortedStocks, setSortedStocks] = useState<Stock[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const { t } = useI18n();
 
     useEffect(() => {
         setIsLoading(true);
-        // Sort the mock portfolio based on profit
-        setTimeout(() => {
-          setHighestProfitStocks(portfolio);
-          setIsLoading(false);
-        }, 1000);
+        setError(null);        
+        const timeoutId = setTimeout(() => {
+            try {
+                const stocks = sortStocksByProfit(portfolio);
+                setSortedStocks(stocks);
+            } catch (err) {
+                setError("Error loading data");
+            } finally {
+                setIsLoading(false);
+            }
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
 
     }, [portfolio]);
 
     return (
         <Card className="overflow-x-auto shadow">
-            
-                
-                    {t("Stocks in Portfolio")}
-                
-            
+            <CardHeader>
+                <CardTitle>{t("Stocks in Portfolio")}</CardTitle>
+            </CardHeader>
+
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -110,41 +83,51 @@ const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProp
                         <TableHead className="text-left">{t("Actions")}</TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody>
-                    {highestProfitStocks.map((stock) => (
-                        
-                            
-                                {stock.symbol}
-                            
-                            
-                                {stock.name}
-                            
-                            
-                                {stock.quantity}
-                            
-                            
-                                {stock.purchasePrice}
-                            
-                            
-                                {stock.currentPrice}
-                            
-                            
-                                {stock.changePercent}%
-                            
-                            
-                                {calculateProfit(stock)}
-                            
-                            
-                                {stock.market}
-                            
-                            
-                                <Button variant="outline" size="sm" onClick={() => onSellStock(stock)}>
-                                    {t("Sell")}
-                                </Button>
-                            
-                        
+                {isLoading ? (
+          <TableBody>
+            {Array.from({ length: 5 }).map((_, index) => (
+                <TableRow key={index}>
+                    {Array.from({ length: 9 }).map((__, cellIndex) => (
+                        <TableCell key={cellIndex}>
+                            <Skeleton className="h-4 w-20" />
+                        </TableCell>
                     ))}
-                </TableBody>
+                </TableRow>
+            ))}
+        </TableBody>
+    ) : error ? (
+        <TableBody>
+            <TableRow>
+                <TableCell colSpan={9} className="text-center text-red-500">{error}</TableCell>
+            </TableRow>
+        </TableBody>
+    ) : (
+        <TableBody>
+            {sortedStocks.length > 0 ? (
+                sortedStocks.map((stock) => (
+                    <TableRow key={stock.symbol}>
+                        <TableCell>{stock.symbol}</TableCell>
+                        <TableCell>{stock.name}</TableCell>
+                        <TableCell>{stock.quantity}</TableCell>
+                        <TableCell>{stock.purchasePrice}</TableCell>
+                        <TableCell>{stock.currentPrice}</TableCell>
+                        <TableCell>{stock.changePercent}%</TableCell>
+                        <TableCell>{calculateProfit(stock)}</TableCell>
+                        <TableCell>{stock.market}</TableCell>
+                        <TableCell>
+                            <Button variant="outline" size="sm" onClick={() => onSellStock(stock)}>
+                                {t("Sell")}
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                ))
+             ) : (
+              <TableRow>
+                <TableCell colSpan={9} className="text-center">{t("No stocks found")}</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        )}
             </Table>
         </Card>
     );

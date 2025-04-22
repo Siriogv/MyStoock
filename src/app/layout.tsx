@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import type {Metadata} from 'next';
-import {Geist, Geist_Mono} from 'next/font/google';
-import './globals.css';
-import {Toaster} from "@/components/ui/toaster";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 import React, { useEffect, useState } from "react";
-import {SidebarLayout} from "@/components/sidebar-layout";
-import {I18nextProvider} from "react-i18next";
+import { SidebarLayout } from "@/components/sidebar-layout";
+import { I18nextProvider } from "react-i18next";
 import { useI18n } from "@/hooks/use-i18n";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 // Removing metadata export from here as it's a client component
@@ -27,35 +27,37 @@ const geistMono = Geist_Mono({
 // };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    const {i18n, isInitialized} = useI18n();
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Example authentication state
+  const { i18n, isInitialized } = useI18n();
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Example authentication state
 
-    useEffect(() => {
-      // Simulate authentication check (replace with your actual auth logic)
-      const checkAuth = () => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        setIsAuthenticated(!!isLoggedIn);
-      };
-  
-      checkAuth();
-      // For simplicity, we're not setting up a real-time listener for auth changes here
-      // Implement a more robust solution for production apps
-    }, []);
-  
-    useEffect(() => {
-      if (!isAuthenticated) {
-        router.push('/login');
-      }
-    }, [isAuthenticated, router]);
+  useEffect(() => {
+    // Simulate authentication check (replace with your actual auth logic)
+    const checkAuth = () => {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      setIsAuthenticated(!!isLoggedIn);
+    };
 
-    return (
-        <html lang={i18n?.language || 'en'}>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    checkAuth();
+    // For simplicity, we're not setting up a real-time listener for auth changes here
+    // Implement a more robust solution for production apps
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
+
+  return (
+    <html lang={i18n?.language || "en"}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         {isAuthenticated ? (
           <SidebarLayout>
             {children}
@@ -64,19 +66,12 @@ export default function RootLayout({
         ) : (
           children
         )}
-
-        </body>
-        </html>
-    );
+      </body>
+    </html>
+  );
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const {i18n} = useI18n();
-    return (
-      <I18nextProvider i18n={i18n}>
-        {children}
-      </I18nextProvider>
-    )
+  const { i18n } = useI18n();
+  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 }
-
-    
