@@ -113,28 +113,52 @@ const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, se
                     
                         
                             
-                                {t("Symbol")}
+                                
+                                    {t("Symbol")}
+                                    {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Name")}
+                                
+                                    {t("Name")}
+                                    {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Quantity")}
+                                
+                                    {t("Quantity")}
+                                    {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Purchase Price")}
+                                
+                                    {t("Purchase Price")}
+                                    {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Current Price")}
+                                
+                                    {t("Current Price")}
+                                    {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                              
-                                {t("Daily %")}
+                                
+                                    {t("Daily %")}
+                                    {sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Profit")}
+                                
+                                    {t("Profit")}
+                                    {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
-                                {t("Market")}
+                                
+                                    {t("Market")}
+                                    {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
+                                
                             
                             
                                 Actions
