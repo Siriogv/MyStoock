@@ -96,7 +96,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         router.push('/');
     };
 
-    const sortedStocks = [...portfolio].sort((a, b) => {
+    const sortedStocks = portfolio ? [...portfolio].sort((a, b) => {
         // Implement your sorting logic here based on the sortColumn and sortOrder
         const aValue = a[sortColumn] || '';
         const bValue = b[sortColumn] || '';
@@ -109,7 +109,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
             return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         }
         return 0;
-    });
+    }) : [];
 
     const currentStocks = sortedStocks.slice(startIndex, endIndex);
 
@@ -220,3 +220,4 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
         </div>
     );
 }
+
