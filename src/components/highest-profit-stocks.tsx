@@ -12,6 +12,26 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {useI18n} from "@/hooks/use-i18n";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {PortfolioStock} from "@/types";
 
 export interface Stock {
     symbol: string;
@@ -36,48 +56,124 @@ const calculateProfit = (stock: Stock) => {
     return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
-export const HighestProfitStocks = () => {
+interface HighestProfitStocksProps {
+    portfolio: Stock[];
+    onSellStock: (stock: Stock) => void;
+    sortColumn: keyof Stock;
+    sortOrder: 'asc' | 'desc';
+    setSortColumn: (column: keyof Stock) => void;
+    setSortOrder: (order: 'asc' | 'desc') => void;
+}
+
+export const HighestProfitStocks = ({ portfolio, onSellStock, sortColumn, sortOrder, setSortColumn, setSortOrder }: HighestProfitStocksProps) => {
     const [highestProfitStocks, setHighestProfitStocks] = useState<Stock[]>([]);
     const { t } = useI18n();
+    const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+    const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
 
     useEffect(() => {
         // Sort the mock portfolio based on profit
-        const sortedStocks = [...mockPortfolio].sort((a, b) => calculateProfit(b) - calculateProfit(a));
+        const sortedStocks = [...portfolio].sort((a, b) => calculateProfit(b) - calculateProfit(a));
         setHighestProfitStocks(sortedStocks);
-    }, []);
+    }, [portfolio]);
+
+    const handleSellStock = (stock: Stock) => {
+        setSelectedStock(stock);
+        setIsSellModalOpen(true);
+        onSellStock(stock);
+    };
+
+    const handleCloseSellModal = () => {
+        setIsSellModalOpen(false);
+        setSelectedStock(null);
+    };
+
+    const handleSort = (column: keyof Stock) => {
+        if (sortColumn === column) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortOrder('asc');
+        }
+    };
 
     return (
-        <Table className="mt-4">
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[80px] text-xs">Symbol</TableHead>
-                    <TableHead className="text-xs">Name</TableHead>
-                    <TableHead className="text-xs">Quantity</TableHead>
-                    <TableHead className="text-xs">Purchase Price</TableHead>
-                    <TableHead className="text-xs">Current Price</TableHead>
-                    <TableHead className="text-xs">Market Value</TableHead>
-                     <TableHead className="text-xs">Daily %</TableHead>
-                    <TableHead className="text-right text-xs">Profit</TableHead>
-                    <TableHead className="text-xs">Market</TableHead>
-                    <TableHead className="text-xs">Capitalization</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {highestProfitStocks.map((stock) => (
-                    <TableRow key={stock.symbol}>
-                        <TableCell className="font-medium text-xs">{stock.symbol}</TableCell>
-                        <TableCell className="text-xs">{stock.name}</TableCell>
-                        <TableCell className="text-xs">{stock.quantity}</TableCell>
-                        <TableCell className="text-xs">{stock.purchasePrice}</TableCell>
-                        <TableCell className="text-xs">{stock.currentPrice}</TableCell>
-                         <TableCell className="text-xs">{stock.currentPrice * stock.quantity}</TableCell>
-                          <TableCell className="text-xs">{stock.changePercent}%</TableCell>
-                        <TableCell className="text-right text-xs">{calculateProfit(stock)}</TableCell>
-                        <TableCell className="text-xs">{stock.market}</TableCell>
-                        <TableCell className="text-xs">{stock.capitalization}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+
+            
+                
+                    
+                        
+                            
+                                {`${t("Symbol")} ${sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Name")} ${sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Quantity")} ${sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Purchase Price")} ${sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Current Price")} ${sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                             
+                                {`${t("Daily %")} ${sortColumn === 'changePercent' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Profit")} ${sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Market")} ${sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {`${t("Capitalization")} ${sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}`}
+                            
+                            
+                                {t("Actions")}
+                            
+                        
+                    
+                
+                
+                    {highestProfitStocks.map((stock) => (
+                        
+                            
+                                {stock.symbol}
+                            
+                            
+                                {stock.name}
+                            
+                            
+                                {stock.quantity}
+                            
+                            
+                                {stock.purchasePrice}
+                            
+                            
+                                {stock.currentPrice}
+                            
+                             
+                                {stock.changePercent}%
+                            
+                            
+                                {calculateProfit(stock)}
+                            
+                            
+                                {stock.market}
+                            
+                            
+                                {stock.capitalization}
+                            
+                            
+                                
+                            
+                        
+                    ))}
+                
+            
+        
     );
 };
+"

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { NewsSection } from "@/components/news-section"; // Import the NewsSection component
-import {Stock} from "@/components/highest-profit-stocks";
+import {Stock, HighestProfitStocks} from "@/components/highest-profit-stocks";
 import {
   Table,
   TableBody,
@@ -14,6 +14,24 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const mockPortfolio = [
   { symbol: 'AAPL', name: 'Apple Inc.', purchasePrice: 150, currentPrice: 170, quantity: 10, market: 'NASDAQ', capitalization: 1500 , changePercent: 2},
@@ -27,134 +45,6 @@ const calculateProfit = (stock: any) => {
   return (stock.currentPrice - stock.purchasePrice) * stock.quantity;
 };
 
-const itemsPerPage = 5;
-
-const TableComponent = ({portfolio}: {portfolio: any[]}) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState<keyof any>('profit');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filterMarket, setFilterMarket] = useState<string>('All');
-
-  const totalPages = Math.ceil(portfolio.length / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const sortedStocks = [...portfolio].sort((a, b) => {
-    const profitA = calculateProfit(a);
-    const profitB = calculateProfit(b);
-
-    let comparison = 0;
-
-    if (sortColumn === 'profit') {
-      comparison = profitA - profitB;
-    } else if (sortColumn === 'market') {
-      comparison = a.market.localeCompare(b.market);
-    } else if (sortColumn === 'capitalization') {
-      comparison = a.capitalization - b.capitalization;
-    } else if (sortColumn === 'quantity') {
-        comparison = a.quantity - b.quantity;
-    }
-    else {
-      comparison = (a[sortColumn] || '').toString().localeCompare((b[sortColumn] || '').toString());
-    }
-
-    return sortOrder === 'asc' ? comparison : -comparison;
-  });
-
-  const filteredStocks = filterMarket === 'All'
-    ? sortedStocks
-    : sortedStocks.filter(stock => stock.market === filterMarket);
-
-  const currentStocks = filteredStocks.slice(startIndex, endIndex);
-
-  const handleSort = (column: keyof any) => {
-    if (column === sortColumn) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortColumn(column);
-      setSortOrder('asc');
-    }
-  };
-
-  const goToPreviousPage = () => {
-    setCurrentPage(currentPage => Math.max(currentPage - 1, 1));
-  };
-
-  const goToNextPage = () => {
-    setCurrentPage(currentPage => Math.min(currentPage + 1, totalPages));
-  };
-
-  return (
-    <div>
-      
-
-      <Table>
-        <TableHeader className="mb-4">
-          <TableRow>
-            <TableHead onClick={() => handleSort('symbol')} className="cursor-pointer p-4">
-              Symbol {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('name')} className="cursor-pointer p-4">
-              Name {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('quantity')} className="cursor-pointer p-4">
-              Quantity {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('purchasePrice')} className="cursor-pointer p-4">
-              Purchase Price {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('currentPrice')} className="cursor-pointer p-4">
-              Current Price {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-             <TableHead className="p-4" >
-              Market Value
-            </TableHead>
-             <TableHead className="p-4" >
-              Daily %
-            </TableHead>
-            <TableHead onClick={() => handleSort('profit')} className="cursor-pointer p-4">
-              Profit {sortColumn === 'profit' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('market')} className="cursor-pointer p-4">
-              Market {sortColumn === 'market' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-            <TableHead onClick={() => handleSort('capitalization')} className="cursor-pointer p-4">
-              Capitalization {sortColumn === 'capitalization' && (sortOrder === 'asc' ? '▲' : '▼')}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentStocks.map((stock) => (
-            <TableRow key={stock.symbol}>
-              <TableCell className="font-medium">{stock.symbol}</TableCell>
-              <TableCell>{stock.name}</TableCell>
-              <TableCell>{stock.quantity}</TableCell>
-              <TableCell>{stock.purchasePrice}</TableCell>
-              <TableCell>{stock.currentPrice}</TableCell>
-              <TableCell>{stock.currentPrice * stock.quantity}</TableCell>
-               <TableCell>{stock.changePercent}</TableCell>
-              <TableCell>{calculateProfit(stock)}</TableCell>
-              <TableCell>{stock.market}</TableCell>
-              <TableCell>{stock.capitalization}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      <div className="flex justify-between items-center mt-4">
-        <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-          Next
-        </Button>
-      </div>
-    </div>
-  );
-};
-
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -165,7 +55,9 @@ const formatCurrency = (amount: number) => {
 export default function Home() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-    const [portfolio, setPortfolio] = useState(mockPortfolio);
+  const [portfolio, setPortfolio] = useState(mockPortfolio);
+  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -185,6 +77,16 @@ export default function Home() {
 
     // Calculate total profit/loss
     const totalProfitLoss = currentTotalValue - totalPurchaseValue;
+
+  const handleSellStock = (stock: Stock) => {
+    setSelectedStock(stock);
+    setIsSellModalOpen(true);
+  };
+
+  const handleCloseSellModal = () => {
+    setIsSellModalOpen(false);
+    setSelectedStock(null);
+  };
 
   return (
     
@@ -211,11 +113,127 @@ export default function Home() {
             </div>
           </div>
 
-          <TableComponent portfolio={portfolio}/>
+          <HighestProfitStocks onSellStock={handleSellStock} portfolio={portfolio} />
+
+          <SellStockModal
+            isOpen={isSellModalOpen}
+            onClose={handleCloseSellModal}
+            stock={selectedStock}
+            setPortfolio={setPortfolio}
+            portfolio={portfolio}
+          />
           
           <NewsSection />
         </div>
     
   );
 }
+
+interface SellStockModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  stock: Stock | null;
+  setPortfolio: (portfolio: Stock[]) => void;
+  portfolio: Stock[];
+}
+
+const SellStockModal = ({ isOpen, onClose, stock, setPortfolio, portfolio }: SellStockModalProps) => {
+  const [sellPrice, setSellPrice] = useState<number | null>(null);
+  const [commission, setCommission] = useState<number>(0);
+  const [isFixedCommission, setIsFixedCommission] = useState(true);
+  const { toast } = useToast();
+
+  const handleSell = () => {
+    if (!stock || !sellPrice) {
+      toast({
+        title: "Error",
+        description: "Please select a stock and enter a sell price.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Calculate commission amount
+    let commissionAmount = isFixedCommission ? commission : (stock.purchasePrice + sellPrice) * (commission / 100);
+    // Calculate profit loss
+    let profitLoss = (sellPrice - stock.purchasePrice) * stock.quantity - commissionAmount;
+      const tax = profitLoss > 0 ? profitLoss * 0.26 : 0;
+      const netProfit = profitLoss - tax;
+
+    // Update the portfolio by removing the sold stock
+    const updatedPortfolio = portfolio.filter(item => item.symbol !== stock.symbol);
+    setPortfolio(updatedPortfolio);
+
+    toast({
+      title: "Success",
+      description: `Successfully sold ${stock.quantity} shares of ${stock.symbol} for ${formatCurrency(netProfit)}`,
+    });
+    onClose();
+  };
+
+  if (!stock) {
+    return null;
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Sell {stock.name}</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to sell your shares of {stock.symbol}?
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="sellPrice" className="text-right">
+              Sell Price
+            </Label>
+            <Input
+              type="number"
+              id="sellPrice"
+              placeholder="Enter sell price"
+              className="col-span-3"
+              onChange={(e) => setSellPrice(Number(e.target.value))}
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="commission" className="text-right">
+              Commission
+            </Label>
+            <Input
+              type="number"
+              id="commission"
+              placeholder="Enter commission amount"
+              className="col-span-3"
+              onChange={(e) => setCommission(Number(e.target.value))}
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="isFixedCommission" className="text-right">
+              Fixed Commission
+            </Label>
+            <Select onValueChange={() => setIsFixedCommission(!isFixedCommission)} >
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Fixed or Percentage" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Fixed</SelectItem>
+                <SelectItem value="false">Percentage</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="button" onClick={handleSell}>
+            Sell
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
