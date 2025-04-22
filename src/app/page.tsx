@@ -316,114 +316,114 @@ const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock 
           accessorKey: 'symbol',
           header: ({ column }) => {
             return (
-              <>
+              
                 {t("Symbol")}
                 {column.getIsSorted()
                   ? column.getIsSorted() === 'asc'
                     ? ' 🔽'
                     : ' 🔼'
                   : null}
-              </>
+              
             );
           },
       },
       {
           accessorKey: 'name',
           header: ({ column }) => (
-              <>
+              
                   {t("Name")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
       {
           accessorKey: 'quantity',
           header: ({ column }) => (
-              <>
+              
                   {t("Quantity")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
       {
           accessorKey: 'purchasePrice',
           header: ({ column }) => (
-              <>
+              
                   {t("Purchase Price")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
       {
           accessorKey: 'currentPrice',
           header: ({ column }) => (
-              <>
+              
                   {t("Current Price")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
       {
           accessorKey: 'changePercent',
           header: ({ column }) => (
-              <>
+              
                   {t("Daily %")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
           cell: ({ row }) => {
-              const value = row.getValue<number>('changePercent');
+              const value = row.getValue('changePercent');
               return (
-                  <>
+                  
                       {value}%
-                  </>
+                  
               );
           },
       },
       {
           accessorKey: 'capitalization',
           header: ({ column }) => (
-              <>
+              
                   {t("Capitalization")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
       {
           accessorKey: 'market',
           header: ({ column }) => (
-              <>
+              
                   {t("Market")}
                   {column.getIsSorted()
                       ? column.getIsSorted() === 'asc'
                           ? ' 🔽'
                           : ' 🔼'
                       : null}
-              </>
+              
           ),
       },
   ], [t]);
@@ -517,4 +517,3 @@ const TableComponent: React.FC<TableComponentProps> = ({ portfolio, onSellStock 
 
 export { TableComponent, calculateProfit, mockPortfolio };
 "
-
