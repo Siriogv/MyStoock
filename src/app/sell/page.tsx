@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
@@ -184,6 +184,7 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
                             {t("Are you sure you want to sell")} {selectedStock?.name}?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    {/* Removed AlertDialogFooter, its content moved directly here */}
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="salePrice" className="text-right">
@@ -251,24 +252,23 @@ export default function SellPage({portfolio, onSell}: SellPageProps) {
                             />
                         </div>
                     </div>
-                    
-                        
-                            {t("Cancel")}
-                        
-                        
-                            
+                     <AlertDialogCancel asChild>
+                            <Button variant="secondary">
+                                {t("Cancel")}
+                            </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button onClick={handleSell}>
                                 {t("Confirm")}
-                            
-                        
-                    
+                            </Button>
+                        </AlertDialogAction>
+                    {/* End of moved AlertDialogFooter's content */}
                 </AlertDialogContent>
             </AlertDialog>
 
-            
-                
-                    {t("Back to Dashboard")}
-                
-            
+            <Button variant="secondary" onClick={goBackToDashboard}>
+                {t("Back to Dashboard")}
+            </Button>
         </div>
     );
 }
@@ -358,10 +358,9 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
                         
                     
                 ))}
-             
-              
-
-               
+            
+            
+                
                     
                 
                 
@@ -375,16 +374,3 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
     );
 };
 
-interface AlertDialogFooterProps {
-    children: React.ReactNode;
-}
-
-const AlertDialogFooter: React.FC<AlertDialogFooterProps> = ({ children }) => (
-    
-        {children}
-    
-);
-
-AlertDialogFooter.displayName = "AlertDialogFooter";
-
-"
