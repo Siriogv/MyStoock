@@ -15,13 +15,16 @@ const resources = {
   },
 };
 
+let i18nInstance: i18n | null = null;
+
 export function useI18n() {
-  const i18nInstance = createInstance();
-  const { i18n: i18nFromUseTranslation } = useTranslation();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [t, setT] = useState<((key: string) => string) | null>(null);
+  const [i18nFromHook, setI18nFromHook] = useState<i18n | null>(null);
 
   const initializeI18next = useCallback(async () => {
-    if (!i18nInstance.isInitialized) {
+    if (!i18nInstance) {
+      i18nInstance = createInstance();
       i18nInstance
         .use(initReactI18next)
         .init({
@@ -29,14 +32,39 @@ export function useI18n() {
           fallbackLng: 'en',
           resources: resources,
         })
-        .then(() => setIsInitialized(true));
+        .then(() => {
+          setIsInitialized(true);
+          setI18nFromHook(i18nInstance);
+        });
+    } else {
+      setIsInitialized(true);
+      setI18nFromHook(i18nInstance);
     }
-  }, [i18nInstance]);
+  }, []);
 
   useEffect(() => {
     initializeI18next();
   }, [initializeI18next]);
 
-  return { i18n: i18nInstance, isInitialized };
-}
+  useEffect(() => {
+    if (isInitialized && i18nFromHook) {
+      setT(() => i18nFromHook.t.bind(i18nFromHook));
+    }
+  }, [isInitialized, i18nFromHook]);
 
+  const changeLanguage = useCallback(
+    (lng: string) => {
+      if (i18nInstance) {
+        i18nInstance.changeLanguage(lng);
+      }
+    },
+    []
+  );
+
+  return {
+    i18n: i18nFromHook,
+    isInitialized,
+    t: t || ((key: string) => key),
+    changeLanguage,
+  };
+}
