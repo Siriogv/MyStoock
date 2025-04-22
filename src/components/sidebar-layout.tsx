@@ -195,81 +195,87 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{t("Simulation Page")}</DialogTitle>
-          <DialogDescription>
+    
+      
+        
+          <span>{t("Simulation Page")}</span>
+          
             {t("Simulate investment scenarios to evaluate potential profits and losses.")}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-              <Label htmlFor="symbol">{t("Stock Symbol")}</Label>
-              <Input
-                type="text"
-                id="symbol"
-                value={symbol}
-                onChange={(e) => setSymbol(e.target.value)}
-              />
-            
-            
-              <Label htmlFor="quantity">{t("Quantity")}</Label>
-              <Input
-                type="number"
-                id="quantity"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
-            
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-              <Label htmlFor="purchasePrice">{t("Purchase Price")}</Label>
-              <Input
-                type="number"
-                id="purchasePrice"
-                value={purchasePrice}
-                onChange={(e) => setPurchasePrice(Number(e.target.value))}
-              />
-            
-            
-              <Label htmlFor="salePrice">{t("Sale Price")}</Label>
-              <Input
-                type="number"
-                id="salePrice"
-                value={salePrice}
-                onChange={(e) => setSalePrice(Number(e.target.value))}
-              />
-            
-          </div>
           
-            <Label htmlFor="commission">{t("Commission")}</Label>
-            <Input
-              type="number"
-              id="commission"
-              value={commission}
-              onChange={(e) => setCommission(Number(e.target.value))}
-            />
+        
+        
           
-
+            
+              
+                
+                  {t("Stock Symbol")}
+                  
+                    type="text"
+                    id="symbol"
+                    value={symbol}
+                    onChange={(e) => setSymbol(e.target.value)}
+                  
+                
+                
+                  {t("Quantity")}
+                  
+                    type="number"
+                    id="quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                  
+                
+              
+            
+            
+              
+                
+                  {t("Purchase Price")}
+                  
+                    type="number"
+                    id="purchasePrice"
+                    value={purchasePrice}
+                    onChange={(e) => setPurchasePrice(Number(e.target.value))}
+                  
+                
+                
+                  {t("Sale Price")}
+                  
+                    type="number"
+                    id="salePrice"
+                    value={salePrice}
+                    onChange={(e) => setSalePrice(Number(e.target.value))}
+                  
+                
+              
+            
+            
+              {t("Commission")}
+              
+                type="number"
+                id="commission"
+                value={commission}
+                onChange={(e) => setCommission(Number(e.target.value))}
+              
+            
+          
           
             
               Fixed Commission
             
           
-
           
             
               Calculate Tax (26%)
             
           
         
-        <DialogFooter>
-          <Button onClick={handleCalculate}>{t("Calculate")}</Button>
-        </DialogFooter>
-
+        
+          
+            {t("Calculate")}
+          
+        
+  
         {simulationResult && (
           
             
@@ -295,8 +301,7 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
             
           
         )}
-      </DialogContent>
-    </Dialog>
+      
+    
   );
 }
-

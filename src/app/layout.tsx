@@ -52,13 +52,16 @@ export default function RootLayout({
         router.push('/login');
       }
     }, [isAuthenticated, router]);
+
     return (
         <html lang={i18n?.language || 'en'}>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {isAuthenticated ? (
             
-                    {children}
-                    <Toaster/>
+                    <SidebarLayout>
+                        {children}
+                        <Toaster/>
+                    </SidebarLayout>
             
         ) : null}
 
@@ -70,10 +73,12 @@ export default function RootLayout({
 export function Providers({ children }: { children: React.ReactNode }) {
     const {i18n} = useI18n();
     return (
-        
-            
+        <I18nextProvider i18n={i18n}>
+            <SidebarLayout>
                 {children}
-            
-        
+            </SidebarLayout>
+        </I18nextProvider>
     )
 }
+
+    
