@@ -268,3 +268,4 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
     </Dialog>
   );
 }
+
