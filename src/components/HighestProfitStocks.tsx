@@ -114,7 +114,7 @@ const HighestProfitStocks = ({ portfolio, onSellStock }: HighestProfitStocksProp
           <CardHeader>
             <CardTitle>{t("Stocks in Portfolio")}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-2">
             <Table>
               <TableHeader>
                 <TableRow>
