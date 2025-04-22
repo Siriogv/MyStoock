@@ -302,13 +302,13 @@ const PortfolioTable = ({ portfolio, setSelectedStock, setIsDialogOpen, sortColu
                         {t("Symbol")} {sortColumn === 'symbol' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                        {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                        {t("Name")} {sortColumn === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                        {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                        {t("Quantity")} {sortColumn === 'quantity' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
-                        {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
+                        {t("Purchase Price")} {sortColumn === 'purchasePrice' && (sortOrder === 'asc' ? '▲' : '▼')}
                     
                     
                         {t("Current Price")} {sortColumn === 'currentPrice' && (sortOrder === 'asc' ? '▲' : '▼'))}
