@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -24,13 +23,17 @@ export async function GET(request: Request) {
         });
 
         const html = response.data;
-        const $ = cheerio.load(html);
+        //const $ = cheerio.load(html);
 
         // Extract data based on the structure of Google Finance page
-        const name = $('div.zzDege').first().text().trim();
-        const price = $('div.YMlKec.fxKbKc').first().text().trim();
-        const changeText = $('div.JwB6zf').first().text().trim();
-        const [change, changePercent] = changeText.split(' ');
+        //const name = $('div.zzDege').first().text().trim();
+        //const price = $('div.YMlKec.fxKbKc').first().text().trim();
+        //const changeText = $('div.JwB6zf').first().text().trim();
+        //const [change, changePercent] = changeText.split(' ');
+        const name = 'TODO';
+        const price = 'TODO';
+        const change = 'TODO';
+        const changePercent = 'TODO';
 
         const stockInfo = {
             symbol,
