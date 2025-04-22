@@ -151,6 +151,7 @@ interface SimulationDialogProps {
 function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
   const { t } = useI18n();
   const router = useRouter();
+  const { toast } = useToast(); // Use the useToast hook
 
   const [symbol, setSymbol] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -177,7 +178,7 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
       netProfit,
     });
 
-    toast({
+    toast({ // Use the toast function from the hook
       title: t("Simulation complete"),
       description: t("The simulation has been successfully calculated."),
     });
@@ -274,3 +275,4 @@ function SimulationDialog({ isOpen, onClose }: SimulationDialogProps) {
     </Dialog>
   );
 }
+
