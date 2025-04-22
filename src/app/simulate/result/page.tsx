@@ -16,6 +16,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useI18n } from "@/hooks/use-i18n";
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
+import { cn } from "@/lib/utils";
 
 export default function SimulationResultPage() {
   const searchParams = useSearchParams();
@@ -50,14 +51,14 @@ export default function SimulationResultPage() {
 
   return (
     <SidebarLayout>
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">{t("Simulation Result")}</h1>
+      <div className="container mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-5 text-center">{t("Simulation Result")}</h1>
 
         {simulationResult ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="shadow-md">
-              <CardHeader>
-                <CardTitle>{t("Profit and Loss Analysis")}</CardTitle>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="shadow-lg border-primary">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl text-center">{t("Profit and Loss Analysis")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <AreaChart width={500} height={400} data={data}
@@ -77,24 +78,26 @@ export default function SimulationResultPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-md">
-              <CardHeader>
-                <CardTitle>{t("Detailed Breakdown")}</CardTitle>
+            <Card className="shadow-lg border-secondary">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl text-center">{t("Detailed Breakdown")}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p>{t("Total Purchase Cost")}: {formatCurrency(simulationResult.totalPurchaseCost)}</p>
-                <p>{t("Total Sale Revenue")}: {formatCurrency(simulationResult.totalSaleRevenue)}</p>
-                <p>{t("Commission Amount")}: {formatCurrency(simulationResult.commissionAmount)}</p>
-                <p>{t("Profit/Loss")}: {formatCurrency(simulationResult.profitLoss)}</p>
-                <p>{t("Tax (26%)")}: {formatCurrency(simulationResult.tax)}</p>
-                <p>{t("Net Profit")}: {formatCurrency(simulationResult.netProfit)}</p>
+              <CardContent className="text-lg">
+                <p className="mb-2">{t("Total Purchase Cost")}: {formatCurrency(simulationResult.totalPurchaseCost)}</p>
+                <p className="mb-2">{t("Total Sale Revenue")}: {formatCurrency(simulationResult.totalSaleRevenue)}</p>
+                <p className="mb-2">{t("Commission Amount")}: {formatCurrency(simulationResult.commissionAmount)}</p>
+                <p className="mb-2">{t("Profit/Loss")}: {formatCurrency(simulationResult.profitLoss)}</p>
+                <p className="mb-2">{t("Tax (26%)")}: {formatCurrency(simulationResult.tax)}</p>
+                <p className="mb-2">{t("Net Profit")}: {formatCurrency(simulationResult.netProfit)}</p>
               </CardContent>
             </Card>
           </div>
         ) : (
-          <p>{t("No simulation result found.")}</p>
+          <p className="text-lg text-muted-foreground">{t("No simulation result found.")}</p>
         )}
-          <Button variant="secondary" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
+           <div className="flex justify-center mt-6">
+              <Button variant="secondary" className="px-8 py-3" onClick={goBackToDashboard}>{t("Back to Dashboard")}</Button>
+          </div>
       </div>
     </SidebarLayout>
   );
